@@ -1,5 +1,6 @@
 git-demo/
 MdFile/
+.vscode/
 *.exe
 *.c
 *.h
