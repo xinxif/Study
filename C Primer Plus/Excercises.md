@@ -385,6 +385,156 @@
    int main(void)
    {
        
+       return 
+           0;
+   }
+   ```
+   
+
+### 5.11编程练习
+
+1. 编写一个程序，把用分钟表示的...
+
+   ```c
+   void chapter_five1(void)
+   {
+       const int M_PER_HOUR = 60;
+       int minutes,left,hour;
+       printf("Please enter minutes:");
+       scanf("%d",&minutes);
+       //printf("%d",minutes);
+       while (minutes>=30)
+       {
+           
+           left=minutes%M_PER_HOUR;
+           hour = minutes/M_PER_HOUR;
+           printf("%dH%dM\n\
+   Now enter anther minutes(<=0 to quit)",hour,left);
+           scanf("%d",&minutes);
+       }
+       
+   }
+   ```
+
+2. 编写一个程序，提示用户输入一.....
+
+   ```c
+   void chapter_five2(void)
+   {
+       int intager,mark;
+       printf("Please enter an intager:");
+       while (scanf("%d",&intager))
+       {
+           mark=11;
+           while (mark--)
+           {
+               printf("%d\t",intager);
+               ++intager;
+               
+           }
+           printf("\nEnter another intager or enter 'q' to quit\n");
+       }
+       
+   }
+   ```
+
+3. 编写一个程序，提示用户输入天数，然...
+
+   ```c
+   void chapter_five3(void)
+   {
+       unsigned int day,week,left;
+       printf("Enter the number of day(s):");
+       while (scanf("%d",&day))
+       {
+           week = day/7;
+           left=day%7;
+           printf("%d days are %d week %d days",day,week,left);
+           printf("\nNow enter another number or enter 'q' to quit:");
+       }
+       
+   }
+   ```
+
+4. 编写一个程序，提示用户输入一个身高（单位：厘米），并分别以....
+
+   ```c
+   void chapter_five4(void)
+   {
+       const double CM_PER_FEET = 30.48;
+       const double CM_PER_INCH = 2.54;
+       double height,inches;
+       unsigned short feet;
+       printf("Enter a height in centimeters:");
+       scanf("%lf",&height);
+       while (height>0)
+       {
+           feet = (int)height/CM_PER_FEET;
+           inches = (height - feet*CM_PER_FEET)/CM_PER_INCH;
+           printf("%.1f cm = %hu feet %.1f inches.\n",height,feet,inches);
+           printf("Enter a height in centimeters (<=0 to quit)");
+           scanf("%lf",&height);
+       }
+       printf("bye");
+   }
+   ```
+
+5. 修改程序addemup.c（程序清单5.13），你可以认....
+
+   ```c
+   void chapter_five5(void)
+   {
+       int user_input,total;
+       printf("Enter a number:");
+       while (scanf("%d",&user_input))
+       {
+           total = (1+user_input)*user_input/2;
+           printf("The addition result of 1 to %d is %d\n",user_input,total);
+           printf("Now enter another number or enter 'q' to quit:");
+   
+       }
+       
+       
+   }
+   ```
+
+6. 修改编程练习5的程序，使其能计算整数的平方....
+
+   ```c
+   void chapter_five6(void)
+   {
+       long long int user_input,total;
+       unsigned long long temp1,temp2;
+       printf("Enter a number:");
+       while (scanf("%lld",&user_input))
+       {
+           temp1 =user_input+1;
+           temp2 =2*user_input+1;
+           total = user_input*temp1*temp2/6;
+           printf("The squared result of 1 to %lld is %llu\n",user_input,total);
+           printf("Now enter another number or enter 'q' to quit:");
+   
+       }
+       
+       
+   }
+   ```
+
+7. 编写一个程序，提示用户输入一个double类型的数，并...
+
+   ```c
+   #include<stdio.h>
+   
+   void squared(const double num)
+   {
+       printf("%.2f",num*num);
+   }
+   int main(void)
+   {
+       double num;
+       printf("Enter a number:");
+       scanf("%lf",&num);
+       squared(num);
        return 0;
    }
    ```
