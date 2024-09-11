@@ -182,7 +182,7 @@
 2. 编写一个程序，要求提示输入一个ASCII码值（如，66）...
 
    ```c
-   void chaper_three2(void)
+   void chapter_three2(void)
    {
        char input;
        int num;
@@ -238,7 +238,7 @@
 
 7. 英寸相当于2.54厘米。编写一个程序，提示...
 
-   ```\
+   ```c
    void chapter_three7(void)
    {
        float inch,centimeter;
@@ -266,6 +266,126 @@
    
        printf("You have %.2f pint.\nYou have %.2f cup.\nYou have %.2f cunce.\nYou have %.2f Soup Ladle.\nYou have %.2f teaspoon."
        ,pint,cup,ounce,soup_ladle,teaspoon);
+   }
+   ```
+
+
+### 4.8编程练习
+
+1. 编写一个程序，提示用户输入名和姓，然后以.......
+
+   ```c
+   void chapter_four1(void)
+   {
+       char name[11],surname[11];
+       printf("Please enter your name and surname:");
+       scanf("%s",name);
+       scanf("%s",surname);
+       printf("%s %s",name,surname);
+   }
+   ```
+
+2. 编写一个程序，提示用户输入名和...
+
+   ```c
+   void chapter_four2(void)
+   {
+       char name [31];
+       printf("Please enter your name and surname:");
+       scanf("%s",name);
+       printf("\"%s\"\n",name);
+       printf("\"%20s\"\n",name);
+       printf("\"%-20s\"\n",name);
+       printf("%*s", strlen(name)+3,name);//string.h should be included.
+   }
+   ```
+
+3. 编写一个程序，读取一个浮点数，首先以小数点...
+
+   ```c
+   void chapter_four3(void)
+   {
+       double user_input;
+       printf("Please enter a floating-point:");
+       scanf("%lf",&user_input);
+       printf("%.1f\t%.1e\n",user_input,user_input);
+       printf("%+.3f\t%.3E",user_input,user_input);
+   }
+   ```
+
+4. 编写一个程序，提示用户输入身高（单位：英寸）和姓...
+
+   ```c
+   void chapter_four4(void)
+   {
+       const float FEET = 0.83333330f;
+       printf("Please enter your height in inches:");
+       float height;
+       scanf("%f",&height);
+       printf("Please enter you name:");
+       char name[20];
+       scanf("%s",name);
+       printf("%s,you are %.3f feet tall",name,height*FEET);
+   }
+   ```
+
+5. 编写一个程序，提示用户输入以兆位每秒（Mb/s）为单位的下...
+
+   ```c
+   void chapter_four5(void)
+   {   
+       const float CONVERT = 8.f;
+       float netword_speed,package_size,downloading_time;
+       printf("Enter the download speed in megabits per second:");
+       scanf("%f",&netword_speed);
+       printf("Enter the size of your package you need download in magebyte:");
+       scanf("%f",&package_size);
+   
+       downloading_time = package_size*CONVERT/netword_speed;
+       printf("At %.2f megabits per second, a file of %.2f megabytes.\ndownloads in %.2f seconds",netword_speed,package_size,downloading_time);
+   }
+   
+   ```
+
+6. 编写一个程序，先提示用户输入名，然后提示用户输入姓。在...
+
+   ```c
+   void chapter_four6(void)
+   {
+       char name[11],surname[11];
+       unsigned short lenght1,lenght2;
+       printf("Enter your name:");
+       scanf("%s",name);
+       printf("Enter your surname:");
+       scanf("%s",surname);
+       lenght1 = strlen(name);
+       lenght2 = strlen(surname);
+       printf("%s %s\n%-*d %-*d",name,surname,lenght1,lenght2,lenght1,lenght2);
+   }
+   ```
+
+7. 编写一个程序，将一个double类型的变量设...
+
+   ```c
+   void chapter_four7(void)
+   {
+       double d = 1.0/3.0;
+       float f = 1.f/3.f;
+       printf("double = %.6f\ndouble = %.12f\ndouble = %.16f",d,d,d);
+       printf("\nfloat = %.6f\nfloat = %.12f\nfloat = %.16f",f,f,f);
+       printf("\n%u",DBL_DIG);
+       printf("\n%u",FLT_DIG);
+   }
+   ```
+
+8. 编写一个程序，提示用户输入旅行的里程....
+
+   ```c
+   #include<stdio.h>
+   int main(void)
+   {
+       
+       return 0;
    }
    ```
 
