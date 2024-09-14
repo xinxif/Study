@@ -539,5 +539,54 @@
    }
    ```
 
-   
+8. 编写一个程序，显示求模运算的结果。把用户输入....
 
+   ```c
+   void chapter_five8(void)
+   {
+       int moduli,integer,calculate;
+       printf("This program computes moduli.\n\
+   Enter an integer to serve as the second operand:");
+       scanf("%d",&moduli);
+       printf("Now enter the first operand:");
+       scanf("%d",&integer);
+       while (integer>=0)
+       {
+           calculate = integer%moduli;
+           printf("%d %%  %d is %d",integer,moduli,calculate);
+           printf("\nNnter next number for first operand (<= 0 to quit)");
+           scanf("%d",&integer);
+       }
+       printf("Done");
+   }
+   ```
+
+9. 编写一个程序，要求用户输入一个华氏温度。程序应
+
+   ```c
+   #include<stdio.h>
+   
+   void temperatures(const double degree_fahrenheit)
+   {
+       double temperature,degree_kelvin;
+       temperature = 5.0/9.0*(degree_fahrenheit-32);
+       degree_kelvin = temperature+273.16;
+       printf("Temperature = %.2f\tDegree Fahrenheit = %.2f\t Degree Kelvin = %.2f\n"
+       ,temperature,degree_fahrenheit,degree_kelvin);
+   }
+   
+   int main(void)
+   {   
+       double degree_fahrenheit;
+       printf("Enter a degree fahrenheit:");
+       while (scanf("%lf",&degree_fahrenheit))
+       {
+           temperatures(degree_fahrenheit);
+           printf("Enter next degree fahrenheit:");
+       }
+   
+       return 0;
+   }
+   ```
+
+   
