@@ -1,4 +1,4 @@
-## 第二章编程练习
+##  第二章编程练习
 
 1.  编写一个程序，调用一次` printf()`函数.........
 
@@ -269,8 +269,7 @@
    }
    ```
 
-
-### 4.8编程练习
+## 4.8编程练习
 
 1. 编写一个程序，提示用户输入名和姓，然后以.......
 
@@ -391,7 +390,7 @@
    ```
    
 
-### 5.11编程练习
+## 5.11编程练习
 
 1. 编写一个程序，把用分钟表示的...
 
@@ -589,4 +588,57 @@
    }
    ```
 
+
+## 6.16编程练习
+
+1. 编写一个程序，创建一个包含...
+
+   ```c
+   void print_alphabet(void)
+   {
+       char alphabet[26]="abcdefghijklmnopqrstuvwxyz";
+       unsigned int index;
+       for(index=0;index<26;++index)
+       {
+           printf("%c",alphabet[index]);
+       }
+   }
+   ```
+
+2. 使用嵌套循环，按下面的格式打印字符：....
+
+   ```c
+   void print_dollar_symbol(void)
+   {
+       int i,j;
+       for (i=1;i<=5;++i)
+       {
+           for(j=0;j<i;++j)
+           {
+               printf("%$");
+           }
+           printf("\n");
+       }
+   }
+   ```
+
+3. 使用嵌套循环，按下面的格式打印字母：
+
+   ```c
+   void print_reverse_alphabet(void)
+   {
+       int external_loop,inner_loop;
+       signed char letter;
+       for(external_loop=1;external_loop<=6;++external_loop)
+       {
+           for(letter='F',inner_loop=0;inner_loop<external_loop;++inner_loop,--letter)
+           {
+               printf("%c",letter);
+           }
+           printf("\n");
+       }
+   }
+   ```
+
    
+
