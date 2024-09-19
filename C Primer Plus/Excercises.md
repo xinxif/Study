@@ -640,5 +640,170 @@
    }
    ```
 
+4. 使用嵌套循环，按下面的格式打印字母...
+
+   ```c
+   void print_alphabet(void)
+   {
+       char alphabet = 'A';
+       unsigned int external ,internal;
+       for(external=1u;external<=6;++external)
+       {
+           for(internal=0u;internal<external;++internal)
+           {
+               printf("%c",alphabet++);
+           }
+           printf("\n");
+       }
+   }
+   ```
+
+5. 编写一个程序，提示用户输入大写字母。使用嵌套循环....
+
+   ```c
+   ```
+
    
 
+6. 编写一个程序打印一个表格，每一行打印一个...
+
+   ```c
+   
+   
+   ```
+
+7. 编写一个程序把一个单词读入一个字符数组中，然后倒...
+
+   ```c
+   void reverse_words(void)
+   {
+       char word[30];
+       size_t length;
+       printf("Enter a word:");
+       scanf("%s",word);
+       length = strlen(word);
+       while (length)
+       {
+           --length;
+           printf("%c",word[length]);
+       }
+       
+   }
+   ```
+
+8. 编写一个程序，要求用户输入两个浮点数，并打印两数之...
+
+   ```c
+   void division()
+   {
+       double user_input1,user_input2,subtraction,multiplication,final_result;
+       printf("Please enter two floating-point:");
+       while (scanf("%lf%lf",&user_input1,&user_input2))
+       {
+           subtraction = user_input1-user_input2;
+           multiplication = user_input1*user_input2;
+           final_result = subtraction/multiplication;
+           printf("The final result is %.2f.\nPlease continue:",final_result);
+   
+       }
+       
+   }
+   ```
+
+9. 修改练习8，使用一个函数返回计算的结果。
+
+   ```c
+   double get_division()
+   {
+       double user_input1,user_input2,subtraction,multiplication,final_result;
+       printf("Please enter two floating-point:");
+       scanf("%lf%lf",&user_input1,&user_input2);
+       subtraction = user_input1-user_input2;
+       multiplication = user_input1*user_input2;
+       final_result = subtraction/multiplication;
+   
+       return final_result;
+   }
+   ```
+
+10. 编写一个程序，要求用户输入一个上限整数和一个下...
+
+   ```c
+   void to_calculate_square_sum(void)
+   {
+       int_fast32_t up_limit,down_limit,calculation_result=0;
+       printf("enter two integers:");
+       while (scanf("%"SCNd32"%"SCNd32,&down_limit,&up_limit))
+       {
+           while (down_limit<up_limit)
+           {
+               ++down_limit;
+               calculation_result = down_limit*down_limit;
+           }
+           
+           printf("The calculation is %"PRId32,calculation_result);
+           printf("\nNow please continue(\"q\" to quit):");
+           calculation_result = 0;
+           
+       }
+   }
+   ```
+
+11. 编写一个程序，在数组中读入8个整数，然后...
+
+    ```c
+    void print_integer()
+    {
+        int32_t i,arr[8];
+        for(i=0;i<8;++i)
+        {
+            scanf("%"SCNd32,&arr[i]);
+        }
+        for(i=7;i>=0;--i)
+        {
+            printf("%"PRId32"  ",arr[i]);
+        }
+    }
+    ```
+
+12. 考虑下面两个无限序列：....
+
+    ```c
+    ```
+
+13. 编写一个程序，创建一个包含8个元素的int类型数组，分别....
+
+    ```c
+    
+    ```
+
+14. 编写一个程序，创建两个包含8个元素的double类型数...
+
+    ```c
+    ```
+
+15. 编写一个程序，读取一行输入，然后把输入...
+
+    ```c
+    
+    
+    ```
+
+16. Daphne以10%的单利息投资了100美元（也就是...
+
+    ```c
+    
+    ```
+
+17. Chuckie Lucky赢得了100万美元（税后），他把奖金存...
+
+    ```c
+    
+    ```
+
+18. Rabnud博士加入了一个社交圈。起初他有5个...
+
+    ```c
+    ```
+
+    
