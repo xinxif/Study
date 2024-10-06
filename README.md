@@ -1,2 +1,2 @@
 # Study
-A repository uesed to record knowledge which i'm learning
+A repository used to record knowledge which i'm learning
