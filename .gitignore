@@ -1,6 +1,7 @@
-git-demo/
 MdFile/
 .vscode/
+!SqList.c
+!SqList.h
 *.exe
 *.c
 *.h
