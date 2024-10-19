@@ -1,33 +1,35 @@
 #ifndef SQLIST_H_
 #define SQLEST_H_
+
+#define NDEBUG //关闭断言
+
 #include<stdint.h>
 #include<stdbool.h>
 #include<assert.h>
 #include<stdlib.h>
+#include<string.h>
 
-#define EXTENTION_RATE 2
-typedef int32_t ElemType;
-typedef uint32_t Limit;
+#define EXTENTION_RATE 2U //数组以何种速度扩展
+typedef int8_t ElemType;
+typedef uint32_t Quota;
 typedef struct 
 {
-    Limit size;
-    Limit capacity;
+    //数组中有多少元素
+    Quota size;
+    //数组中可以容纳多少元素
+    Quota capacity;
     ElemType *element;
 }SqList;
 
 SqList* InitLits(void);
-void DestroyList(SqList *);
-bool ListInsert(SqList*,Limit,ElemType);
-bool ListDelete(SqList*,Limit,ElemType);
-Limit LocateElem(const SqList*,ElemType);
-void PushBack(SqList *list,const ElemType* element);
+void DestroyList(SqList *SqLi);
+void ListInsert(SqList*destination,const Quota position,const ElemType element);
+ElemType ListDelete(SqList* SqLi, Quota position);
+Quota LocateElem(const SqList*SqLi,ElemType element);
+void PushBack(SqList *SqLi,const ElemType element);
+ElemType GetElem(const SqList* SqLi, ElemType location);
 inline static
-ElemType GetElem(const SqList* list,ElemType location)  
-{
-    assert(location<=list->size);
-    return *(list->element);
-}
-
+Quota Size(const SqList* const SqLi) { return SqLi->size; }
 
 
 #endif
