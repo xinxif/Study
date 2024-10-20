@@ -25,7 +25,7 @@
 
 NORETURN void fatal_error(const char *message)
 {
-    printf("%s\n", message);
+    //printf("%s\n", message);
 
     exit(EXIT_FAILURE);
 }
@@ -39,6 +39,7 @@ void MemoryAllocate(SqList *SqLi)
     SqLi->element = (ElemType*)calloc(size,sizeof(ElemType));
 
 #if defined(NDEBUG)
+    //是否释放内存终止程序
     ALLOCATE_MEMORY_ERROR(SqLi,temp, "Allocation Memory Failure");
 #else
     assert(SqLi->element);

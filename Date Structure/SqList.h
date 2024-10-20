@@ -10,7 +10,7 @@
 #include<string.h>
 
 #define EXTENTION_RATE 2U //数组以何种速度扩展
-typedef int8_t ElemType;
+typedef int32_t ElemType;
 typedef uint32_t Quota;
 typedef struct 
 {
@@ -29,7 +29,7 @@ Quota LocateElem(const SqList*SqLi,ElemType element);
 void PushBack(SqList *SqLi,const ElemType element);
 ElemType GetElem(const SqList* SqLi, ElemType location);
 inline static
-Quota Size(const SqList* const SqLi) { return SqLi->size; }
+Quota Size(const SqList* SqLi) { return SqLi->size; }
 
 
 #endif
