@@ -1,6 +1,5 @@
 MdFile/
 .vscode/
 *.exe
-*.c
 !SqList.h
 !SqList.c
