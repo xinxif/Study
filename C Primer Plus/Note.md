@@ -1542,6 +1542,7 @@ C语言关键字中，**粗体表示的是C90标准新增的关键字**，**斜�
         - assert()有几个好处：它不仅能自动标识文件和出问题的行号，还有一种无需更改代码就能开启或关闭 assert()的机制。==**如果认为已经排除了程序的 bug，就可以把下面的宏定义写在包含assert.h的位置前面**==：`#define NDEBUG`
         - `_Static_assert()`C11
           - `_Static_assert`声明，可以在**编译时检查assert()表达式**。因此，assert()可以导致正在运行的程序中止，**而_Static_assert()可以导致程序无法通过编译。**
+          - 第1个参数**整形常量表达式**，第2个参数是一个字符串，表达式为0，编译器为打印字符串
     - `string.h`库中的`memcpy()`和`memmove()`
       - `void *memcpy(void * restrict s1, const void * restrict s2, size_t n);`
         - 假设**两个内存区域之间没有重叠**
