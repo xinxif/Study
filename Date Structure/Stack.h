@@ -49,6 +49,7 @@ void destory_stack(stack stk);
 static inline
 size_t size(const stack stk) { return ((list_stack*)stk)->size;}
 static inline
-bool empty(const stack stk) { return ((list_stack*)stk)->size;}
+bool empty(const stack stk) { return !((list_stack*)stk)->size;}
+
 #endif // !__STACK__
 

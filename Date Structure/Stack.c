@@ -3,6 +3,7 @@ static inline
 list_stack* restoration(stack stk){return (list_stack*)stk;}
 static inline
 node get_new_node(void){return (node)calloc(1U, sizeof(struct l_node));}
+
 stack init(void)
 {
 	list_stack* new_stack = (list_stack*)calloc(1U, sizeof(list_stack));
