@@ -1,14 +1,20 @@
 #include<iostream>
-using std::cout;
-using std::cin;
-using std::endl;
+#include<cctype>
+#include<string>
+#include<vector>
+using namespace std;
 int main()
 {
-    cout<<"Enter two numbers:"<<endl;
-    int v1=0,v2=0;
-    cin>>v1>>v2;
-    cout<<"The sum of "<<v1<<" and "<<v2
-        <<" is "<<v1+v2<<endl;
-    
+    vector<unsigned>scores(11,0);
+    unsigned grade;
+    while (cin>>grade)
+    {
+        if(grade<=100)
+            ++*(scores.begin()+grade/10);
+    }
+    for(const auto &val:scores)
+    {
+        cout<<val<<" ";
+    } 
     return 0;
 }
