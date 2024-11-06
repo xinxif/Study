@@ -2,19 +2,17 @@
 #include<cctype>
 #include<string>
 #include<vector>
+#include<iterator>
+#include<cstring>
 using namespace std;
+using arr4 = int[4];
+void test(int &arr)
+{
+    cout<<sizeof(arr)<<endl;
+}
 int main()
 {
-    vector<unsigned>scores(11,0);
-    unsigned grade;
-    while (cin>>grade)
-    {
-        if(grade<=100)
-            ++*(scores.begin()+grade/10);
-    }
-    for(const auto &val:scores)
-    {
-        cout<<val<<" ";
-    } 
+    cout<<endl;
+    cout<<sizeof(std::string)<<endl;
     return 0;
 }
