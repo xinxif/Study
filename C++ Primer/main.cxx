@@ -5,14 +5,12 @@
 #include<iterator>
 #include<cstring>
 using namespace std;
-using arr4 = int[4];
-void test(int &arr)
-{
-    cout<<sizeof(arr)<<endl;
-}
+
 int main()
 {
-    cout<<endl;
-    cout<<sizeof(std::string)<<endl;
+    int i = 10;
+    double j = 10.;
+    i*=static_cast<int>(j);
+    cout<<i<<endl;
     return 0;
 }
