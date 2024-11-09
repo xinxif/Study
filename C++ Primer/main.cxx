@@ -4,13 +4,10 @@
 #include<vector>
 #include<iterator>
 #include<cstring>
+#include<stdexcept>
 using namespace std;
 
 int main()
 {
-    int i = 10;
-    double j = 10.;
-    i*=static_cast<int>(j);
-    cout<<i<<endl;
     return 0;
 }
