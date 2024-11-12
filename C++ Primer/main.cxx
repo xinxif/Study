@@ -1,13 +1,14 @@
 #include<iostream>
-#include<cctype>
-#include<string>
 #include<vector>
-#include<iterator>
-#include<cstring>
-#include<stdexcept>
-using namespace std;
+#include<string>
 
-int main()
+int main(int argc,char**argv)
 {
-    return 0;
+	std::string str;
+	for (size_t i = 1; i < argc; ++i)
+	{
+		str += argv[i];
+	}
+	std::cout << str << std::endl;
+	return 0;
 }
