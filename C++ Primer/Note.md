@@ -817,11 +817,122 @@ for(auto row:ia)
 
 #### 函数重载
 
+- 不允许两个函数除了返回类型外其它所有的要素都相同。
+
+  - 一个拥有**顶层`const`的形参无法和另一个没有顶层`const`的形参区分**开来。
+
+    ```c++
+    Record loopup(Phone*);
+    Record loopup(Phone*const);
+    ```
+
+  - 如果形参是某种类型的指针或引用，则通过**区分其指向的是常量对象还是非常量对象可以实现函数重载**，此时的`const`是底层的。
+
+    ```c++
+    Record loopuo(Account*);
+    Record loopup(const Account*);
+    ```
+
+    - 传递一个非常量对象或者指向非常量对象的指针时，编译器会优先选用非常量版本的函数。
+
+  - 有多个函数可以匹配，但是每一个都不是明显的最佳选择，此时将发送错误称为**二义性调用**。
+
+    
+
+- 如果在内层作用域中声明名字，他将隐藏外层作用域中声明的同名实体。==**在不同的作用域中无法重载函数名**。==
+
+  - **在局部作用于中声明函数不是一个好的选择。**
+  - ==**C++中，名字查找发生在类型检查之前**==
+
 #### 特殊用途语言特性
+
+- 默认实参
+
+  - 一旦某个形参被赋予了默认值，他后面的所有形参都必须有默认值。
+
+  - 函数调用时实参按位置解析。
+
+  - **尽量让不怎么使用默认值得形参出现在前面，而让那些经常使用默认值得形参出现在后面。**
+
+  - **==在给定得作用域中一个形参只能被赋予一次默认实参==**
+
+    ```c++
+    string screen(sz,sz,char = ' ');
+    string screen(sz,sz,char = '*');//错误：重复声明
+    ```
+
+  - **==局部变量不能作为默认实参，除此之外，只要表达式得类型能转换成形参所需得类型，该表达式就能作为默认实参。==**
+
+    ```c++
+    //wd,def和ht得声明必须出现在函数之外
+    sz wd = 80;
+    char def = ' ';
+    sz ht();
+    string screen(sz = ht(),sz = wd,char = def);
+    //用作默认实参得名字在函数声明所在得作用域内解析
+    //而这些名字得求值过程发生在函数调用时。
+    ```
+
+- 内联函数和`constexpr`函数
+
+  - 内联机制用于优化规模较小，流程直接，频繁调用得函数。很多编译器都不支持内联递归函数。
+  - `constexpr`函数：函数得**==返回类型==及所有==形参的类型==都得是字面值类型**，且**函数体中必须==有且只有==一条`return`语句**。
+    - `constexpr`函数被隐式地定义为内联函数。
+    - `constexpr`函数体内也可以包含其它语句，只要这些语句在==**运行时**==不执行任何操作就行。
+    - `constexpr`函数不一定返回常量表达式。
+  - 内联函数或者`constexpr`函数通常定义在头文件中。
+  - 调试帮助`cassert`
+    - `CC -D NDEBUT main.c` 这条命令的作用等价于在`main.c`的文件的一开始写`#define NDEBUG`
 
 #### 函数匹配
 
+- 实参类型转换
+  1. 精确匹配
+     - 实参类型和形参类型相同。
+     - 实参从数组类型或函数类型转换成对应的指针类型
+     - 向实参**添加项层**`const`或者从实参中删除顶层`const`.
+  2. 通过`const`==**转换**==实现的匹配(参见4.11.2 节，第143页)。
+  3. 通过**类型提**升实现的匹配(参见4.11.1 节，第142页)。
+  4. 通过算术类型转换或指针转换实现的匹配。
+     - **所有算术类型转换的级别都一样**。
+       - `int`向`unsigned int`的转换并不比从`int`向`double`的转换级别高。
+  5. .通过类类型转换实现的匹配(参见14.9节，第514页，将详细介绍这种转换)。
+
 #### 函数指针
+
+- 把函数名作为一个值使用时，函数自动地转换成指针。
+
+  - `pf = lengthCompare或pf=&lengthCompare`
+  - `pf("hello","goodbye")或(*pf)("hello","goodbye")`等价的方式。
+  - 函数指针类型必须与重载函数中的某一个精确匹配
+
+- 函数指针形参
+
+  ```c++
+  void useBigger(const string&s1,const string&s2
+                 ,bool pf(const string&,const string&));//自动地转换成指向函数的指针
+  void useBigger(const string&s1,const string&s2
+                 ,bool (*pf)(const string&,const string&));//显示地将形参定义成指向函数的指针
+  typedef bool Func(const string&,const string*);
+  typedef decltype(lengthCompare) Func2;//Func和Func2是函数类型
+  typedef bool (*FuncP)(const string&const string&);
+  typedef decltype(lengthCompare)*FuncP2//指向函数的指针
+  ```
+
+- 返回**指向函数的指针**
+
+  - ==**必须把返回类型写成指针形式，编译器不会自动地将函数返回类型当成对应的指针类型处理。**==
+
+    ```c++
+    using F = int(int*,int);//F是函数类型，不是指针
+    using PF = int(*)(int*,int);//PF是指针类型
+    
+    auto f1(int)->int(*)(int*,int);
+    ```
+
+    
+
+
 
 
 
