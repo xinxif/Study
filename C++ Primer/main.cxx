@@ -22,14 +22,20 @@ auto re_mul(int x,int y)->int(*)(int,int)
 }
 int main(int argc,char**argv)
 {
-	std::vector<int(*)(int,int)>vpf;
-	vpf.push_back(&sum);
-	vpf.push_back(&minus);
-	vpf.push_back(multiply);
-	vpf.push_back(division);
-	std::cout<<vpf[0](1,1)<<" "
-			<<vpf[1](1,1)<<" "
-			<<vpf[2](1,1)<<" "
-			<<vpf[3](1,1)<<std::endl;
+	unsigned char P2 = 0xff;
+	unsigned char i;
+	for(i = 0;;++i)
+	{
+		if(i%8==0)
+		{
+			i=0;
+			P2=0xff;
+		}
+		P2<<=1;
+		//Delay1ms(1000);
+		std::cout<<(int)P2<<std::endl;
+	}
+	
+
 	return 0;
 }
