@@ -118,7 +118,7 @@
      int c(ld),d=ld; //正确：转换执行，且确实丢失了部分值
      ```
 
-2. 默认初始化
+2. ==**默认初始化**==
 
    - 定义于任何函数体之外的变量被初始化为0
    - 定义于函数体内部的内置类型变量将**不被初始化**。一个未被初始化的内置类型变量的值是未定义的，如果试图拷贝或以其它形式访问此类值将引发错误。
@@ -1157,6 +1157,149 @@ for(auto row:ia)
 - 静态数据成员可以是不完全类型，静态数据成员的类型可以就是它所属的类类型。
 
 - 静态成员和普通成员的另外一个区别是**我们可以使用静态成员作为默认实参**。
+
+### IO库
+
+#### IO类
+
+<img style="width: 1000px;height:250px" src="Image\IO库类型和头文件.png">
+
+- 为了**支持使用宽字符的语言**，标准库定义了一组类型和对象来操纵`wchar_t`类型数据。宽字符版本的类型和函数的名字以一个w开始。例如`wcin`、`wcou`t和 `wcerr`是分别对应`cin`、`cout`和` cerr`的宽字符版对象。==**宽字符版**==
+  - ==**`ifstream`和`istringstream`继承自`istream`。`ostream`和`ostringstream`都继承自`ostream`**==
+    - 在要求使用基类型对象的地方，我们可以用继承类型的对象来代替
+
+  - **==不能拷贝或对IO对象赋值==**
+
+
+<img style="width: 700px;height:120px" src="Image\IO库条件状态.png">
+
+<img style="width: 700px;height:320px" src="Image\IO库条件状态2.png">
+
+- **由于流可能处于错误状态，因此代码通常因该在使用一个流之前检查它是否处于良好状态。**
+
+  - ```c++
+    auto old_state = cin.rdstate();//记住cin的当前状态.
+    cin.clear();					//使cin有效
+    process_input(cin);				//使用cin
+    cin.setstate(old_state);		//将cin置为原有状态
+    ```
+
+  - `badbit`系统级错误，通常情况下，一旦`badbit`被置位，流就无法使用了。
+
+  - `failbit`：可恢复错误，如期望读取数值却读到一个字符。
+
+    - `is.clear(is.rdstate() & ~std::istream::failbit);`==**恢复上次io错误**==
+
+  - **到达文件结束位置**：`eofbit`和`failbit`都会被置位。
+
+  - 如果`badbit`、`failbit` 和`eofbit`任一个被置位，则检测流状态的条件会失败。
+
+  - 4个`iostate`类型的`constexpr`值**表示特定的位模式**。这些值用来表示特定类型的I0条件，**可以与位运算符一起使用来一次性检测或设置多个标志位**。
+
+- 管理输出缓冲
+
+  - ```c++
+    //flush刷新缓冲区，但不输出任何额外的字符: ends 向缓冲区插入一个空字符，然后刷新缓冲区。
+    cout<<"hi!"<<flush;
+    
+    //unitbuf告诉流接下来的每次写操作之后都要进行flush，nounitbuf使其恢复使用正常的系统管理的缓冲区刷新机制:
+    cout<<unitbuf;
+    //任何输出都立刻刷新
+    cout<<nounitbuf;
+    ```
+
+  - 当**一个输入流被关联到一个输出流**时，任何试图从**输入流**读取数据的操作都会先**刷新关联的输出流**。
+
+    - 标准库将cout和cin关联在一起
+    - ==`tie()`==：
+      - 不带参数，返回指向输出流的指针，没有返回空指针
+      - 带参数：`ostream`指针，将自己关联到`ostream`
+      - `cin.tie(&cout);`
+    - **==每个流同时最多关联到一个流，但多个流可以同时关联到同一个`ostream`==**
+
+#### 文件输入输出
+
+<img style="width: 700px;height:250px" src="Image\fstream.png">
+
+- 头文件`fstream`
+
+  - `ifstream`从一个给定的文件读取数据
+  - `ofstream`向一个给定的文件写入数据
+  - `fstream`读写给定文件
+  - 一旦一个文件流已经打开，它就保持与对应文件的关联。实际上，对一个已经打开的文件流调用`open`会失败，并会导致`failbit`被置位。随后的试图使用文件流的操作都会失败。为了将文件流关联到另外一个文件，必须首先关闭已经关联的文件。一旦文件成功关闭，我们可以打开新的文件
+  - ==**当一个`fstream`对象被销毁时，`close`会自动被调用**==
+
+- 文件模式
+
+  <img style="width: 700px;height:200px" src="Image\文件模式.png">
+
+  - 只要当`out`也被设定时才可设定`trunc`模式
+
+  -  只要`trunc`没被设定，就可以设定`app`模式。在`app`模式下，即使没有显式指定`out`模式，文件也总是以输出方式被打开。
+
+  - 默认情况下，即使我们没有指定`trunc,` **以out模式打开的文件也会被截断**。为了==**保留以`out`模式打开的文件的内容，我们必须同时指定app模式**==，这样只会将数据追加写到文件末尾。或**者同时指定in模式，即打开文件同时进行读写操作**
+
+  - `fstream`关联的文件默认以`in`和`out`模式打开。
+
+    ```c++
+    ofstream app("file2",ofstream::app);
+    ofstream app2("file2",ofstream::out|ofstream::app);
+    //保留被`ofstream`打开的文件中已用数据的唯一方法是显示指定app或in模式
+    ```
+
+#### string流
+
+<img style="width: 700px;height:200px" src="Image\stringstream.png">
+
+- ==`sstream`头文件==：内存IO
+  - `sstream`头文件中定义的类型都==**继承**==自我们已经使用过的`iostream`头文件中定义的类型。
+
+### 顺序容器
+
+#### 顺序容器概述
+
+<img style="width: 700px;height:200px" src="Image\顺序容器.png">
+
+<img style="width: 600px;height:800px" src="Image\容器操作.png">
+
+<img style="width: 600px;height:100px" src="Image\容器操作2.png">
+
+#### 容器库概览
+
+- `list<string>::vale_type，::reference，::const_reference`
+  - `list`中放的元素类型
+
+- 为了**创建一个容器为另一个容器的拷贝**，**两个容器的类型及其元素类型必须匹配**。不过，==**当传递迭代器参数来拷贝一个范围时**==，就**不要求容器类型是相同的了**。而且，新容器和原容器中的元素类型也可以不同，只要能将要拷贝的==**元素转换**==为要初始化的容器的元素类型即可。
+
+- `array`
+
+  - **定义一个`array`时，除了指定元素类型，还要指定容器大小。**
+  - `array<int,42> ia;`
+  - 支持数组赋值
+
+- 赋值和`swap`
+
+  <img style="width: 600px;height:200px" src="Image\顺序容器赋值操作.png">
+
+  - 
+
+#### 顺序容器操作
+
+#### vector对象是如何增长的
+
+#### 额外的string操作
+
+#### 容器适配器
+
+
+
+
+
+
+
+
+
+
 
 
 
