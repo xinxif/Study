@@ -1281,23 +1281,106 @@ for(auto row:ia)
 
   <img style="width: 600px;height:200px" src="Image\顺序容器赋值操作.png">
 
-  - 
+  - 两个容器的交换操作：`swap`元素本事并未交换，`swap`只是交换了两个容器的内部结构。
+    - 除`array`外,`swap`不对任何元素进行拷贝、删除或插入操作，因此可以保证在常数时间内完成。
+    - **元素不会被移动的事实意味着**，除`string `外，**指向容器的迭代器、引用和指针在swap操作之后都不会失效**。它们==**仍指向swap操作之前所指向的那些元素**==。但是，在`swap`之后，这些元素已经属于不同的容器了。
 
 #### 顺序容器操作
 
+<img style="width: 600px;height:400px" src="Image\顺序容器添加元素.png">
+
+- ==**`deque`**==和`vector`一样提供随机访问元素的能力。
+
+- 如果我们**传递给`insert`一对迭代器**，**他们不能指向添加元素的目标容器**。
+
+- `emplace`操作
+
+  - `emplace_front,emplace,emplace_back`，对应`push_front,insert,push_back`，**构造元素**：将==**参数传递给元素类型的构造函数**==。
+    - 调用`emplace_back`时，会在容器管理的内存空间中直接创建对象，而调用`push_back`则会创建一个局部临时对象，并将其压入容器中。
+
+  <img style="width: 600px;height:300px" src="Image\顺序容器访问.png">
+
+  <img style="width: 600px;height:300px" src="Image\顺序容器的删除操作.png">
+
+- `forward_list`
+
+  <img style="width: 600px;height:300px" src="Image\forward_list.png">
+
+- 顺序容器大小操作
+
+  - `c.resize(n)`调整`c`的大小位`n`个元素，若`n<c.size()`,则多出的元素被丢弃。若必须添加新元素，对**新元素进行值初始化**。
+  - `c.resize(n,t)`调整`c`的大小位`n`个元素。任何新添加的元素都初始化为值`t`
+
+- 容器操作可能使迭代器失效
+
+  - `vector,string`
+    - 如果**存储空间未重新分配**，指向==**插入位置之前**==的元素的迭代器、指针和引用仍有效，但==**指向插入位置之后**==元素的迭代器、指针和引用将会失效。
+    - 对于`vector`和`string`，指向被删元素之前元素的迭代器、引用和指针仍有效。注意:当我们==**删除元素时，尾后迭代器总是会失效**==。
+  - `deque`
+    - 插入到==**除首尾位置之外的任何位置都会导致**==迭代器、指针和引用失效。如果在首尾位置添加元素，迭代器会失效，但==**指向存在的元素的引用和指针不会失效**==。
+    - 如果在==**首尾之外的任何位置删除元素**==，那么指向被删除元素外其他元素的迭代器、引用或指针也会失效。如果是删除 deque 的尾元素，则尾后迭代器也会失效，但其他迭代器、引用和指针不受影响;如果是删除首元素，这些也不会受影响。
+
 #### vector对象是如何增长的
+
+- 容器大小管理操作
+  - `shrink_to_fit()`
+    - 在新标准库中，我们可以调用`shrink_to_fit`来要求`deque`、`vector`或`string`**退回不需要的内存空间**。此函数指出我们不再需要任何多余的内存空间。但是，==**具体的实现可以选择忽略此请求**==。也就是说,调用`shrink_to_fit`也并不保证一定退回内存空间。
+  - `capacity()`
+  - `reserve(n)`
+    - 只有当**需要的内存空间超过当==前容量时==**，`reserve`调用才会改变`vector`的容量。如果需求大小大于当前容量，`reserve`至少分配与需求一样大的内存空间（可能更大)。
+    - 如果需求大小小于或等于当前容量，`reserve` 什么也不做。特别是，当需求大小小于当前容量时，容器不会退回内存空间。因此，在调用`reserve`之后，`capacity`将会大于或等于传递给`reserve`的参数。
+    - 调用`resize`或`reserve`时**给定的大小超过当前**`capacity`，`vector`才可能重新分配内存空间。
 
 #### 额外的string操作
 
+- 构造string的其它方法
+
+  <img style="width: 600px;height:170px" src="Image\构造string的其它方法.png">
+
+  <img style="width: 600px;height:70px" src="Image\substr.png">
+
+- 改变`string`的其它方法
+
+  - `string`的`insert`和`erase`的其它版本
+
+    ```c++
+    std::string s;
+    s.insert(s.size(),5,'!');//在s的末尾插入5个感叹号
+    s.erase(s.size()-5,5);	//从s删除最后5个字符
+    const char *cp = "Stately,plump Buck";
+    s.assign(cp,7);			//从cp的开始处，替换7个字符
+    s.insert(s.size(),cp+7);//从末尾插入，直到cp结束
+    s.insert(0,s2);			//在s中位置之前插入s2的拷贝
+    s.insert(0,s2,0,s2.size());//在s[1]之前插入s2中s2[0]开始的s2.size ()个字符
+    
+    ```
+
+- 额外的`string`操作
+
+  <img style="width: 600px;height:400px" src="Image\额外的string操作.png">
+
+  <img style="width: 600px;height:200px" src="Image\修改string的操作2.png">
+
+  ```c++
+  s2.replace(11,3,"5th");
+  //插入的文本恰好与删除的文本一样长。这不是必须的，可以插入一个更长或更短的string
+  s.replace(11,3,"Fifth");
+  //删除了3个字符，但在其位置插入了5个新字符
+  ```
+
+  - `assign`总是替换`string`中的所有内容
+  - `append`总是将新字符追加到`string`末尾
+
+- `string`搜索操作
+
+  <img style="width: 600px;height:300px" src="Image\string的搜索操作.png">
+
+  <img style="width: 600px;height:200px" src="Image\string的搜索操作2.png">
+
+  - 6个不同的搜索函数，每个函数都有4个重载版本。返回`string::size_type`值，标识匹配的位置。搜索失败，返回`string::npos`的`static`成员，标准库将`npos`定义为一个`const string::size_type`类型，并且初始化为-1
+
+
 #### 容器适配器
-
-
-
-
-
-
-
-
 
 
 
