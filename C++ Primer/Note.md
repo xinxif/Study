@@ -1371,20 +1371,236 @@ for(auto row:ia)
   - `assign`总是替换`string`中的所有内容
   - `append`总是将新字符追加到`string`末尾
 
-- `string`搜索操作
+- `string`**搜索**操作
 
   <img style="width: 600px;height:300px" src="Image\string的搜索操作.png">
 
   <img style="width: 600px;height:200px" src="Image\string的搜索操作2.png">
 
   - 6个不同的搜索函数，每个函数都有4个重载版本。返回`string::size_type`值，标识匹配的位置。搜索失败，返回`string::npos`的`static`成员，标准库将`npos`定义为一个`const string::size_type`类型，并且初始化为-1
+  
+- `compare`函数
+
+  - `str`与指定字符串的关系等于0，大于正数，小于负数
+  - <img style="width: 600px;height:250px" src="Image\compare函数.png">
+  - <img style="width: 600px;height:250px" src="Image\string的数值之间的操作.png">
 
 
 #### 容器适配器
 
+<img style="width: 600px;height:300px" src="Image\容器适配器接受的操作.png">
 
+- 三个**顺序容器**适配器：`stack`，`queue`和`priority_queue`。一个容器适配器接收一种已有的容器类型，使其行为看起来像一种不同的类型。==**`stack`不接受`array`和`forward_list`**==
+  - **每个适配器都定义两个构造函数**：**默认构造函数创建一个空对象**，接受一个容器的构造函数**拷贝该容器来==初始化适配器==**。例如，假定 `deq`是一个`deque<int>`，我们可以用`deq`来初始化一个新的`stack`。
+  - ==**默认情况下**==，`stack`和 `queue`是基于`deque`实现的，`priority_queue`是在`vec
+    tor`之上实现的
+    - `stack<string,vector<string>> str_stk`在`vector`上实现的空栈
+  - `queue`和`priority_queue`适配器定义==**在`queue`头文件中**==。
+  - `priority_queue`为队列中元素建立优先级。**新加入的元素会排在所有优先级比它低的已有元素之前**。
 
+### 泛型算法
 
+#### 概述
 
+- ==**算法总是通过迭代器操作容器，无法改变容器的大小，应确保目的容器拥有足够多的空间可以容纳元素**==
+  - ==**容器要拥有足够多的size而不是capacity，算法不具备向容器添加元素的功能**==
 
+- `numeric`头文件中定义了一组数值泛型算法，`algorithm`
+  - 通常情况下，算法==**遍历范围**==，对其中的每个元素进行一些处理
+  - `find`返回第一个等于给定值的元素的迭代器，没有，返回第二个参数。
 
+#### 初始泛型算法
+
+- 附录A列出了所有算法
+  - `accumulate`定义在`numeric`中，函数接受三个参数，前两个指出了需要求和的元素的范围，第三个参数是**和的初始值**。
+    - `string sum = accumulate(v.cbegin(),v.cend(),string(""));`
+    - **第三个参数的类型**决定了函数中使用**哪个加法运算符**以及**返回值的类型**
+  - `equal`：确定两个序列是否保存相同的值，它将第一个序列中的每个元素与第二个序列中的对应元素进行比较。对应元素都相等返回`true`否则返回`false`
+    - **那些只接受一个单一迭代器来表示第二个序列的算法，==都假定第二个序列至少与第一个序列一样长。==**
+  - `fill`
+    - `fill(vec.begin(),vec.end(),100)`将给定值赋予序列中的每个元素
+    - `fill_n(dest,n,val)`：将**给定值赋予迭代器指向的元素**开始的**指定个元素**。
+  - `back_inserter` 头文件`iterator`
+    - `back_inserter`**接受一个指向容器的引用**，返回一个与该容器绑定的插入迭代器当我们通过此迭代器赋值时，赋值运算符会调用`push_back`将一个具有给定值的元素添加到容器中。
+    - `fill_n(back_inserter(vec),10,0);`
+  - `copy`
+    - 三个迭代器：前两个标识一个输入范围，第三个表示**目的序列的起始位置**。
+    - 返回的是**目的位置迭代器(递增后)的值**。
+  - `replace`
+    - `replace(vec.begin(),vec.end(),0,42);`将所有值为0的元素改为42
+    - 多个算法都提供所谓的“拷贝”版本。这些算法计算新元素的值，但不会将它们放置在输入序列的末尾，而是创建一个新序列保存这些结果。
+      - `replace_copy`
+      - `replace_copy(vec.begin(),vec.end(),back_inserter(lst),0,42)`
+      - 此算法接受额外的第三个迭代器参数，指出调整后序列的保存位置。
+  - `sort`
+    - `stable_sort`：这种排序算法维持相等元素的原有位置
+  - `unique`
+    - 先调用排序然后重排输入序列，使得每个元素只出现一次，返回指向==**不重复区域之后一个位置**==的迭代器。
+    - `unique_copy`
+      - 第三个迭代器，表示==**拷贝不重复元素的目的位置**==。
+  - `partition`
+    - 对容器进行划分，使得谓词为true的在前半部分，false在后半部分。
+    - 返回最后一个使谓词为true的元素之后的位置
+  - `find_if`
+    - 第三个参数一元谓词，返回第一个使谓词返回非0的元素，不存在这样的元素返回尾迭代器
+  - `transform`
+    - 前两个迭代器表示输入序列，第三个迭代器表示目的的位置，算法对**输入序列中每个元素可调用可调用对象，并将结果写到目的位置**。
+  - `bind`
+    - 头文件`functional`名称空间`std::placeholder::_1`
+    - `auto newCallable = bind(callable,arg_list)`
+    - `arg_list` 是一个逗号分隔的参数列表,对应给定的`callable`的参数。即，当我们调用`newCallable`时，`newCallable` 会调用`callable`,并传递给它`arg_list`中的参数。
+    - **`arg_list`中`_n`的名字，表示`newcallable`的参数**
+      - `auto g = bind(f,a,b,_2,c_1)`
+      - ==**`g`的第一个参数绑定到`_1`上第二个参数绑定到`_2`上**==
+    - ==**bind的那些不是占位符的参数被拷贝到`bind`返回的的调用对象中**==
+      - `bind(print,ref (os),_1,' ')`函数`ref`返回一个对象，包含给定的引用，此对象是可以拷贝的。标准库中还有一个`cref`函数，生成一个保存`const`引用的类。与`bind`一样，函数`ref`和`cref` 也定义在头文件`functiona`l中。
+
+#### 定制操作
+
+- `lambda`表达式
+
+  - `[capture list](parameter list)->return type {function body}`
+
+  - **忽略括号和参数列表等价与指定一个空的参数列表**。
+
+  - `lambda`不能有默认实参
+
+  - 一个`lambda`可以出现在一个函数中，使用其局部变量，但它只能使用那些明确指明的变量。一个`lambda`通过**将局部变量包含在其捕获列表中**来指出将会使用这些变量。
+
+  - 当定义一个`lambda`时，编译器生成一个与`lambda`对应的新的(未命名的)类类型。我们将在14.8.1节(第507页)介绍这种类是如何生成的。目前，可以这样理解，**当向一个函数传递一个`lambda`时，同时定义了一个新类型和该类型的一一个对象:传递的参数就是此编译器生成的类类型的未命名对象。类似的，当使用`auto`定义一个用`lambda` 初始化的变量时，定义了一个从`lambda`生成的类型的对象**。默认情况下，从`lambda`生成的类都包含一个对应该`lambda`所捕获的变量的数据成员。类似任何普通类的数据成员，`lambda`的数据成员也在`lambda`对象创建时被初始化。
+
+  - 变量的**捕获方式也可以是值或引用**。**被捕获的变量的值是在`lambda`创建时拷贝，而不是调用时拷贝。**
+
+  - ==**隐式捕获**==
+
+    <img style="width: 600px;height:300px" src="Image\lambda捕获列表.png">
+
+    - **显示捕获的变量必须使用与隐式捕获不同的方式**
+    
+  - 对于**一个被拷贝的变量`lambda`不会改变其值**，如果我们希望改变一个被捕获的变量的值，就==**必须在参数列表首加上关键字`mutable`**==
+  
+    - `auto f =[i]()mutable{return ++i;};`
+  
+  - **只有一条return语句`lambda`不用指定返回类型。** 反之编译器推断`return`是`void`
+
+#### 再探迭代器
+
+1. 插入迭代器：接受一个容器，生成一个迭代器，能实现向给定容器添加元素
+
+   - `it=t`：在`it`**指定的当前位置插入值**`t`。假定`c`是`it`绑定的容器，依赖于插入迭代器的不同种类，此赋值会分别调用`c.push. _back(t)`、`c.push_ front(t)`或`c.insert(t,p)`，其中`P`为传递给`inserter`的迭代器位置
+
+   - `*it,++it,it++`：这些操作虽然存在，但不会对`it`做任何事情。每个操作都返回`it`
+
+     - `back_inserter`：创建一个`push_back`迭代器
+
+     - `front_inserter`：创建一个`push_front`的迭代器
+
+     - `inserter`：创建一使用`insert`的迭代器，**此函数接受第二参数，这个参数必须是一个指向给定容器的迭代器**，==元素被插入到给定迭代器所表示的元素之前==
+
+2. `iostream`迭代器：迭代器将他们对应的流当作一个特定类型的元素序列来处理
+
+   - `istream_iterator`：读取输入流
+
+     - <img style="width: 500px;height:200px" src="Image\istream_iterator.png">
+
+     - 当创建一个流迭代器时，==**必须指定迭代器将要读写的对象类型**==。一个
+       `istream_iterator` 使用`>>`来读取流。因此，`istream_iterator`要**读取的类型必须定义了输入运算符**。当创建一个`istream_ iterator`时，我们可以将它绑定到一个流。当然，我们还可以==**默认初始化迭代器，这样就创建了一个可以当作尾后值使用的迭代器**==。
+
+       ```c++
+       ifstream in("afile");
+       istream_iterator<string> str_it(in);
+       istream_iterator<string> eof;
+       while(str_it!=eof)
+       {
+           //后置递增运算会从流中读取下一个值，向前推进，但返回的是迭代器的旧值。迭代器的旧值包含了从流中读取的前一个值，对迭代器进行解引用就能获得此值。
+           vec.push_back(*str_it++);
+       }
+       
+       //从迭代器范围构造vec;
+       std::vector<std::string> vec(str_it,eof);
+       c
+       istream_iterator<int> in(cin),eof;
+       std::cout<<accumulate(in,eof,0)<<std::endl;
+       ```
+
+     - **==对于一个绑定到流的迭代器，一旦其关联的流遇到文件尾或IO错误，迭代器的值就与尾后迭代器相等==**
+
+     - 当我们将一个`istream_iterator`绑定到一个流时，标准库并不保证迭代器立即从流读取数据。具体实现可以推迟从流中读取数据，直到我们使用迭代器时才真正读取。标准库中的实现所保证的是，在我们第一次解引用迭代器之前，从流中读取数据的操作已经完成了。
+
+   - `ostream_iterator`：向一个流写数据
+
+     <img style="width: 500px;height:200px" src="Image\ostream_iterator.png">
+
+     - **可以**提供第二个参数，它是一个字符串，在输出每个元素后，都会打印这个字符串，**==这个字符串必须是一个C风格的字符串==**
+     - ==**不允许空的或表示尾后位置的`ostream_iterator`**==
+
+3. 反向迭代器
+
+   - **反向迭代器需要递减运算符**，我们只能从即支持`++`也支持`--`的迭代器来定义反向迭代器。
+   
+     <img style="width: 700px;height:200px" src="Image\反向迭代器和普通迭代器之间的关系.png">
+   
+     ```c++
+     std::string str("FIRST,MIDDLE,LAST");
+     auto rcomma = std::find(str.rbegin(), str.rend(), ',');
+     //转换成正常的迭代器。正向打印单词
+     std::cout<<std::string(rcomma.base(),str.end())<<std::endl;
+     ```
+   
+   - `rcomma`和`rcomma.base()`**指向不同的元素**，`line.crbegin` 和`line.cend()`也是如此。==**这些不同保证了元素范围无论是正向处理还是反向处理都是相同的**==。
+   
+   - `vector<int>::reverse_iterator be`反向迭代器
+
+#### 泛型算法结构
+
+1. 迭代器类型
+
+   1. 输入迭代器：读取序列中的元素，**必须支持的操作**
+
+      - **==只读，不写；单遍扫描，只能递增==**
+
+      - `==`,`!=`
+
+      - 前置和后置`++`
+
+      - 读元素的解引用`*`,箭头运算符`->`
+
+   2. 输出迭代器
+
+      - 只写，不读:单遍扫描，只能递增
+
+      - 用于推进迭代器的**前置和后置递增运算**`++`
+
+      - 解引用运算符`*`,只出现在赋值运算符的左侧(向一个已经解引用的输出迭代器
+        赋值，就是将值写入它所指向的元素)
+
+   3. 前向迭代器
+      - 可读写;多遍扫描，只能递增
+
+   4. 双向迭代器
+      - 可读写;多遍扫描，可递增递减
+
+   5. 随机访问迭代器
+      - 可读写，多遍扫描，支持全部迭代器运算
+
+2. 算法形参模式
+   - **接受单个目标迭代器的算法**
+     - 如果`dest`是一个直接指向容器的迭代器，那么算法将输出数据写到容器中已经存在的元素内。
+     - 向输出迭代器写入数据的算法都假定目标空间足够容纳写入的数据。
+   - 接受第二个输入序列的算法
+     - 接受**单独的**`beg2`或是**接受`beg2`和`end2`**的算法用这些迭代器**表示第二个输入范围**。这些算法通常**使用第二个范围中的元素与第一个输入范围结合来进行一些运算**。
+   - ==**一些算法的重载形式传递一个谓词**==：替换默认的`<`或`==`运算符
+   - ==**`_if`算法**==
+     - `find(beg,end,val)`,`find_if(beg,end,pred)`
+     - 这两个算法提供了命名上差异的版本，而非重载版本，因为两个版本的算法都接受相同数目的参数。因此可能产生重载歧义。
+     - **==拷贝元素版本和不拷贝版本==**：写到额外目的空间算法都在名字后面附加一个`_copy`
+
+#### 特定容器算法
+
+<img style="width: 500px;height:200px" src="Image\list和forward_list.png">
+
+<img style="width: 500px;height:100px" src="Image\list和forward_list2.png">
+
+<img style="width: 500px;height:250px" src="Image\splice.png">
+
+- ==对于`list`和`forward list`,应该优先使用成员函数版本的算法而不是通用算法。==
