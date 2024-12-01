@@ -133,7 +133,7 @@
 
    - C++标准库保留了一些名字，**用户自定义的标识符不能连续出现两个下划线，也不能以下划线紧连大写字母开头，定义在函数体外的标识符不能以下划线开头。**
 
-     <img style="width: 800px;height:400px" src="Image\C++关键字.png">
+     <img style="width: 1200px;height:600px" src="Image\C++关键字.png">
 
    - **作用域中一旦声明了某个名字**，它所**嵌套着的所有作用域中都能访问该名字**。同时，**允许在内层作用域中重新定义外层作用域已有的名字**。
 
@@ -337,7 +337,7 @@
    | `string s3="value"`  | 等价于s3("value")，s3是字面值"value"的副本                  |
    | `string s4(n,'c')`   | 把s4初始化为由连续n个字符c组成的串                          |
 
-   <img style="width: 800px;height:300px" src="Image\string的操作.png">
+   <img style="width: 1200px;height:500px" src="Image\string的操作.png">
 
    - 如果使用**等号初始化**一个变量，实际上执行的是==**拷贝初始化**==( copy initialization), 编译器把等号右侧的初始值拷贝到新创建的对象中去。与之相反，如果**不使用等号**，则执行的是==**直接初始化**==( direct initialization )。
    - `string s8=string(10,'c');`
@@ -379,7 +379,7 @@
 
 2. 初始化`vector`对象
 
-   - <img style="width: 900px;height:200px" src="Image\初始化vector.png">
+   - <img style="width: 900px;height:300px" src="Image\初始化vector.png">
 
    - 其二，如果**提供的是一个类内初始值**(参见2.6.1节，第64页)，则**只能使用拷贝初始化**或**使用花括号的形式初始化**。第三种特殊的要求是，如果**提供的是初始元素值的列表，则只能把初始值都放在花括号里进行列表初始化**，而不能放在圆括号里
 
@@ -405,7 +405,7 @@
 
    - 如果循环体内部包含有向`vector`对象添加元素的语句，则不能使用范围for循环。==**范围for语句体内不应该改变其所遍历序列的大小**==。
 
-   - <img style="width: 900px;height:200px" src="Image\vector支持的操作.png">
+   - <img style="width: 900px;height:300px" src="Image\vector支持的操作.png">
 
    - 使用vector的`size_type`，`vector<int>::size_type`
 
@@ -425,7 +425,7 @@
 
 2. 迭代器运算
 
-   <img style="width: 900px;height:300px" src="Image\vector和string迭代器支持的运算.png">
+   <img style="width: 900px;height:400px" src="Image\vector和string迭代器支持的运算.png">
 
    - 迭代器相减是两个迭代器的距离。类型名为`difference_type`的带符号整形数。
 
@@ -494,9 +494,9 @@ for(auto row:ia)
 
 **同一组内**的运算符**优先级相同**，组的位置越**靠前**组内的运算符**优先级越高**。
 
-<img style="width: 900px;height:600px" src="Image\运算符优先级表1.png">
+<img style="width: 1200px;height:700px" src="Image\运算符优先级表1.png">
 
-<img style="width: 900px;height:900px" src="Image\运算符优先级表2.png">
+<img style="width: 1200px;height:1000px" src="Image\运算符优先级表2.png">
 
 - 函数调用也是一种特殊的运算符，它对运算对象的数量没有限制。
 
@@ -691,7 +691,7 @@ for(auto row:ia)
   cout<<item1+item2<<endl;
   ```
 
-  - `runtime_error`是标准异常类型的一种，==定义在==`stdexcept`==头文件==中，我们必须初始化`runtime_ error`的对象，方式是**给它提供一个string对象或者一个C风格的字符串**。
+  - `runtime_error`是标准异常类型的一种，==定义在==`stdexcept`==头文件==中，我们必须初始化`runtime_ error`的对象，方式是**给它提供一个string对象或者一个C风格的字符串**。和`out_of_range`
   - `throw`后紧跟一个表达式，==**表达式的类型就要抛出异常的类型**==。
 
   ```c++
@@ -709,7 +709,7 @@ for(auto row:ia)
   - 跟在`try`块之后的**是一个或多个`catch`子句**。`catch`子句包括三部分:关键字`catch`、**括号内一个(可能未命名的)对象的声明**(称作异常声明，exception declaration)以及一个块。当选中了某个catch子句处理异常之后，执行与之对应的块。catch一旦完成，程序跳转到try语句块最后一个catch**子句之后的那条语句继续执行**。
   - try**语句块中的program-statements 组成程序的正常逻辑**，像其他任何块一样，program-statements可以有包括声明在内的任意C++语句。一如往常， ==**try语句块内声明的变量在块外部无法访问，特别是在catch子句内也无法访问。**==
   - 寻找处理代码的过程与函数调用链刚好**相反**。当**异常被抛出时**，**首先搜索抛出该异常的函数。如果没找到匹配的`catch`子句，终止该函数**，**并在调用该函数的函数中继续寻找。如果还是没有找到匹配的`catch`子句，这个新的函数也被终止，继续搜索调用它的函数。以此类推**，沿着程序的执行路径逐层回退，直到找到适当类型的`catch`子句为止。如果**最终还是没能找到任何匹配的`catch`子句，程序转到名为`terminate`的标准库函数**。该函数的行为与系统有关，一般情况下， **执行该函数将导致程序非正常退出**。
-  - <img style="width: 1000px;height:250px" src="Image\stdexcept.png">
+  - <img style="width: 1000px;height:400px" src="Image\stdexcept.png">
   - `exception`**头文件**定义了最通用的异常类`exception`，它只报告异常的发送，不提供任何额外信息。
   - `new`**头文件**定义了`bad_alloc`异常类型，这种类型将在12.1.2节(第407页)详
     细介绍。
@@ -750,7 +750,7 @@ for(auto row:ia)
   - 如果函数的实参数量未知但是全部实参的类型都相同，我们可以使用
     `initializer_ list` 类型的形参。
 
-    <img style="width: 1000px;height:250px" src="Image\initializer_list.png">
+    <img style="width: 1000px;height:400px" src="Image\initializer_list.png">
 
     ```c++
     //expected和actual是string对象
@@ -1158,11 +1158,13 @@ for(auto row:ia)
 
 - 静态成员和普通成员的另外一个区别是**我们可以使用静态成员作为默认实参**。
 
+## 第二部分
+
 ### IO库
 
 #### IO类
 
-<img style="width: 1000px;height:250px" src="Image\IO库类型和头文件.png">
+<img style="width: 1000px;height:400px" src="Image\IO库类型和头文件.png">
 
 - 为了**支持使用宽字符的语言**，标准库定义了一组类型和对象来操纵`wchar_t`类型数据。宽字符版本的类型和函数的名字以一个w开始。例如`wcin`、`wcou`t和 `wcerr`是分别对应`cin`、`cout`和` cerr`的宽字符版对象。==**宽字符版**==
   - ==**`ifstream`和`istringstream`继承自`istream`。`ostream`和`ostringstream`都继承自`ostream`**==
@@ -1170,10 +1172,9 @@ for(auto row:ia)
 
   - **==不能拷贝或对IO对象赋值==**
 
+<img style="width: 1400px;height:250px" src="Image\IO库条件状态.png">
 
-<img style="width: 700px;height:120px" src="Image\IO库条件状态.png">
-
-<img style="width: 700px;height:320px" src="Image\IO库条件状态2.png">
+<img style="width: 1400px;height:640px" src="Image\IO库条件状态2.png">
 
 - **由于流可能处于错误状态，因此代码通常因该在使用一个流之前检查它是否处于良好状态。**
 
@@ -1219,7 +1220,7 @@ for(auto row:ia)
 
 #### 文件输入输出
 
-<img style="width: 700px;height:250px" src="Image\fstream.png">
+<img style="width: 1400px;height:500px" src="Image\fstream.png">
 
 - 头文件`fstream`
 
@@ -1231,7 +1232,7 @@ for(auto row:ia)
 
 - 文件模式
 
-  <img style="width: 700px;height:200px" src="Image\文件模式.png">
+  <img style="width: 1400px;height:350px" src="Image\文件模式.png">
 
   - 只要当`out`也被设定时才可设定`trunc`模式
 
@@ -1249,7 +1250,7 @@ for(auto row:ia)
 
 #### string流
 
-<img style="width: 700px;height:200px" src="Image\stringstream.png">
+<img style="width: 1400px;height:300px" src="Image\stringstream.png">
 
 - ==`sstream`头文件==：内存IO
   - `sstream`头文件中定义的类型都==**继承**==自我们已经使用过的`iostream`头文件中定义的类型。
@@ -1258,11 +1259,11 @@ for(auto row:ia)
 
 #### 顺序容器概述
 
-<img style="width: 700px;height:200px" src="Image\顺序容器.png">
+<img style="width: 1400px;height:400px" src="Image\顺序容器.png">
 
-<img style="width: 600px;height:800px" src="Image\容器操作.png">
+<img style="width: 1200px;height:1000px" src="Image\容器操作.png">
 
-<img style="width: 600px;height:100px" src="Image\容器操作2.png">
+<img style="width: 1200px;height:200px" src="Image\容器操作2.png">
 
 #### 容器库概览
 
@@ -1279,7 +1280,7 @@ for(auto row:ia)
 
 - 赋值和`swap`
 
-  <img style="width: 600px;height:200px" src="Image\顺序容器赋值操作.png">
+  <img style="width: 1200px;height:300px" src="Image\顺序容器赋值操作.png">
 
   - 两个容器的交换操作：`swap`元素本事并未交换，`swap`只是交换了两个容器的内部结构。
     - 除`array`外,`swap`不对任何元素进行拷贝、删除或插入操作，因此可以保证在常数时间内完成。
@@ -1287,7 +1288,7 @@ for(auto row:ia)
 
 #### 顺序容器操作
 
-<img style="width: 600px;height:400px" src="Image\顺序容器添加元素.png">
+<img style="width: 1200px;height:600px" src="Image\顺序容器添加元素.png">
 
 - ==**`deque`**==和`vector`一样提供随机访问元素的能力。
 
@@ -1298,13 +1299,13 @@ for(auto row:ia)
   - `emplace_front,emplace,emplace_back`，对应`push_front,insert,push_back`，**构造元素**：将==**参数传递给元素类型的构造函数**==。
     - 调用`emplace_back`时，会在容器管理的内存空间中直接创建对象，而调用`push_back`则会创建一个局部临时对象，并将其压入容器中。
 
-  <img style="width: 600px;height:300px" src="Image\顺序容器访问.png">
+  <img style="width: 1200px;height:400px" src="Image\顺序容器访问.png">
 
-  <img style="width: 600px;height:300px" src="Image\顺序容器的删除操作.png">
+  <img style="width: 1200px;height:400px" src="Image\顺序容器的删除操作.png">
 
 - `forward_list`
 
-  <img style="width: 600px;height:300px" src="Image\forward_list.png">
+  <img style="width: 1200px;height:600px" src="Image\forward_list.png">
 
 - 顺序容器大小操作
 
@@ -1335,9 +1336,9 @@ for(auto row:ia)
 
 - 构造string的其它方法
 
-  <img style="width: 600px;height:170px" src="Image\构造string的其它方法.png">
+  <img style="width: 1200px;height:230px" src="Image\构造string的其它方法.png">
 
-  <img style="width: 600px;height:70px" src="Image\substr.png">
+  <img style="width: 1200px;height:140px" src="Image\substr.png">
 
 - 改变`string`的其它方法
 
@@ -1357,9 +1358,9 @@ for(auto row:ia)
 
 - 额外的`string`操作
 
-  <img style="width: 600px;height:400px" src="Image\额外的string操作.png">
+  <img style="width: 1200px;height:500px" src="Image\额外的string操作.png">
 
-  <img style="width: 600px;height:200px" src="Image\修改string的操作2.png">
+  <img style="width: 1200px;height:250px" src="Image\修改string的操作2.png">
 
   ```c++
   s2.replace(11,3,"5th");
@@ -1373,22 +1374,22 @@ for(auto row:ia)
 
 - `string`**搜索**操作
 
-  <img style="width: 600px;height:300px" src="Image\string的搜索操作.png">
+  <img style="width: 1200px;height:300px" src="Image\string的搜索操作.png">
 
-  <img style="width: 600px;height:200px" src="Image\string的搜索操作2.png">
+  <img style="width: 1200px;height:300px" src="Image\string的搜索操作2.png">
 
   - 6个不同的搜索函数，每个函数都有4个重载版本。返回`string::size_type`值，标识匹配的位置。搜索失败，返回`string::npos`的`static`成员，标准库将`npos`定义为一个`const string::size_type`类型，并且初始化为-1
   
 - `compare`函数
 
   - `str`与指定字符串的关系等于0，大于正数，小于负数
-  - <img style="width: 600px;height:250px" src="Image\compare函数.png">
-  - <img style="width: 600px;height:250px" src="Image\string的数值之间的操作.png">
+  - <img style="width: 1200px;height:500px" src="Image\compare函数.png">
+  - <img style="width: 1200px;height:500px" src="Image\string的数值之间的操作.png">
 
 
 #### 容器适配器
 
-<img style="width: 600px;height:300px" src="Image\容器适配器接受的操作.png">
+<img style="width: 1200px;height:600px" src="Image\容器适配器接受的操作.png">
 
 - 三个**顺序容器**适配器：`stack`，`queue`和`priority_queue`。一个容器适配器接收一种已有的容器类型，使其行为看起来像一种不同的类型。==**`stack`不接受`array`和`forward_list`**==
   - **每个适配器都定义两个构造函数**：**默认构造函数创建一个空对象**，接受一个容器的构造函数**拷贝该容器来==初始化适配器==**。例如，假定 `deq`是一个`deque<int>`，我们可以用`deq`来初始化一个新的`stack`。
@@ -1473,7 +1474,7 @@ for(auto row:ia)
 
   - ==**隐式捕获**==
 
-    <img style="width: 600px;height:300px" src="Image\lambda捕获列表.png">
+    <img style="width: 1200px;height:600px" src="Image\lambda捕获列表.png">
 
     - **显示捕获的变量必须使用与隐式捕获不同的方式**
     
@@ -1501,7 +1502,7 @@ for(auto row:ia)
 
    - `istream_iterator`：读取输入流
 
-     - <img style="width: 500px;height:200px" src="Image\istream_iterator.png">
+     - <img style="width: 1000px;height:400px" src="Image\istream_iterator.png">
 
      - 当创建一个流迭代器时，==**必须指定迭代器将要读写的对象类型**==。一个
        `istream_iterator` 使用`>>`来读取流。因此，`istream_iterator`要**读取的类型必须定义了输入运算符**。当创建一个`istream_ iterator`时，我们可以将它绑定到一个流。当然，我们还可以==**默认初始化迭代器，这样就创建了一个可以当作尾后值使用的迭代器**==。
@@ -1529,7 +1530,7 @@ for(auto row:ia)
 
    - `ostream_iterator`：向一个流写数据
 
-     <img style="width: 500px;height:200px" src="Image\ostream_iterator.png">
+     <img style="width: 1000px;height:300px" src="Image\ostream_iterator.png">
 
      - **可以**提供第二个参数，它是一个字符串，在输出每个元素后，都会打印这个字符串，**==这个字符串必须是一个C风格的字符串==**
      - ==**不允许空的或表示尾后位置的`ostream_iterator`**==
@@ -1597,10 +1598,240 @@ for(auto row:ia)
 
 #### 特定容器算法
 
-<img style="width: 500px;height:200px" src="Image\list和forward_list.png">
+<img style="width: 1000px;height:200px" src="Image\list和forward_list.png">
 
-<img style="width: 500px;height:100px" src="Image\list和forward_list2.png">
+<img style="width: 1000px;height:100px" src="Image\list和forward_list2.png">
 
-<img style="width: 500px;height:250px" src="Image\splice.png">
+<img style="width: 1000px;height:250px" src="Image\splice.png">
 
 - ==对于`list`和`forward list`,应该优先使用成员函数版本的算法而不是通用算法。==
+
+### 关联容器
+
+<img style="width: 1000px;height:400px" src="Image\关联容器类型.png">
+
+#### 使用关联容器
+
+1. 八个容器的不同体现在**三个维度**上
+   - `set`或`map`
+   - 不重复关键字或者允许重复关键字
+   - 顺序或无效，允许重复关键字`multi`，**不保持关键字按顺序存储**，`unordered`
+
+#### 关联容器概述
+
+1. ==**关联容器不支持顺序容器的位置相关的操作**==，例如`push_front`，原因是关联容器中元素是根据关键字存储的。
+
+   - 关联容器的迭代器**都是双向的**。
+
+   `map<string,int>m = {{key,value},{key,value}}`
+
+2. 关键字类型要求
+
+   - **对于有序容器**：关键字类型必须定义元素的比较方法。默认使用`<`运算符来比较关键字。
+   - ==**严格弱序**==
+     - 两个关键字不能同时“小于等于”对方
+     - 如果k1“小于等于”k2，且k2“小于等于”k3，那么k1必须“小于等于”k3。
+     - 如果存在两个关键字，任何一个都不“小于等于”另一个，那么我们称这两个关键字是“等价”的。
+   - **自定义的操作**
+     - `std::map<std::string, int, decltype(compare)*> myMap(compare);`
+     - 比较操作类型**应该是一种函数指针类型**。
+
+3. `pair`类型`utility`头文件
+
+   <img style="width: 1000px;height:400px" src="Image\pair上的操作.png">
+
+   ```c++
+   pair<string,int>
+       process(vector<string>&v)
+   {
+       //处理v
+       if(!v.empty())
+       {
+           return {v.back(),v.back().size()};//列表初始化
+       }
+       else
+       {
+           return pair<string,itn>();//隐式构造返回值
+       }
+   }
+   ```
+
+#### 关联容器操作
+
+<img style="width: 1000px;height:300px" src="Image\关联容器的额外类型.png">
+
+1. 关联容器迭代器
+   - **解引用一个==关联容器迭代器时==**，会得到一个类型为容器的`value_type`的值的引用，对`map`，`value_type`是一个`pair`类型，`first`成员保存`const`的关键字。
+   - `set`类型同时定义了`iterator`和`const_iterator`类型，但两种类型都只允许==**读**==访问`set`中的元素。
+
+2. 添加元素
+
+   <img style="width: 1000px;height:300px" src="Image\关联容器insert操作.png">
+
+   1. `insert`成员，两个版本，分别接受一对迭代器，或是一个初始化器列表，这两个版本的行为类似对应的构造函数，**对于一个给定的关键字，只有第一个带此关键字的元素才被插入到容器中**。
+   2. 向`map`添加元素，
+     - `word_count.insert ({word,1});`
+     - `word_count.insert (make_pair (word,1) );`
+     - `word_count.insert (pair<string,size_t> (word,1));`
+     - `word_count.insert(map<string,size_t>::value_type (word,1));`
+
+3. 删除元素
+
+   <img style="width: 1000px;height:300px" src="Image\从关联容器删除元素.png">
+
+4. `map`的下标操作
+
+   - ==**我们不能对一个`multimap`或一个`unordered_multimap`进行下标操作**==，因为这些容器中可能有多个值与一个关键字相关联。
+   - `map`下标运算符接受一个索引(即，一个关键字)获取与此关键字相关联的值。但是，与其他下标运算符不同的是，**如果关键字并不在map中，会为它创建一个元素并插入到`map`中**，关联值将进行值初始化。
+   - `C.at(k)`：访问关键字为`k`的元素，==**带参数检查**==；若`k`不在`c`中，抛出一个`out_of_range`异常。
+
+5. 访问元素
+
+   <img style="width: 1000px;height:100px" src="Image\关联容器查找2.png">
+
+   <img style="width: 1000px;height:300px" src="Image\关联容器查找.png">
+
+   - **==如果一个multimap或multiset中有多个元素具有给定关键字，则这些元素在容器中会相邻存储。==**
+     - 最直观的方法是使用`find`和`count`
+     - 如果关键字在容器中，`lower_bound`返回的迭代器指向第一个具有给定关键字的元素，而`upper_bound`返回的迭代器则指向最后一个匹配给定关键字的元素之后的位置。如果元素不在 `multimap `中，则` lower_bound`和会返回相同的迭代器**-指向一个不影响排序的关键字插入位置**。
+     - 最直接的方法`equal_range`
+
+#### 无序容器
+
+<img style="width: 1000px;height:700px" src="Image\无序容器的管理操作.png">
+
+1. **无序容器在存储上组织为一组桶**，每个桶保存**零个或多个元素**。无序容器使用一个**哈希函数将元素映射到桶**。为了访问一个元素，容器首先计算元素的哈希值，它指出应该搜索哪个桶。**容器将具有一个特定哈希值的所有元素都保存在相同的桶中**。如果容器允许重复关键字，所有具有相同关键字的元素也都会在同一个桶中。因此，无序容器的性能依赖于哈希函数的质量和桶的数量和大小。
+2. **默认情况下，无序容器使用关键字类型的==运算符来比较元素**，它们还使用一个`hash<key_type>`**类型的对象**来生成每个元素的哈希值。标准库为**内置类型(包括指针)提供了hash模板**。**还为一些标准库类型**，包括`string`和智能指针类型定义了`hash`。因此，我们可以直接定义关键字是内置类型（包括指针类型)、string 还是智能指针类型的无序容器。
+3. **我们==不能直接定义关键字类型==为自定义==类类型==的无序容器**。与容器不同，不能直接使用哈希模板，**而必须提供我们自己的`hash`模板版本**。我们将在16.5节(第626页)
+   - 使用一个哈希函数，和关键字类型的`==`运算符组织元素。
+
+### 动态内存
+
+#### 动态内存与智能指针
+
+- `memory`头文件
+
+  - `make_shared`函数
+
+    - 最安全的分配和使用动态内存的方法是调用一个名为`make_shared`的标准库函数。
+    - `make_shared`用其参数来==**构造**==给定类型的对象，传递的参数要和类型的构造函数相匹配。
+  
+  - `shared_ptr`：允许多个指针指向同一个对象
+  
+    <img style="width: 1000px;height:300px" src="Image\智能指针1.png">
+  
+    <img style="width: 1000px;height:300px" src="Image\智能指针2.png">
+  
+    - 最后一个`shared_ptr`销毁前内存都不会释放，保证`shared_ptr`在无用之后不在保留
+  
+    - `shared_ptr`和`new`结合使用
+  
+      - 接受**指针参数**的智能指针**构造函数是`explicit`的**，我们不能将一个内置指针隐式转换为一个智能指针。
+  
+        ```c++
+        shared_ptr<int> p1 = new int(1023);//错误
+        shared_ptr<int> p2(new int(1023));
+        ```
+  
+      - **==默认情况下，一个用来初始化的智能指针的普通指针必须指向动态内存，因为智能指针默认使用`delete`释放它所关联的对象。==**
+  
+        <img style="width: 1000px;height:300px" src="Image\改变shared_ptr的其它方法.png">
+  
+        <img style="width: 1000px;height:300px" src="Image\改变shared_ptr的其它方法2.png">
+  
+      - ==**`shared_ptr`可以协调对象的析构，但这仅限于其自身的拷贝**==
+  
+      - 当将一个`shared_ ptr`绑定到一个普通指针时，我们就将内存的管理责任交给了这个`shared_ ptr`。一旦这样做了 ，我们就不应该再使用内置指针来访问`shared_ ptr`所指向的内存了。
+  
+      - `get`函数：我们需要**向不能使用智能指针的代码**传递一个内置指针，使用`get`返回的指针的代码不能`delete`此指针。
+  
+      -  **如果在`new`和`delete`之间发送异常，且异常未在`f`中被捕获，则内存就永远不会被释放了**
+  
+        - 在异常发生后资源能被正确的释放，一个简单的确保资源被释放的方法是使用智能指针。
+  
+  - `unique_ptr`：“**独占**”所指向的对象
+  
+    <img style="width: 1000px;height:400px" src="Image\unique_ptr.png">
+  
+    - **==不能拷贝或赋值`unique_ptr`==**，可以通过调用`release`或`reset`将指针的所有权（非const）`unique_ptr`转义给另一个`unique`
+    - `reset`成员接受一 个可选的指针参数，令`unique_ ptr`重新指向给定的指针。如果`unique_ ptr`不为空，它原来指向的对象被释放。
+    - ==**不能拷贝`unique_ ptr`的规则有一个例外：我们可以拷贝或赋值一个将要被销毁的`unique_ ptr`。 **==
+      - ==**最常见的例子是从函数返回一个`unique_ ptr`**==
+      - 还可以返回一个局部对象的拷贝
+    - 标准库早期版本`auto_ptr`具有`unique_ptr`的部分特性
+      - 不能在容器中保存`auto_ptr`不能从函数中返回`auto_ptr`
+    - **我们必须在尖括号中`unique_ptr`指向类型之后提供删除器类型。在创建或`reset`一 个这种`unique_ptr`类型的对象时，必须提供。个指定类型的可调用对象**
+    - 我们必须在**尖括号中**`unique_ptr`指向类型之后提供删除器类型。在创建或`reset`一个这种`unique_ ptr`类型的对象时，必须提供一个指定类型的可调用对象
+      - `unique_ptr<objT,delT> p(new objT,fcn);`
+  
+  - `weak_ptr`：
+  
+    <img style="width: 1000px;height:400px" src="Image\weak_ptr.png">
+  
+    - `weak_ptr`指向一个`share_ptr`管理的对象。**将一个`weak ptr`绑定到一个`shared ptr`不会改变`shared_ ptr`的引用计数**。一旦最后一个指向对象的`shared_ptr`被销毁，对象就会被释放。即使有`weak_ ptr`指向对象，对象也还是会被释放。
+    - ==**由于对象可能不存在，我们不能使用`weak_ ptr` 直接访问对象，而必须调用`lock`。此函数检查`weak_ ptr`指向的对象是否仍存在。**==
+  
+- 直接管理内存
+
+  - 自由空间分配的内存是无名的，`new`无法为其分配的对象命名，默认情况下，**动态分配的对象是默认初始化的**，而类类型对象将使用默认构造函数进行初始化。
+
+  - 可以使用直接初始化，传统的构造方式，列表初始化来初始化一个动态分配的对象。
+
+    ```c++
+    int *pi = new int(1024);//直接初始化
+    int *pi2 = new int();//值初始化为0
+    int *pi3 = new int;//默认初始化
+    string * ps = new string(10,'9');
+    vector<int>*pv = new vector<int>{1,2,3,4,5};
+    ```
+
+  - 如果我们提供了**一个括号包围的初始化器**，**就可以使用`auto`从此初始化器来推断我们想要分配的对象的类型**。但是，由于编译器要用初始化器的类型来推断要分配的类型，只有当括号**中仅有单一初始化器**时才可以使用`auto`
+
+    - `auto p = new auto(obj);`
+    - `p`指向一个与`obj`类型相同的对象该对象用`obj`进行初始化
+
+  - **动态分配的`const`对象**
+
+    - 一个动态分配的`const`对象必须进行初始化，**定义了默认构造函数的类类型**，其`const`动态对象可以隐式初始化。
+
+      ```c++
+      const int * pci = new const int(1024);
+      ```
+
+  - ==**内存耗尽**==
+
+    - `new`表达式失败：抛出一个类型为`bad_alloc`的异常
+
+    - **定位new**：向`new`传递`nothrow`对象，不抛出异常，不能分配内存返回空指针。
+
+    - `bad_alloc`和`nothrow`定义在**==头文件new中==**
+
+      ```c++
+      int *p1 = new int;
+      int *p2 = new(nothrow)int;
+      ```
+
+  - 指针值和`delete`
+
+    - 我们传递给`delete`的指针必须指向动态分配的内存，或者是一个空指针
+    - 释放一个空指针总是没有错误的
+    - **空悬指针**：指向一块曾经保存数据对象但现在已经无效的内存的指针。
+
+- **使用我们自己的释放操作**
+
+  - 定义一个函数来代替`delete`，这个删除器函数必须能够完成对`shared_ptr`中保存的指针进行释放的操作。
+  - 不使用相同的内置指针值初始化(或`rese`t)多个智能指针。
+  - 不`delete get()`返回的指针。
+  - 不使用`get()`初始化或`reset`另一个智能指针。
+  - 如果你使用`get()`返回的指针，记住当最后一个对应的智能指针销毁后，你的
+    指针就变为无效了。
+  - 如果你使用智能指针管理的资源不是`new`分配的内存，记住传递给它一个删除
+    器。
+
+
+#### 动态数组
+
+#### 使用标准库：文本查询系统
+
+
+
