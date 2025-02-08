@@ -1,0 +1,9 @@
+void show_bytes(byte_pointer start,std::size_t len)
+{
+    std::size_t i;
+	for(i=0;i<len;++i)
+	{
+		std::printf(" %.2x",start[i]);
+	}
+    std::printf("\n");
+}one line test
