@@ -5527,6 +5527,545 @@ class Bulk_quote : public Quote
 
      - **合成的拷贝和移动构造函数按照完全相同的顺序执行，合成的赋值运算符中的成员也按照该顺序赋值**。**和往常一样，对象的销毁顺序与构造顺序正好相反**，首先销毁`TeddyBear`部分,最后销毁`ZooAnimal`部分。
 
+### 特殊工具与技术
+
+#### 控制内存分配
+
+1. 重载`new`和`delete`
+
+   ```c++
+   //当我们使用一条new表达式时
+   string *sp = new string("a value:");
+   string *arr =new string[10];
+   ```
+
+   - **第一步**, `new`表达式调用一个名为`operator new`(或者`operator new[]`)的标准库函数。该函数分配一块足够大的、原始的、未命名的内存空间以便存储特定类型的对象(或者对象的数组)。
+
+   - **第二步**，编译器运行相应的构造函数以构造这些对象，并为其传入初始值。
+
+   - **第三步**，对象被分配了空间并构造完成，返回一个指向该对象的指针。
+
+   - 当我们使用`delete`表达式**删除一个动态分配的对象时**：
+
+     - 第一步，对`sp`所指的对象或者`arr`所指的数组中的元素执行对应的析构函数。
+     - 第二步，编译器调用名为`operator delete`(或者`operator delete[]`)
+       的标准库函数释放内存空间。
+
+   - **如果==应用程序希望控制内存分配的过程==，则它们需要==定义自己的`operator new`函数和`operator delete` 函数==。即使在标准库中已经存在这两个函数的定义，我们仍旧可以定义自己的版本。==编译器不会对这种重复的定义提出异议==，相反，==编译器将使用我们自定义的版本==替换标准库定义的版本。**
+
+   - 应用程序**可以在全局作用域中定义**`operator new`函数和`operator delete`函数，**也可以将它们定义为成员函数**。当编译器发现一条`new`表达式或`delete`表达式后，将在程序中查找可供调用的 `operator`函数。如果被分配（释放）的对象是类类型，则编译器首先在类及其基类的作用域中查找。此时如果该类含有 `operator new`成员或`operator delete`成员，则相应的表达式将调用这些成员。否则，编译器在全局作用域查找匹配的函数。此时如果编译器找到了用户自定义的版本，则使用该版本执行`new`表达式或`delete`表达式;如果没找到，则使用标准库定义的版本。
+
+   - 我们可以使用作用域运算符令`new`表达式或`delete`表达式忽略定义在类中的函数，直接执行全局作用域中的版本。例如，`::new`只在全局作用域中查找匹配的 `operator new`函数，`::delete`与之类似。
+
+   - `operator new`接口和`operator delete`接口
+
+     ```c++
+     //这些版本可能抛出异常
+     void *operator new(size_t);
+     void *operator new[](size_t);
+     void *operator delete(void*)noexcept;
+     void *operator delete[](void*)noexcept;
+     
+     //这些版本承诺不会抛出异常
+     void *operator new (size_t, nothrow_t& ) noexcept;
+     void *operator new[](size_t, nothrow_t&) noexcept;
+     void *operator delete (void*, nothrow_t&) noexcept;
+     void *operator delete[] (void* , nothrow_t&) noexcept;
+     ```
+
+     - ==**类型`nothrow_t`**==是定义在`new`头文件中的一个`struct`，在这个类型中不包含任何成员。**`new`头文件还定义了一个名为==`nothrow`的`const`对象==**，用户可以通过这个对象请求`new`的非抛出版本。
+     - ==**当我们重载这些运算符时，必须使用`noexcept`异常说明符指定其不抛出异常**。==
+     - 应用程序**可以自定义上面函数版本中的任意一个**,前提是**自定义的版本必须==位于全局作用域或者类作用域中==**。当我们**将上述运算符函数==定义成类的成员==时，它们==是隐式静态的==**。我们无须显式地声明`static`，当然这么做也不会引发错误。因为 `operator new`用在对象构造之前而`operator delete`用在对象销毁之后，所以这两个成员（`new`和`delete`）必须是静态的，而且它们不能操纵类的任何数据成员。
+       - 对于**`operator new`函数或者 `operator new[]`函数来说，它的返回类型必须是`void*`，第一个形参的类型必须是`size_t`且该形参不能含有默认实参**。当我们**为一个对象分配空间时使用`operator new`;**为一个数组分配空间时使用`operator new[]`。**当编译器调用`operator new`时，==把存储指定类型对象所需的字节数传给`size_t`形参==**;当调用`operator new[]`时，传入函数的则是存储数组中所有元素所需的空间。	
+     - 如果我们想要**自定义`operator new`函数**，则**可以为它提供额外的形参**。此时，**用到这些自定义函数的`new`表达式必须使用`new`的==定位形式==**将实参传给新增的形参。尽管在一般情况下我们可以自定义具有任何形参的`operator new`，但是下面这个函数却无论如何不能被用户重载:
+
+     ```c++
+     void *operator new(size_t,void*);//这个形式只供标准库使用，不能被用户重新定义。
+     ```
+
+     - 对于`operator delete`函数或者`operator delete[]`函数来说，它们的**返回类型必须是void**，**第一个形参的类型必须是`void*`**。执行一条`delete`表达式将调用相应的`operator`函数，**并==用指向待释放内存==的指针来初始化void*形参**。
+     - 当我们**将`operator delete`或`operator delete[]`==定义成类的成员时==**，**==该函数可以包含另外一个类型为`size_t`的形参==**。此时，**该形参的初始值是第一个形参所指对象的字节数**。**`size_t`形参可用于删除继承体系中的对象**。如果基类有一个虚析构函数，则传递给`operator delete`的字节数将因待删除指针所指对象的动态类型不同而有所区别。而且，实际运行的`operator delete`函数版本也由对象的动态类型决定。
+
+   - `malloc`函数与`free`函数
+
+     - 当定义了自己的全局`operator new`和 `operator delete`后，**这两个函数必须以某种方式执行分配内存与释放内存的操作**。这两个函数还应该同时满足某些测试的目的,即检验其分配内存的方式是否与常规方式类似。
+
+     ```c++
+     void* operator new(size_t size){
+         if(void*mem = malloc(size))
+             return mem;
+         else
+             throw bad_alloc();
+     }
+     void operator delete(void *mem)noexcept){free(mem);}
+     ```
+
+   - 定位`new`表达式
+
+     - **在C++的早期版**本中`allocator`类还不是标准库的一部分。**应用程序如果想把内存分配与初始化分离开来的话**，**需要调用 `operator new`和 `operator delete`。**这两个函数的行为与`allocator` 的 `allocate` 成员和`deallocate`成员非常类似，它们负责分配或释放内存空间，但是不会构造或销毁对象。
+     - 与`allocator`不同的是，**对于`operator new`分配的内存空间**来说我们无法使用`construct`函数构造对象。相反，**我们应该使用`new`的定位`new` (placement new)形式构造对象**。如我们所知，`new`的这种形式为分配函数提供了额外的信息。我们可以使用定位`new`传递一个地址，此时**==定位`new`的形式如下所示:==**
+       - `new (place_address) type`
+       - `new (place_address) type (initializers)`
+       - `new (place_address) type [size]`
+       - `new (place_address) type {braced initializer list}`
+       - 其中`place_address`必须是一个指针，同时在`initializers` 中提供一个(可能为空的)以逗号分隔的初始值列表，该初始值列表将用于构造新分配的对象。
+     - **当仅通过一个地址值调用时，定位`new`使用`operator new (size t, void*)`“分配”它的内存**。**这是一个我们无法自定义的`operator new`版本(参见19.1.1节，第727页)。该函数不分配任何内存，它只是简单地返回指针实参;然后由`new`表达式负责在指定的地址初始化对象以完成整个工作**。事实上，**定位`new` 允许我们在一个特定的、预先分配的内存地址上构造对象**。
+     - 尽管在很多时候使用定位`new`与`allocator`的`construct`成员非常相似,但在它们之间也有一个重要的区别。我们传给`construct`的指针必须指向同一个`allocator`对象分配的空间，但是传给定位`new`的指针无须指向`operator new`分配的内存。实际上如我们将在19.6节（第753页）介绍的，传给定位`new`表达式的指针甚至不需要指向动态内存。
+
+   - 显示的析构函数调用
+
+     - 对析构函数的显示调用也与使用`destroy`很类似，我们既可以通过对象调用析构函数，也可以通过对象的指针或引用调用析构函数
+     - 和调用`destroy`类似，**调用析构函数可以清除给定的对象但是不会释放该对象所在的空间**。如果需要的话，我们可以重新使用该空间。
+
+#### 运行时类型识别RTTI
+
+1. `dynamic_cast`运算符
+
+   - `dynamic_cast`运算符的使用形式
+
+     - `dynamic_cast<type*>(e)`
+     - `dynamic_cast<type&>(e)`
+     - `dynamic_cast<type&&>(e)`
+     - `type`**必须是一个类类型**,**并且通常情况下该类型应该含有虚函数**。
+       - 在第一种形式中，`e`必须是一个有效的指针;
+       - 在第二种形式中，`e`必须是一个左值;
+       - 在第三种形式中，`e`不能是左值。
+     - **`e`的类型必须符合以下三个条件中的任意一个**:
+       - `e` 的类型是目标`type`的**公有派生类**,
+       - `e` 的类型是目标`type`的**公有基类或者`e`的类型就是目标 `type`的类型**。如果符合，则类型转换可以成功。否则，转换失败。
+       - 如果一条`dynamic_cast`语句的**转换目标是指针类型并且失败了，则结果为`0`**。如果**转换目标是引用类型并且失败了，则`dynamic_cast`运算符将抛出一个`bad_cast`异常**。
+
+   - 指针类型的`dynamic_cast`
+
+     ```c++
+     //如果有一个指向Base的指针bp，则我们可以在运行时将它装换成指向Derived的指针
+     if(Derived*dp = dynamic_cast<Derived*>(bp))
+     {
+         //使用dp指向的Derived对象
+     }
+     else//bp指向一个Base对象
+     {
+         //使用bp指向的Base对象
+     }
+     ```
+
+     - **==如果`bp`指向`Derived`对象==,则上述的类型转换初始化`dp`并令其指向`bp`所指的`Derived`对象**。此时，`if`语句内部使用`Derived`操作的代码是安全的。==**否则，类型转换的结果为`0`**==,`dp` 为`0`意味着`if`语句的条件失败，此时`else`子句执行相应的`Base`操作。
+     - 在条件部分定义了`dp`，这样做的好处是可以在一个操作中同时完成类型转换和条件检查两项任务。而且，指针`dp`在`if`语句外部是不可访问的。一旦转换失败，即使后续的代码忘了做相应判断，也不会接触到这个未绑定的指针，从而确保程序是安全的。
+     - **对一个空指针执行`dynamic_cast`，结果就是所需类型的空指针。**
+
+   - 引用类型的`dynamic_cast`
+
+     - 当对引用类型转换失败时，程序抛出一个名为`std::bad_cast`的异常，该异常定义在`typeinfo`标准库头文件中。
+
+       ```c++
+       void f(const Base&)
+       {
+       	try{
+               const Derived &d = dynamic_cast<const Derived&>(b);
+               //使用b引用的Derived对象
+       	}catch(bad_cast){
+               //处理类型转换失败的情况
+           }
+       }
+       ```
+
+2. `typeid`运算符
+
+   - `typeid`**表达式的形式是`typeid(e)`，其中`e`可以是任意表达式或类型的名字**。`typeid`**操作的结果是一个常量对象的引用**，==**该对象的类型是标准库类型`type_info`或者`type_info`的公有派生类型**==。`type_info`类定义在`type_info`头文件中。
+
+   - `typeid`运算符可以作用于任意类型的表达式。和往常一样，**顶层`const`被忽略**，如果**表达式是一个引用**，则`typeid`返回该**引用所引对象的类型**。不过当`typeid`作**用于==数组或函数时,==并不会执行向指针的标准类型转换**。也就是说，如果我们对数组`a`执行`typeid (a)`，则所得的结果是数组类型而非指针类型。
+
+   - **当运算对象不属于类类型或者是一个不包含任何虚函数的类时**，`typeid`运算符指示的是运算对象的静态类型。而当运算对象是定义了至少一个虚函数的类的左值时，`typeid`的结果直到运行时才会求得。
+
+   - 使用`typeid`运算符
+
+     - 通常情况下,**我们使用`typeid` ==比较两条表达式的类型是否相同==，或者比较一条==表达式的类型是否与指定类型相同==:**
+
+     ```c++
+     Derived *dp = new Derived;
+     Base *bp = dp;		//两个指针都指向Derived对象
+     if(typeid(*bp)==typeid(*dp)){//在运行时比较两个对象的类型
+        //bp和dp指向同一类型的对象
+     }
+     //检查运行时类型是否是某种指定的类型
+     if(typeid(*bp)==typeid(Derived)){
+         //bp实际指向Derived对象
+     }
+     ```
+
+     - `typeid`==**是否需要运行时检查决定了表达式是否会被求值**==。只有当类型含**有虚函数**时，编译器才会**对表达式求值**。反之，如果类型不含有虚函数，则`typeid`返回表达式的静态类型;编译器无须对表达式求值也能知道表达式的静态类型。
+     - 如果**表达式的动态类型可能与静态类型不同，则必须在运行时对表达式求值以确定返回的类型**。这条规则适用于`typeid(*p)`的情况。**如果指针p所指的类型不含有虚函数，则p不必非得是一个有效的指针**。否则，`*p`将在运行时求值，此时p必须是一个有效的指针。**如果p是一个空指针，则`typeid(*p)`将抛出一个名为`bad_typeid`的异常**
+
+3. 使用RTTI
+
+   - 类的层次关系
+
+     - 我们定义的相等运算符的形参是基类的引用，然后使用`typeid`检查两个运算对象的类型是否一致。如果运算对象的类型不一致，则`==`返回`false`;类型一致才调用`equal`函数。每个类定义的` equal`函数负责比较类型自己的成员。这些运算符接受`Base`形参，但是在进行比较操作前先把运算对象转换成运算符所属的类类型。
+
+     ```c++
+     class Base
+     {
+         friend bool operator==(const Base&,const base&);
+         public:
+         //Base的接口成员
+         protected:
+         virtual bool equal(const Base&)const;
+         //Base的数据成员和其它用于实现的成员
+     };
+     class Derived:public Base{
+         public:
+         //Derived的其它接口成员
+         protected:
+         bool equal(const Base&)const;
+         //Derived的数据成员和其它用于实现的成员
+     }
+     ```
+
+   - 类型敏感的相等运算符
+
+     ```c++
+     bool operator==(const Base&lhs,const Base&rhs)
+     {
+         //如果typeid不相同，返回false,否则需调用equal
+         return typeid(lha)==typeid(rhs)&&lhs.equal(rhs);
+     }
+     ```
+
+   - 虚`equal`函数
+
+     ```c++
+     bool Derived::equal(const Base&rhs)const
+     {
+         //我们清除这两个类型是相等的，所以转换过程不会抛出异常
+        	auto r = dynamic_cast<const Derived&>(rhs);
+         //执行比较两个Derived对象的操作并返回结果
+     }
+     ```
+
+   - 基类`equal`函数
+
+     ```c++
+     bool Base::equal(const Base&rhs)const
+     {
+         //执行比较Base对象的操作
+     }
+     ```
+
+4. `type_info`类
+
+   - `type_info`类的精确定义随着编译器的不同而略有差异。不过，C++标准规定`type_info`类必须定义在`typeinfo`头文件中，并且至少提供表19.1所列的操作。
+
+     <img style="width: 1000px;height:320px" src="Image\type_info的操作.png">
+
+   - 因为`type_info`类**一般是作为一个基类出现**，所以它还应该提供一个公有的虚析构函数。当编译器希望提供额外的类型信息时,通常在`type_info`的派生类中完成。
+
+   - `type_info`**类没有默认构造函数**，而且它的**拷贝和移动构造函数以及赋值运算符都被定义成删除的**。因此，我们无法定义或拷贝`type_info`类型的对象，也不能为`type_info`类型的对象赋值。创建`type_info`对象的唯一途径是使用`typeid`运算符。
+
+#### 枚举类型
+
+- **枚举类型**使我们可以将**一组整形常量**组织在一起。和**类**一样，**每个枚举类型定义了==一种新==的类型**。枚举属于字面值常量类型。
+
+- C++包含两种枚举：**限定作用域**和**不限定作用域**。C++11新标准引入了**限定作用域的枚举类型**
+
+  - 定义限定作用域的枚举类型的一般形式是：`enum class`或`enum struct`
+
+- 定义**不限定作用域的枚举类型**时**省略掉关键字class（或struct)**，枚举类型的名字是可选的:
+
+  ```C++
+  enum color {red,yellow,green};	//不限定作用域的枚举类型
+  enum {floatPrec = 6,doublePrec = 10,double_doublePrec = 10};
+  ```
+
+  - 如果`enum`是未命名的，则我们只能在定义该`enum`时定义它的对象。和类的定义类似，我们需要在 `enum`定义的右侧花括号和最后的分号之间提供逗号分隔的声明列表。
+
+- 枚举成员
+
+  - 在限定作用域的枚举类型中，**枚举成员的名字遵循常规的作用域准则，并且在枚举类型的作用域外是不可访问的**。与之相反，在**不限定作用域的枚举类型中，枚举成员的作用域与枚举类型本身的作用域相同**:
+
+  ```c++
+  enum color { red, yellow, green };		//不限定作用域的枚举类型
+  enum stoplight { red, yellow, green };	//错误:重复定义了枚举成员
+  enum class peppers {red,yellow,green};	//正确:枚举成员被隐藏了
+  
+  color eyes = green;//正确:不限定作用域的枚举类型的枚举成员位于有效的作用域中
+  peppers p = green;//错误:peppers的枚举成员不在有效的作用域中
+  				  //color::green在有效的作用域中，但是类型错误
+  
+  color hair = color::red;	//正确:允许显式地访问枚举成员
+  peppers p2 = peppers::red;	//正确:使用pappers的red
+  ```
+
+  - 默认情况下，枚举值从0开始，依次加1。不过我们也能为一个或几个枚举成员指定专门的值。没有显示地提供初始值，则当前枚举成员的值等于之前枚举成员的值加1
+
+- 和类一样，枚举也定义新的类型
+
+  - 要想**初始化**`enum`对象或者为`enum`**对象赋值**，==**必须使用该类型的一个枚举成员或者该类型的另一个对象**==。
+
+  - ==**一个不限定作用域的枚举类型的对象或枚举成员自动地转换成整型。因此，我们可以在任何需要整型值的地方使用它们:**==
+
+    ```c++
+    int i = color::red;	//正确:不限定作用域的枚举类型的枚举成员隐式地转换成int
+    int j = peppers::red;//错误:限定作用域的枚举类型不会进行隐式转换
+    ```
+
+- 指定`enum`的大小
+
+  - 如果我们**没有指定`enum`的潜在类型**,则**默认情况下限定作用域的`enum`成员类型是`int`**。
+  - 对于**不限定作用域的枚举类型来说，其枚举成员不存在默认类型**，我们只知成员的潜在类型足够大，肯定能够容纳枚举值。
+  - **如果我们指定了枚举成员的潜在类型（包括对限定作用域的`enum`的隐式指定)，则一旦某个枚举成员的值超出了该类型所能容纳的范围，将引发程序错误。**
+  - **指定 `enum`潜在类型的能力使得我们可以控制不同实现环境中使用的类型**，**我们将可以确保在一种实现环境中编译通过的程序所生成的代码与其他实现环境中生成的代码一致**。
+
+  ```c++
+  enum intValues:unsigned long long{};
+  ```
+
+- 枚举类型的前置声明
+
+  - 在C++11新标准中，我们可以提前声明`enum`。`enum` 的**前置声明(无论隐式地还是显示地)必须指定其成员的大小**:
+
+  - `enum`的声明和定义必须匹配。
+
+    ```c++
+    //不限定作用域的枚举类型intValues的前置声明
+    enum intvalues : unsigned long long;//不限定作用域的，必须指定成员类型
+    enum class open_modes; //限定作用域的枚举类型可以使用默认成员类型int
+    ```
+
+- 形参匹配与枚举类型
+
+  - 要想初始化一个`enum`对象，必须使用该`enum`类型的另一个对象或者它的一个枚举成员。因此，**即使某个整型值恰好与枚举成员的值相等，它也不能作为函数的`enum`实参使用。**
+
+  ```c++
+  //不限定作用域的枚举类型，潜在类型因机器而异
+  enum Tokens { INLINE =128,VIRTUAL = 129};
+  void ff(Tokens);
+  void ff(int); 
+  int main() {
+  	Tokens curTok = INLINE; 
+      ff(128);		//精确匹配ff(int)
+  
+  	ff(INLINE);		//精确匹配ff(Tokens)
+  
+  	ff(curTok);		//精确匹配ff(Tokens)
+  	return 0;
+  }
+  ```
+
+  - 尽管我们不能直接将**整型值**传给**enum形参**，但是可以将**一个不限定作用域的枚举类型的对象或枚举成员传给整型形参**。此时, `enum`的值提升成`int`或更大的整型，实际提升的结果由枚举类型的潜在类型决定:
+
+  ```c++
+  void newf (unsigned char);
+  void newf (int);
+  unsigned char uc = VIRTUAL;
+  
+  newf(VIRTUAL);//调用newf (int)
+  newf(uc);	  //调用newf (unsigned char)
+  ```
+
+#### 类成员指针
+
+- 成员指针是指可以**指向类的非静态成员的指针**。一般情况下，指针指向一个对象，但是**成员指针==指示的是类的成员==**，而非类的对象。类的静态成员不属于任何对象，因此无须特殊的指向静态成员的指针，指向静态成员的指针与普通指针没有什么区别。
+- **成员指针的类型**囊括了**类的类型**以及**成员的类型**。当初始化一个这样的指针时，我们令其指向类的某个成员，但是不指定该成员所属的对象;直到使用成员指针时，才提供成员所属的对象。
+
+1. 数据成员指针
+
+   - **成员指针还必须包含成员所属的类**。因此，我们必须在`*`之前添加`classname::`以表示当前定义的指针可以指向`classname`的成员。
+
+     ```c++
+     //pdata可以指向一个常量（非常量)Screen对象的string成员
+     const string Screen::*pdata;
+     //初始化一个成员指针或赋值时，需要指定它所指的成员。
+     pdata = &Screen::contents //pdata指向某个非特定Screen对象的contents成员
+     ```
+
+     - 我们将**取地址运算符**作用于**`screen`类的成员**而非内存中的一个该类对象。
+     - 当然，在C++11新标准中声明成员指针最简单的方法是使用`auto`或`decltype` 。`auto pdata = &screen: :contents;`
+
+   - 使用成员数据指针
+
+     ```c++
+     screen myscreen, *pscreen = &myscreen;
+     //.*解引用pdata 以获得myscreen对象的contents成员
+     auto s = myscreen.*pdata;
+     //->*解引用pdata 以获得pScreen所指对象的contents成员
+     s = pscreen->*pdata;
+     ```
+
+     - 从概念上来说，这些运算符执行两步操作:它们**首先解引用成员指针**以得到所需的成员;**然后像成员访问运算符一样，通过对象（`.*`）或指针(`->*`)获取成员。**
+
+   - 返回数据成员指针的函数
+
+     - **常规的访问控制规则对==成员指针同样有效==**。例如，`Screen` 的`contents`成员是私有的，因此之前对于`pdata`的使用必须位于`Screen`类的成员或友元内部，否则程序将发生错误。
+     - 因为数据成员一般情况下是私有的，所以我们通常不能直接获得数据成员的指针。如果一个像`screen`这样的类希望我们可以访问它的`contents`成员，最好定义一个函数，令其返回值是指向该成员的指针。
+
+     ```c++
+     class Screen{
+         public:
+         //返回一个成员指针
+         static const std::string Screen::*data()
+         {return &Screen::contents;}
+     }
+     ```
+
+2. 成员函数指针
+
+   - `classname::*`的形式声明一个指向成员函数的指针**。指向成员函数的指针也需要指向目标函数的返回类型和形参列表。如果成员函数是`const`成员或者引用成员，则我们必须将`const`限定符或引用限定符包含进来。**
+
+   - **和普通的函数指针类似，如果成员存在重载的问题，则我们必须显式地声明函数类型以明确指出我们想要使用的是哪个函数。**
+
+     ```c++
+     // pmf是一个指针,它可以指向Screen的某个常量成员函数
+     //前提是该函数不接受任何实参，并且返回一个char
+     auto pmf = &Screen::get_cursor;
+     
+     char (Screen::*pmf2)(Screen::pos,Screen::pos)const;
+     pfm2 = &Screen::get;
+     //pfm2 = Screen::get;
+     ```
+
+     - **==成员函数和指向该成员的指针之间不存在自动转换规则==**
+
+   - 使用成员函数指针
+
+     - 和使用指向数据成员的指针一样，**我们使用`.*`或者`->*`运算符作用于指向成员函数的指针，以调用类的成员函数**:
+
+     ```c++
+     Screen myscreen,*pscreen = &myscreen;
+     //通过pscreen所指的对象调用pmf所指的函数
+     char cl = (pscreen->*pmf)();
+     //通过myscreen对象将实参0，0传给含有两个形参的get函数
+     char c2 =(myscreen.*pmf2)(0，0);
+     ```
+
+   - 使用成员指针的类型别名
+
+     ```c++
+     //Action是一种可以指向Screen成员函数的指针，它接受两个pos实参，返回一个char
+     using Action = char (Screen::*)(Screen::pos,screen::pos)const;
+     Action get = &Screen::get;
+     //我们可以将指向成员函数的指针作为某个函数的返回类型或形参类型
+     Screen& action(Screen&,Action = &Screen::get);
+     
+     Screen myScreen;
+     //等价的调用
+     action(myScreen);				//使用默认实参
+     action(myScreen,get);			//使用我们之前定义的变量get
+     action(myScreen,&Screen::get);	//显示地传入地址
+     ```
+
+   - 成员指针函数表
+
+     ```c++
+     class Screen
+     {
+         public:
+         using Action = Screen&(Screen::*)();
+         enum Directions{HOME,FORWARD,BACK,UP,DOWN};
+         Screen& home();
+         Screen& forward();
+         Screen& back();
+         Screen& up();
+         Screen& down();
+         Screen& move(Directions);
+         private:
+         static Action Menu[]; //函数表
+     }
+     Screen& Screen::move(Directions cm)
+     {
+         return (this->*Menu[cm])();
+     }
+     Screen::Action Screen::Menu[]=
+                     {
+     					&Screen::home,
+         				&Screen::forward,
+         				&Screen::back,
+         				&Screen::up,
+         				&Screen::down,
+                     };
+     myScreen.move(Screen::HOME);//调用myScreen.home
+     myScreen.move(Screem::DOWN);//调用myScreen.down
+     ```
+
+3. 将成员函数作为可调用对象
+
+   - 如我们所知，**要想通过==一个指向成员函数的指针进行函数调用==，必须首先利用`.*`运算符或`->*`运算符==将该指针绑定到特定的对象上==**。因此**与普通的函数指针不同，成员指针不是一个可调用对象，**这样的指针不支持函数调用运算符。
+
+     ```c++
+     //因为成员指针不是可调用对象，所以我们不能直接将一个指向成员函数地指针传递给算法
+     auto fp = &string::empty;	//fp指向string的empty函数
+     find_if(svec.begin(),svec.end(),fp);//错误，必须使用.*或->*调用成员指针。
+     ```
+
+   - 使用`function`生成一个可调用对象
+
+     - 从**指向成员函数的指针获取可调用对象的一种方法是使用标准库模板`function`。**
+
+     ```c++
+     function<bool(const string&)> fcn = &string::empty;
+     find_if(svec.begin(),svec.end(),fcn);
+     ```
+
+     - 我们告诉`function`一个事实:**即`empty`是一个接受`string`参数并返回 `bool`值的函数**。**==通常情况下，执行成员函数的对象将被传给隐式的 `this`形参==。当我们==想要使用`function`为成员函数生成一个可调用对象时==，必须首先“翻译”该代码，使得隐式的形参变成显式的。**
+
+     - 当一个 `function`**对象包含有一个指向成员函数的指针时**，`function`类知道它必须使用正确的指向成员的指针运算符来执行函数调用。也就是说，我们可以认为在`find_if`当中含有类似于如下形式的代码;
+
+       ```c++
+       //假设it是find_if内部的迭代器，则*it是给定范围内的一个对象
+       if (fcn (*it))	//假设fcn是find if内部的一个可调用对象的名字
+       ```
+
+       - 其中, `function`将使用正确的指向成员的指针运算符。从本质上来看，`function`类将函数调用转换成了如下形式:
+
+       ```c++
+       //假设it是find_if内部的迭代器，则*it是给定范围内的一个对象
+       if (((*it).*p)())	//假设p是fcn内部的一个指向成员函数的指针
+       ```
+
+     - 当我们定义一个`function`对象时,必须指定该对象所能表示的函数类型，即可调用对象的形式。如果**可调用对象是一个成员函数**，则**==第一个形参==必须表示该成员是在哪个(一般是隐式的）对象上执行的**。同时，我们**提供给`function`的形式中还必须==指明对象是否是以指针或引用的形式传入的==。**
+
+     - 以定义`fcn`为例，我们想在`string` 对象的序列上调用`find_if`，因此我们要求`function` 生成一个接受`string`对象的可调用对象。又因为我们的`vector`保存的是`string` 的指针，所以必须指定`function`接受指针。
+
+       ```c++
+       vector<string*> pvec;
+       function<bool(const string*)>fp = &string::empty;
+       //fp接受一个指向string的指针，然后使用->*调用empty
+       find_if(pvec.begin(),pvec.end(),fp);
+       ```
+
+   - 使用`mem_fn`生成一个可调用对象`functional`头文件
+
+     - `mem_fn`可以根据成员指针的类型推断可调用对象的类型，而无须用户显示地指示
+     - `mem_fn`生成的可调用对象可以通过对象调用，也可通过指针调用。
+
+     ```c++
+     find_if(svec.begin(),svec.end(),mem_fn(&string::empty));
+     auto f = mem_fn(&string::empty);//f接受一个string或者一个string*
+     f(*svec.begin () );//正确:传入一个string对象，f使用.*调用empty
+     f(&svec[0]);//正确:传入一个string的指针,f使用->*调用empt
+     //实际上，我们可以认为mem_fn生成的可调用对象含有一对重载的函数调用运算符:一个接受string*，另一个接受string& o
+     ```
+
+   - 使用`bind`生成一个可调用对象
+
+     - 我们还可以使用`bind`从成员函数生成一个可调用对象。
+
+     - 和`function`类似的地方是，当我们使用`bind` 时，**必须将函数中用于表示执行对象的隐式形参转换成显式的**。和`mem_fn`类似的地方是，**`bind`生成的可调用对象的第一个实参既可以是`string`的指针，也可以是`string`的引用:**
+
+       ```c++
+       //// 选择范围中的每个string，并将其bind到empty的第一个隐式实参上
+       auto if = find_if(svec.begin(),svec.end(),bind(&string::empty,_1));
+       ```
+
+#### 嵌套类
+
+#### union：一种节省空间的类
+
+#### 局部类
+
+#### 固有的不可移植的特性
+
+
+
 
 
 
