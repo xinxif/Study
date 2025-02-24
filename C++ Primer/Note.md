@@ -6058,17 +6058,493 @@ class Bulk_quote : public Quote
 
 #### 嵌套类
 
+- 嵌套类是一个独立的类，与外层类基本没什么关系。特别是，**外层类的对象和嵌套类的对象是相互独立的,在嵌套类的对象中不包含任何外层类定义的成员**;类似的，在外层类的对象中也不包含任何嵌套类定义的成员。
+
+- 嵌套类的名字在**外层类作用域中**是可见的，在外层类作用域之外不可见。
+
+- 嵌套类中成员的种类与非嵌套类是一样的。和其他类类似，**嵌套类也使用访问限定符来控制外界对其成员的访问权限**。**外层类对嵌套类的成员没有特殊的访问权限，同样嵌套类对外层类的成员也没有特殊的访问权限**。
+
+- **嵌套类在==其外层类中==定义了一个类型成员**。和其他成员类似，该类型的访问权限由外层类决定。
+
+  - 位于外层类`public`部分的嵌套类实际上定义了一种可以随处访问的类型:
+  - 位于外层类`protected`部分的嵌套类定义的类型**只能被外层类及其友元和派生类访问;**
+  - 位于外层类`private` 部分的嵌套类定义的类型只能被**外层类的成员和友元访问。**
+
+- 声明一个嵌套类
+
+  ```c++
+  class TextQuery
+  {
+      public:
+      class QueryResult;
+  }
+  ```
+
+- 在外层类之外定义一个嵌套类
+
+  - 嵌套类必须声明在类的内部，但是可以定义在类的内部或者外部
+
+    ```c++
+    //QueryResult是TextQuery 的成员，下面的代码负责定义QueryResult
+    class TextQuery::QueryResult {
+    //位于类的作用域内，因此我们不必对QueryResult形参进行限定
+     	friend std::ostream&
+            print(std::ostream&, const QueryResult&);
+    public:
+    //无须定义 QueryResult::ine_no
+    //嵌套类可以直接使用外层类的成员，无须对该成员的名字进行限定
+    QueryResult(std::string,
+    	std::shared_ ptr<std::set<line_no>>,
+    	std::shared_ptr<std::vector<std::string>>);
+    };
+    ```
+
+  - **在嵌套类在其==外层类之外==完成真正的定义之前,它都是一个不完全类型。**
+
+- 定义嵌套类的成员
+
+  ```c++
+  // QueryResult类嵌套在TextQuery类中
+  //下面的代码为QueryResult类定义名为QueryResult的成员
+  TextQuery::QueryResult::QueryResult (string s,
+  					shared_ptr<set<line_no>> p,
+                    	shared_ptr<vector<string>> f):
+  					sought (s) , lines(p), file(f) {}
+  ```
+
+- 嵌套类的静态成员定义
+
+  - 如果`QueryResult`声明了一个静态成员，则该成员的定义将位于`TextQuery`的作用域之外。
+
+  ```c++
+  //QueryResult类嵌套在TextQuery类中，
+  //下面的代码为QueryResult定义一个静态成员
+  int TextQuery::QueryResult::static_mem = 1024;
+  ```
+
+- 嵌套类作用域中的名字查找
+
+  - 名字查找的一般规则在嵌套类中同样适用。当然，因为嵌套类本身是一个嵌套作用域，所以还必须查找嵌套类的外层作用域。
+  - 返回类型不在类的作用域中，因此我们必须指明数的返回值是`TextQuery::QueryResult`类型。不过在函数体内部我们可以直接访问`QueryResult`，。
+
+  ```c++
+  //返回类型必须指明QueryResult是一个嵌套类
+  TextQuery::QueryResult
+  TextQuery::query (const string &sought) const
+  {   //如果我们没有找到sought，则返回set的指针
+      static shared_ptr<set<line_no>> nodata (new set<line_no>);
+      //使用find而非下标以避免向wm中添加单词
+      auto loc = wm.find (sought) ;
+      if (loc ==wm.end ( ) )
+          return QueryResult (sought, nodata, file);//没有找到
+  	else
+  		return QueryResult(sought, loc->second,file);
+  ```
+
+- 嵌套类和外层类是相互独立的
+
+  - **嵌套类的对象只包含嵌套类定义的成员；同样，外层类的对象只包含外层类定义的成员，在外层类对象中不会有任何嵌套类的成员。**
+
 #### union：一种节省空间的类
+
+- **联合是一种特殊的类**。一个`union`**可以有多个数据成员，但==在任意时刻只有一个数据成员可以有值==**。分配给一个`union`对象的存储空间至少要能容纳他的最大的数据成员。
+
+- 类的某些特性对`union`同样适用，但并非所有特性都如此。**`union`不能含有引用类型的成员**，**除此之外，它的成员可以是绝大多数类型**。在C++11新标准中，**含有构造函数或析构函数的类类型也可以作为`union`的成员类型**。`union`可以为其成员指定`public`、`protected`和 `private`等保护标记。默认情况下，`union`的成员都是公有的，这点与`struct`相同。
+
+- `union`==**可以定义包括构造函数和析构函数在内的成员函数**==。但是由于`union`既不能继承自其他类，也不能作为基类使用，所以在 `union` 中不能含有虚函数。
+
+- 定义`union`
+
+  ```c++
+  union Token{char cval;int ival;double dval;};
+  ```
+
+- 使用`union`类型
+
+  - 默认情况下`union`是未初始化的。我们可以像显示地**初始化聚合类一样使用一对花括号内的初始值**显示地初始化一个`union`
+  - 为`union`的一个数据成员赋值会令其他数据成员变成未定义的状态。当我们使用`union`时，必须清楚地知道当前存储在union中的值到底是什么类型。
+
+  ```c++
+  Token first_token = {'a'}; //提供了初始值，则该初始值被用于初始化第一个成员
+  ```
+
+- 匿名`union`
+
+  - 一旦我们定义了一个`union`，编译器就自动地为`union`创建一个未命名的对象。
+
+  - 在匿名`union`的定义所在的作用域内该`union`的成员都是可以直接访问的。
+
+  - 匿名`union`不能包含受保护的成员或私有成员，也不能定义成员函数。
+
+    ```c++
+    union{
+       char cval;
+       int ival;
+       double dval;
+    };
+    cval = 'c';	//为刚刚定义的未命名的匿名union对象赋一个新值
+    ival = 42;	//该对象当前保存的值是42
+    ```
+
+- 含有类类型成员的`union`
+
+  - `C++`的早期版本规定,在`union` 中不能含有定义了构造函数或拷贝控制成员的类类型成员。C++11新标准取消了这一限制。
+  - 对于**含有特殊==类类型成员==**的`union`。如果我们想将`union`的值改为类类型成员对应的值，或者将类类型成员的值改为一个其他值，则必须分别构造或析构该类类型的成员:当我们将`union` 的值改为类类型成员对应的值时,必须运行该类型的构造函数;反之，当我们将类类型成员的值改为一个其他值时，必须运行该类型的析构函数。
+  - `union`包含的是**内置类型的成员**时，==**编译器将按照成员的次序依次合成默认**
+    **构造函数或拷贝控制成员**==。但是如果`union`含有==**类类型的成员**==，并且**该类型自定义了默认构造函数或拷贝控制成员，则编译器将为`union`合成对应的版本并将其声明为删除的。**
+  - `string`类定义了五个拷贝控制成员以及一个默认构造函数。如果`union`
+    含有`string`类型的成员，并且没有自定义默认构造函数或某个拷贝控制成员，则编译器将合成缺少的成员并将其声明成删除的。如果在某个类中含有一个`union`成员，而且该`union`含有删除的拷贝控制成员，则该类与之对应的拷贝控制操作也将是删除的。
+
+- 使用类管理`union`成员
+
+  - **对于`union`来说，要想构造或销毁类类型的成员必须执行非常复杂的操作，因此我们通常把含有类类型成员的`union`内嵌在另一个类当中。这个类可以管理并控制与`union`的类类型成员有关的状态转换。**
+
+  ```c++
+  class Token
+  {
+  public:
+  	//因为union含有一个string成员，所以Token必须定义拷贝控制成员。
+  	Token():tok(INT), ival(0) {}
+  	Token(const Token&t):tok(t.tok){copyUnion(t);}
+  	Token& operator=(const Token&t);
+  	//如果union含有一个string成员，则我们必须销毁他。
+  	~Token() { if (tok == STR) sval.~basic_string(); }
+  
+  	//这些赋值运算符负责设置union的不同成员
+  	Token& operator=(const std::string&);
+  	Token& operator=(char);
+  	Token& operator=(int);
+  	Token& operator=(double);
+  private:
+  	enum { INT, CHAR, DBL, STR }tok;
+  	union {		//匿名union
+  		char			cval;
+  		int				ival;
+  		double			dval;
+  		std::string		sval;
+  	};
+  	//每个Token对象含有一个该未命名union类型的未命名成员
+  	//检查判别式，然后酌情拷贝union成员
+  	void copyUnion(const Token&);
+  };
+  ```
+
+- 管理判别式并销毁`string`
+
+  ```c++
+  Token &Token::operator==(int i)
+  {
+      if(tok==STR) sval.~string();//如果当前存储的是string,释放它
+      ival = i;					//为成员赋值
+      tok = INT;					//更新判别式
+      return *this;
+  }
+  ToKen &Token::operator==(const std::string &s)
+  {
+      if(tok==STR)		//如果当前存储的是string，可以直接赋值
+          sval=s;
+      else
+          new(&sval)string(s);
+      tok = STR;
+      return *this;
+  }
+  ```
+
+  - **如果`union`当前存储的不是`string`，**则我们找不到一个已存在的`string`对象供我们调用赋值运算符。此时,我们必须先利用定位`new`表达式在内存中为`sval`构造一个`string`,然后将该`string`初始化为`string`形参的副本，最后更新判别式并返回结果。
+
+- 管理需要拷贝控制的联合成员
+
+  ```c++
+  void Token::copyUnion(const Token &t)
+  {
+  	switch(t.tok)
+      {
+          case Token::INT: 	ival = t.ival;break;
+          case Token::CHAR:	cval = t.cval;break;
+          case Token::DBL:	dval = t.dval;break;
+          case Token::STR: new(&sval) string(t.sval) ; break;
+      }
+  }
+  //赋值运算符必须处理string成员的三种可能情况:左侧运算对象和右侧运算对象都是string、两个运算对象都不是string、只有一个运算对象是string:
+  Token &Token::operator=(const Token &t)
+  {
+      if (tok == STR && t.tok != STR) sval.~string();
+  	if(tok == STR && t.tok ==STR)
+  		sval = t.sval;//无须构造一个新string
+      else
+  	copyUnion (t); //如果t.tok是STR，则需要构造一个string
+      tok = t.tok;
+  	return *this;
+  )
+  ```
 
 #### 局部类
 
+- **局部类定义的类型只在定义它的作用域内可见。局部类的成员受到严格限制，不允许声明静态数据成员。**
+
+- 局部类不能使用函数作用域中的变量
+
+  - **局部类==只能访问外层作用域==定义的==类型名==，==静态变量==，以及==枚举成员==，局部类定义在某个函数内部，则该函数的普通局部变量不能被该局部类使用。**
+
+  ```c++
+  int a,val;
+  void foo(int val)
+  {
+      static int si;
+      enum Loc{a=1024,b};
+      
+      struct Bar
+      {
+          enum Loc locVal;//使用一个局部类型名
+          int barVal;
+          void fooBar(Loc l = a)//正确：默认实参是Loc::a
+          {
+              barVal = val;	//错误：val是foo的局部变量
+              barVal = ::val;	//正确：使用一个全局对象
+              varVal = si;	//正确：使用一个静态局部对象
+              locVal = b;		//正确：使用一个枚举成员
+          }
+  	};
+  }
+  ```
+
+- 常规的访问保护规则对局部类同样适用
+
+  - **外层函数对局部类的私有成员没有任何访问特权**。当然，**局部类可以将外层函数声明为友元**;**或者更常见的情况是局部类将其成员声明成公有的**。在程序中有权访问局部类的代码非常有限。局部类已经封装在函数作用域中，通过信息隐藏进一步封装就显得没什么必要了。
+
+- 局部类中的名字查找
+
+  - **局部类内部的名字查找次序与其他类相似**。在**声明类的成员时，必须先确保用到的名字位于作用域中，然后再使用该名字**。**定义成员时用到的名字可以出现在类的任意位置**。如果某个名字不是局部类的成员，则继续**在外层函数作用域中查找**;如果还没有找到，则在**外层函数所在的作用域中查找**。
+
+- 嵌套的局部类
+
+  - 可以在局部类的内部再嵌套一个类。此时，嵌套类的定义可以出现在局部类之外。不过，嵌套类必须定义在与局部类相同的作用域中。
+
+    ```c++
+    void foo()
+    {
+    	class Bar
+        {
+            public:
+            class Nested;//声明Nested类
+        };
+        //定义Nested类
+        class Bar::Nested
+        {
+    	};
+    }
+    ```
+
+  - 当我们在类的外部定义成员时，必须指明该成员所属的作用域。因此在上面的例子中，Bar : : Nested的意思是Nested是定义在Bar 的作用域内的一个类。
+
+  - **局部类内的嵌套类也是一个局部类**，**必须遵循局部类的各种规定**。嵌套类的所有成员都必须定义在嵌套类内部。
+
 #### 固有的不可移植的特性
 
+- 所谓不可移植的特性是指因机器而异的特性,，当我们将含有不可移植特性的程序从一台机器转移到另一台机器上时，通常需要重新编写该程序。
 
+1. 位域
 
+   - **类可以将其（非静态）数据成员定义成位域**(bit-field)，在一个位域中含有一定数量的二进制位。位域在内存中的布局是与机器相关的
+   - **位域的类型必须是整型或枚举类型**。因为带符号位域的行为是由具体实现确定的，所以在**通常情况下我们使用无符号类型保存一个位域**。==**位域的声明形式**==是在==**成员名字之后紧跟一个冒号以及一个常量表达式**==，该表达式用于指定成员所占的二进制位数。
 
+   ```c++
+   typedef unsigned int Bit;
+   class File
+   {
+   	Bit mode : 2;			//mode 占2位
+   	Bit modified : 1;			//modified占 1位
+   	Bit prot_owner : 3;			//prot_owner占3位
+   	Bit prot_group : 3;			//prot_group 占3位
+   	Bit prot_world : 3;			//prot_world 占 3位
+   	// File的操作和数据成员
+   public:
+   	//文件类型以八进制的形式表示，参见2.1.3节（第35页)
+   	enum modes { READ = 01, WRITE = 02, EXECUTE = 03 };
+   	File& open(modes);
+   	void close();
+   	void write();
+   	bool isRead() const; void setwrite();
+   
+   };
+   ```
 
+   - 如果可能的话,**在类的内部连续定义的位域压缩在同一整数的相邻位，从而提供存储压缩**。
+     - 例如在之前的声明中，五个位域可能会存储在同一个`unsigned int`中。这些二进制位是否能压缩到1个整数中以及如何压缩是与机器相关的。
+   - **取地址运算符(&）不能作用于位域，因此任何指针都无法指向类的位域。**
 
+   - 使用位域
 
+   ```c++
+   void File::write()
+   {
+       modified = 1;
+       //...
+   }
+   void File::close()
+   {
+   	if(modified)
+           //......保存内容
+   }
+   File &File::open(File::modes m)
+   {
+       mode|=READ;//按默认方式设置READ
+       //其它处理
+       if(m&WRITE)//如果打开了READ和WRITE
+           //按照读/写方式打开文件
+      	return *this;
+   }
+   //检查或设置位域的值
+   inline bool File::isRead()const{return mode&READ;}
+   inline void File::setWrite(){mode|=WRITE;}
+   ```
 
+2. `volatile`限定符
+
+   - **`volatile`的确切含义与机器有关，只能通过阅读编译器文档来理解。要想让使用了 `volatile`的程序在移植到新机器或新编译器后仍然有效,通常需要对该程序进行某些改变。**
+   - 程序可能包含一个由系统时钟定时更新的变量。**当对象的值可能在程序的控制或检测之外被改变时**，**应该将该对象声明为 `volatile`。**关键字`volatile`告诉编译器不应对这样的对象进行优化。
+
+   ```c++
+   volatile int display_register; //该int值可能发生改变
+   volatile Task *curr_taskl;		//curr_task指向一个volatile对象
+   volatile int iax[max_size];		//iax的每个元素都是volatile
+   volatile Screen bitmapBuf;		//bitmapBuf的每个成员都是volatile
+   ```
+
+   - `const`和 `volatile` 限定符互相没什么影响，某种类型可能既是`const`的也是`volatile`的，此时它同时具有二者的属性。
+   - 只有`volatile`的成员函数才能被`volatile`的对象调用
+   - `volatile`限定符和指针之间也存在类似的关系。我们可以声明`volatile`指针，指向`volatile`对象的指针，指向`volatile`对象的`volatile`指针。
+
+   ```c++
+   volatile int v;		//v是一个volatile int
+   int *volatile vip;	//vip是一个volatile指针，它指向int
+   volatile int *ivp;	//ivp是一个指针，它指向一个volatile int
+   volatile int *volatile vivp;	//vivp是一个volatile指针，它指向一个volatile int
+   ```
+
+   - 和`const`一样，我们只能将一个`volatile`对象的地址（或者拷贝一个指向`volatile`类型的指针）赋给一个指向` volatile `的指针。同时，只有当某个引用是`volatile`的时，我们才能使用一个`volatile`对象初始化该引用。
+   - `const`和`volatile`的**一个重要区别是我们不能使用合成的拷贝/移动构造函数及赋值运算符初始化`volatile`对象或从`volatile`对象赋值**。合成的成员接受的形参类型是（非`volatile`）常量引用,显然我们不能把一个非 `volatile`引用绑定到一个volatile对象上。
+
+   ```c++
+   //如果一个类希望拷贝，移动或赋值它的volatile对象，则该类必须自定义拷贝或移动操作
+   class Foo
+   {
+   	public:
+       Foo(const volatile Foo&);	//从一个volatile对象进行拷贝
+       //将一个volatile对象赋值给一个非volatile对象
+       Foo& operator=(volatile const Foo&);
+       //将一个volatile对象赋值给一个volatile对象
+       Foo& operator=(volatile const Foo&)volatile;
+   };
+   ```
+
+   - 尽管我们可以为`volatile`对象定义拷贝和赋值操作，但是一个更深层次的问题是拷贝`volatile`对象是否有意义呢?不同程序使用`volatile`的目的各不相同，对上述问题的回答与具体的使用目的密切相关。
+
+3. 链接指示：`extern "C"`
+
+   - 要想把`C++`代码和其他语言(包括C语言)编写的代码放在一起使用，要求我们必须有权访问该语言的编译器，并且这个编译器与当前的`C++`编译器是兼容的。
+
+   - 声明一个非C++函数
+
+     - **链接指示可以有两种形式:单个的或复合的**。链接指示不能出现在类定义或函数定义的内部。==**同样的链接指示必须在函数的每个声明中都出现**。==
+
+     ```c++
+     //可能出现在C++头文件<cstring>中的链接指示
+     //单语句链接指示
+     extern "C" size_t strlen (const char *);
+     //复合语句链接指示
+     extern "C"{
+     int strcmp (const char* ,const char* ) ;
+     char *strcat (char*, const char* ) ;
+     }
+     //编译器也可能会支持其它语言的链接指示，如extern "Ada",extern "FORTRAN"
+     ```
+
+   - 链接指示与头文件
+
+     ```c++
+     //复合语句链接指示
+     extern "C"{
+         #include<string.h>		//操作C风格字符串的C函数
+     }
+     ```
+
+     - **头文件中的所有普通函数声明都被认为是由链接指示的语言编写的**。链接指示可以嵌套，**因此如果头文件包含带自带链接指示的函数，则该函数的链接不受影响。**
+     - **C++从C语言继承的标准库函数可以定义成C函数,但并非必须:决定使用C还是C++实现C标准库，是每个C++实现的事情。**
+
+   - 指向`extern "C"`函数的指针
+
+     - **==编写函数所用的语言是函数类型的一部分==。因此,对于使用链接指示定义的函数来说，它的每个声明都必须使用相同的链接指示。而且，指向其他语言编写的函数的指针必须与函数本身使用相同的链接指示:**
+
+     ```c++
+     //pf指向一个C函数，该函数接收一个int返回void
+     extern "C" void (*pf)(int);
+     //指向C函数的指针与指向C++函数的指针是不一样的类型，一个指向C函数的指针不能用在执行初始化或赋值操作后指向C++函数，反之亦然
+     void (*pf1)(int);			//指向一个C++函数
+     extern "C" void(*pf2)(int);	//指向一个C函数
+     pf1 = pf2;					//错误：pf1和pf2的类型不同
+     ```
+
+     - 有的C++编译器会接受之前的这种赋值操作并将其作为对语言的扩展,尽管从严格意义上来看它是非法的。
+
+   - 链接指示对整个声明都有效
+
+     - 当我们使用链接指示时，它不仅对函数有效，而且对作为返回类型或形参类型的函数指针也有效。
+
+       ```c++
+       //f1是一个C函数，它的形参是一个指向C函数的指针
+       extern "C" void fl (void (* ) (int) );
+       ```
+
+     - 因为链接指示同时作用于声明语句中的所有函数，所以如果我们希望给C++函数传入一个指向C函数的指针，则必须使用类型别名。
+
+     ```c++
+     // FC是一个指向C函数的指针
+     extern "C" typedef void FC(int) ;
+     // f2是一个C++函数，该函数的形参是指向C函数的指针
+     void f2(FC * );
+     ```
+
+   - 导出C++函数到其它语言
+
+     - 通过使用链接指示对函数进行定义，我们可以令一个C++函数在其他语言编写的程序中可用:
+
+     ```c++
+     //calc函数可以被C程序调用
+     extern "C" double calc(double dparm){/*.......*/}
+     ```
+
+     - 编译器将为该函数生成适合指定语言的代码。
+     - 有时需要在C和C++中编译同一个源文件，为了实现这一目的，在编译C++版本的程序时预处理器定义` __cplusplus(`两个下画线）。利用这个变量，我们可以在编译C++程序的时候有条件地包含进来一些代码:
+
+     ```c++
+     #ifdef __cplusplus
+     //我们正在编译C++程序
+     extern "C"
+     #endif
+     int strcmp(const char*,const char*);
+     ```
+
+   - 重载函数与链接指示
+
+     - 链接指示与重载函数的相互.作用依赖于目标语言。如果目标语言支持重载函数,则为该语言实现链接指示的编译器很可能也支持重载这些C++的函数。
+     - C语言不支持函数重载,因此也就不难理解为什么一个C链接指示只能用于说明一组重载函数中的某一个了:
+
+     ```c++
+     //错误:两个extern "C"函数的名字相同
+     extern "C" void print (const char* ) ;
+     extern "C" void print (int) ;
+     
+     //如果在一组重载函数中有一个是C函数，则其余的必定都是C++函数:
+     class SmallInt {/ * ...* / };
+     class BigNum { /* ...*/ };
+     //C函数可以在C或C++程序中调用
+     //C++函数重载了该函数，可以在C++程序中调用
+     extern "C" double calc (double);
+     extern smallInt calc(const SmallInt& );
+     extern BigNum calc (const BigNum& );
+     //C版本的calc函数可以在C或C++程序中调用，而使用了类类型形参的C++函数只能在C++程序中调用。上述性质与声明的顺序无关。
+     ```
+
+     
 
