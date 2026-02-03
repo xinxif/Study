@@ -319,26 +319,26 @@
 
    - <img style="width: 1100px;height:240px" src="image\Buttons.png">
    - <img style="width: 1100px;height:440px" src="image\输入组件.png">
-   - <img style="width: 1100px;height:440px" src="image\InputWidget.png">
-   - <img style="width: 1100px;height:340px" src="image\显示类组件.png">
-   - <img style="width: 1100px;height:340px" src="image\显示类组件2.png">
-   - <img style="width: 1100px;height:740px" src="image\容器类组件.png">
+   - <img style="width: 1100px;height:540px" src="image\InputWidget.png">
+   - <img style="width: 1100px;height:440px" src="image\显示类组件.png">
+   - <img style="width: 1100px;height:440px" src="image\显示类组件2.png">
+   - <img style="width: 1100px;height:840px" src="image\容器类组件.png">
    - `QAxWidget`**是从`QWidget` 间接继承**的，继承关系比较复杂。
    - <img style="width: 1100px;height:340px" src="image\ItemWidget.png">
    - 还有一些界面组件并没有出现在 `Qt Designer` 的组件面板里，例如常用的菜单栏（`QMenuBar`类）、菜单（`QMenu` 类）、工具栏（`QToolBar` 类）、状态栏（`QStatusBar` 类）等组件，对应的几个类都是直接从`QWidget` 继承而来的，
    
 2. `QWidget` 类的主要属性和接口函数
 
-   - <img style="width: 1100px;height:540px" src="image\QWidget的主要属性.png">
+   - <img style="width: 1100px;height:640px" src="image\QWidget的主要属性.png">
 
      - `sizePolicy`
-       - `QSizePolicy`类型，它定义了组件在**水平和垂直**方向的尺寸变化策略。`Horizontal Policy`组件在水平方向的尺寸变化策略，`Vertical Policy` 表示组件在垂直方向的尺寸变化策略。其值都是枚举类型`QSizePolicy::Policy`
+       - ==**`QSizePolicy`类型**==，它定义了组件在**水平和垂直**方向的尺寸变化策略。`Horizontal Policy`组件在水平方向的尺寸变化策略，`Vertical Policy` 表示组件在垂直方向的尺寸变化策略。其值都是枚举类型`QSizePolicy::Policy`
        - `QSizePolicy::Preferred`：首选尺寸，使用`sizeHint()`函数的返回值作为**最优**尺寸，组件仍然可以缩放，但是放大时不会超过`sizeHint()`函数返回的尺寸。
        - `QSizePolicy::Expanding`：可扩展尺寸，`sizeHint()`函数的返回值是**可变大小**的尺寸，组件可扩展。
        - `QSizePolicy::MinimumExpanding`：最小可扩展尺寸，`sizeHint()`函数的返回值是**最小**尺寸，组件可扩展。
        - `QSizePolicy::Ignored`：忽略尺寸，`sizeHint()`函数的返回值被忽略，**组件占据尽可能大的空间**。
        - 在使用尺寸策略时，`QWidget` 的`sizeHint()`函数会起到很大作用，在组件的父组件尺寸变化时，`sizeHint()`返回组件的建议尺寸。
-       - `QSizePolicy` 还有`Horizontal Stretch`（水平延展）属性和`Vertical Stretch`（垂直延展）属性，分别表示水平延展因子和垂直延展因子，它们都是整数值，取值范围是0～255。默认值是0，表示组件保持默认的宽度或高度。
+       - `QSizePolicy` 还有`Horizontal Stretch`（==**水平延展**==）属性和`Vertical Stretch`（==**垂直延展**==）属性，分别表示水平延展因子和垂直延展因子，它们都是整数值，取值范围是0～255。默认值是0，表示组件保持默认的宽度或高度。
        - <img style="width: 1100px;height:240px" src="image\延展因子.png">
      
    - `QWidget` 作为窗口时的属性
@@ -355,7 +355,6 @@
        void showMinimized(); //窗口最小化
        void showNormal(); //全屏、最大化或最小化操作之后，恢复正常大小显示
        
-           
        //QWidget 中定义的信号只有3 个，定义如下：
        void customContextMenuRequested(const QPoint &pos);
        void windowIconChanged(const QIcon &icon);
@@ -371,14 +370,14 @@
    - `QFormLayout`：表单布局，与`QGridLayout` 功能类似，适用于**两列组件**的布局管理。
    - ==`QStackedLayout`：堆叠布局。==
      - `QStackedLayout `用于管理多个`QWidget` 类对象，也就是多个页面，但任何时候只有一个页面可见。
-     - `QStackedLayout` 的管理效果与`QStackedWidget` 的相似，只是它没有切换页面的按钮，需要另外编程处理页面切换。
+     - `QStackedLayout` 的管理效果与`QStackedWidget` 的相似，只是它==**没有切换页面的按钮**==，需要另外编程处理页面切换。
    - <img style="width: 1100px;height:240px" src="image\布局管理继承体系.png">
-   - 表单布局只适用于两列组件的布局，例如第一列是 `QLabel` 组件，第二列是`QLineEdit`，`QComboBox` 等输入组件，构成一种输入表单。
+   - 表单布局==**只适用于两列组件**==的布局，例如第一列是 `QLabel` 组件，第二列是`QLineEdit`，`QComboBox` 等输入组件，构成一种输入表单。
    - `Horizontal Spacer` 和`Vertical Spacer` 对应的类均是`QSpacerItem`。`QSpacerItem` 可以用于在布局中占位，或填充剩余空间。
    - 分割条组件类 `QSplitter` 是从`QWidget `继承而来的，所以它是一个可见的界面组件。分割条一般用于水平或垂直分割来显示两个容器类组件。
 2. 布局可视化设计及其代码原理
    - 任何布局类对象在可视化设计时都有`layoutLeftMargin`、`layoutTopMargin`、`layoutRightMargin` 和
-     `layoutBottomMargin` 这4 个边距属性，这4 个**边距属性**用于设置**布局组件与父容器的4 个边距的最小值**，单位是**像素**。水平布局和垂直布局还有一个属性`layoutSpacing`，表示**组件的最小间距**。
+     `layoutBottomMargin` 这4 个边距属性，这4 个**边距属性**用于设置**==布局组件与父容器==的4 个边距的最小值**，单位是**像素**。水平布局和垂直布局还有一个属性`layoutSpacing`，表示**组==件的最小间距==**。
    - 网格布局
      - `layoutHorizontalSpacing`：水平方向上组件的最小间距。
      - `layoutVerticalSpacing`：垂直方向上组件的最小间距。
@@ -386,17 +385,18 @@
      - `layoutColumnStretch`：各列的延展因子，与水平布局的`layoutStretch `属性功能相同。
      - `layoutRowMinimumHeight`：各行的最小高度，单位是像素，若值是0 则表示自动设置。
      - `layoutColumnMinimumWidth`：各列的最小宽度，单位是像素，若值是0 则表示自动设置。
-     - `layoutSizeConstraint`：布局的尺寸限制方式，其值是枚举类型`QLayout::SizeConstraint`，默认设置为`QLayout::SetDefaultConstraint`，也就是**将父组件的最小尺寸作为网格布局的最小尺寸**。
+     - `layoutSizeConstraint`：布局的尺寸限制方式，其值是**枚举类型`QLayout::SizeConstraint`**，默认设置为`QLayout::SetDefaultConstraint`，也就是**将父组件的最小尺寸作为网格布局的最小尺寸**。
      - `void QGridLayout::addWidget(QWidget *widget, int fromRow, int fromColumn, int rowSpan,int columnSpan, Qt::Alignment alignment = Qt::Alignment())`
        - **`fromRow` 和`fromColumn` 表示组件所在的行号和列号，`rowSpan` 和`columnSpan `表示组件占用的行数和列数，`alignment` 表示默认的对齐方式。**
-       - 在设计网格布局的时候，并不意味着每个网格里都必须有组件，网格可以空着，也可以使用水平或垂直间隔组件占位。
+       - 在设计**网格布局**的时候，**并不意味着每个网格里都必须有组件，网格可以空着**，也可以使用水平或垂直间隔组件占位。
+         - **水平或垂直间隔组件**:`Vertical Spacer`，`Horizontal Spacer`
    - 分割条
      - `QSplitter`，分割条可以实现水平分割或垂直分割，一般是在两个可以自由改变大小的组件之间进行分割。
-     - `QMainWindow::setCentralWidget()`函数将其设置为主窗口的中心组件，也就是填充满主窗口的工作区。
+     - `QMainWindow::setCentralWidget()`函数将其设置为主窗口的中心组件，也就是**填充满主窗口的工作区**。
      - `orientation`：方向，即水平分割或垂直分割
      - `opaqueResize`：如果值是`true`，表示拖动分割条时，组件是动态改变大小的
-     - `handleWidth`：进行分割操作的拖动条的宽度，单位是像素。
-     - `childrenCollapsible`：表示进行分割操作时，子组件的大小是否可以变为0。
+     - `handleWidth`：进行分割操作的==**拖动条的宽度**==，单位是像素。
+     - `childrenCollapsible`：表示==**进行分割操作时，子组件的大小是否可以变为0**==。
 
 #### QString
 
@@ -404,13 +404,13 @@
 
    - `QString`存储的是一串字符，每个字符是==一个`QChar` 类型==的数据。`QChar` 使用的是`UTF-16` 编码，==一个字符包含`2` 字节数据。==
 
-   - 对于超过65535 的Unicode 编码，`QString` 使用两个连续的`QChar` 字符表示。
+   - 对于超过65535 的`Unicode` 编码，`QString` 使用两个连续的`QChar` 字符表示。
 
    - `Latin1` 字符集是对`ASCII` 字符集的扩展，也是用1 字节编码，它用128～255 表示拉丁字母表中特殊语言字符的编码。
 
-   - `ASCII` 和`Latin1` 都是用`1` 字节编码的，最多只有`256` 个字符，无法表示汉语、日语等其他语言里的字符，因此又出现了`Unicode` 编码。`Unicode` 编码增加一个或多个高字节对`Latin1` 字节进行扩展。当这些高字节数据为`0` 时，低字节数据就是`Latin1` 字符。`Unicode` 支持大多数国家/地区语言文字的编码，所以被广泛使用。
+   - `ASCII` 和`Latin1` 都是用`1` 字节编码的，最多只有`256` 个字符，无法表示汉语、日语等其他语言里的字符，因此又出现了`Unicode` 编码。`Unicode` 编码增**加一个或多个高字节**对`Latin1` 字节进行扩展。当这些高字节数据为`0` 时，低字节数据就是`Latin1` 字符。`Unicode` 支持大多数国家/地区语言文字的编码，所以被广泛使用。
 
-   - `Unicode` 有多种存储方案，其中`UTF-8` 最少用`1` 字节编码，可以使用`1～4 `字节编码；`UTF-16` 最少用`2`字节编码，可以使用`2` 字节或`4` 字节编码。`UTF-8` 可以兼容`Latin1` 编码，所以被广泛使用。`Qt Creator` 存储的`C++`语言头文件和源程序文件都默认使用`UTF-8` 编码。
+   - `Unicode` 有多种存储方案，其中`UTF-8` 最少用`1` 字节编码，**可以使用`1～4 `字节编码**；`UTF-16` 最少用`2`字节编码，可以使用`2` 字节或`4` 字节编码。**`UTF-8` 可以兼容`Latin1` 编码**，所以被广泛使用。`Qt Creator` 存储的`C++`语言头文件和源程序文件都默认使用`UTF-8` 编码。
 
    - ```c++
      QString str= "dimple,酒窝";
@@ -426,16 +426,16 @@
 
    - 只有当`QChar` 字符的编码为`0～255` 时，函数`toLatin1()`的转换才有意义。
 
-   - `QChar` 的接口函数`unicode()`用于返回字符的`UTF-16` 编码。也就是char16_t 类型的数。
+   - `QChar` 的接口函数`unicode()`用于返回字符的`UTF-16` 编码。也就是`char16_t` 类型的数。
 
-   - `QChar QChar::fromUcs2(char16_t c)`通过char16_t 类型的编码构造`QChar` 字符。静态函数。
+   - ==`QChar QChar::fromUcs2(char16_t c)`通过`char16_t` 类型的编码构造`QChar` 字符。**静态函数**。==
 
    - ```c++
      QString str= "Hello,北京";
      str[6]= QChar(0x9752); 				//'青'，使用构造函数
      str[7]= QChar::fromUcs2(0x5C9B); 	//'岛'，使用静态函数
      
-     //Qt 的源程序文件采用的是UTF-8 编码，源代码中的“青”是2 字节UTF-8 编码，而QChar没有这种类型参数的构造函数。
+     //Qt的源程序文件采用的是UTF-8 编码，源代码中的“青”是2 字节UTF-8编码，而QChar没有这种类型参数的构造函数。
      str[6]= QChar('青'); 				//错误的代码
      ```
 
@@ -445,7 +445,7 @@
 
      - 函数`left()`和`right()`。函数`left()`从字符串中提取左边`n `个字符，函数`right()`从字符串中提取右边`n` 个字符
 
-     - `first()`与`left()`功能相同，`last()`与`right()`功能相同，`first()`和`last()`是`Qt 6.0` 中引入的函数，执行速度更快。
+     - `first()`与`left()`功能相同，`last()`与`right()`功能相同，**`first()`和`last()`是`Qt 6.0` 中引入的函数，执行速度更快**。
 
      - `QString QString::mid(qsizetype pos, qsizetype n = -1)`
 
@@ -462,7 +462,7 @@
 
      - `QString QString::section(const QString &sep, qsizetype start, qsizetype end = -1,QString::SectionFlags flags = SectionDefault)`
 
-       - 从字符串中提取以`sep` 作为分隔符，从`start` 段到`end` 段的字符串。
+       - 从字符串中**提取以`sep` 作为分隔符，从`start` 段到`end` 段的字符串**。
 
        - ```c++
          QString str2, str1= "学生姓名,男,2003-6-15,汉族,山东";
@@ -525,68 +525,67 @@
      - `int toInt(bool *ok = nullptr, int base = 10);`
 
        - `base` 可以设置为2～36，
-       - 如果转换失败，返回值是0。如果要判断转换是否成功，不要根据返回值是否为0 来判断，而是要传递参数`ok`，根据`ok` 的返回值来判断。
-       - **==字符串表示的是进制数则base因该设为2==**
-       - 
-
-     - `float toFloat(bool *ok = nullptr)`
-
-     - `double toDouble(bool *ok = nullptr)`
-
-     - `setNum()`用于**将整数或浮点数转换为字符串**。`setNum()`是==`overload` 型函数==，有很多种参数形式。
-
-       - `QString &setNum(float n, char format = 'g', int precision = 6)`
+       - 如果转换失败，返回值是0。如果要判断转换是否成功，不要根据返回值是否为0 来判断，==**而是要传递参数`ok`，根据`ok` 的返回值来判断**。==
+       - **==字符串表示的是二进制数则base因该设为2==**
+       
+- `float toFloat(bool *ok = nullptr)`
+     
+- `double toDouble(bool *ok = nullptr)`
+     
+- `setNum()`用于**将整数或浮点数转换为==字符串==**。`setNum()`是==`overload` 型函数==，有很多种参数形式。
+     
+  - `QString &setNum(float n, char format = 'g', int precision = 6)`
        - <img style="width: 1100px;height:180px" src="image\浮点数格式.png">
-
-     - ==**静态函数**==`number()`
-
-       - 参数形式和功能与成员函数`setNum()`的相似
-
-     - **静态函数**`asprintf()`
-
-       - `QString` 的静态函数`asprintf()`用于构造格式化输出各种数据的字符串，类似于标准C 语言中的函数`printf()`。
-
-       - `cformat`格式化字符串中支持汉字，但是**替换格式化字符串中的**`%s `只能==**用`UTF-8` 编码的字符串**==，也就是变量的字符串中不能有汉字，否则会出现乱码。
-
-       - ```c++
+     
+- ==**静态函数**==`number()`
+     
+  - 参数形式和功能与成员函数`setNum()`的相似
+     
+- **静态函数**`asprintf()`
+     
+  - `QString` 的静态函数`asprintf()`用于构造格式化输出各种数据的字符串，类似于标准C 语言中的函数`printf()`。
+     
+  - `cformat`格式化字符串中支持汉字，但是**替换格式化字符串中的**`%s `只能==**用`UTF-8` 编码的字符串**==，也就是变量的字符串中不能有汉字，否则会出现乱码。
+     
+  - ```c++
          QString UPC = "UPC";
          //QString UPC= "石油大学"; //如果这个字符串中有汉字，str2 会出现乱码
          QString str2= QString::asprintf("Hello,欢迎来到 %s",UPC.toLocal8Bit().data());
          //将QString型变量UPC的UTF-16 编码的字符串转换为本地8位编码的QByteArray型数据，再得到QByteArray数据的char 类型指针
          ```
-
-     - 函数`arg()`
-
-       - `QString arg(int a, int fieldWidth = 0, int base = 10, QChar fillChar = QLatin1Char(' '))`
-
-         - `a` 是要转换为字符串的整数
-
-         - `fieldWidth` 是转换成的字符串占用的最少空格数
-
-         - `base`是转换成的字符串显示进制
-
-         - `fillChar`是当`fieldWidth`大于实际数位宽度时使用的填充字符，默认用空格
-
-         - ```c++
+     
+- 函数`arg()`
+     
+  - `QString arg(int a, int fieldWidth = 0, int base = 10, QChar fillChar = QLatin1Char(' '))`
+     
+    - `a` 是要转换为字符串的整数
+     
+    - `fieldWidth` 是转换成的字符串占用的最少空格数
+     
+    - `base`是转换成的字符串显示进制
+     
+    - `fillChar`是当`fieldWidth`大于实际数位宽度时使用的填充字符，默认用空格
+     
+    - ```c++
            //格式字符串中占位符出现的顺序可以打乱，甚至可以重复出现，例如，最后一行代码如果是：
            QString str1= QString("%1 年度: %3/%2/%1").arg(Y).arg(M,2,base,ch).arg(D,2,base,ch);
            //那么，str1 的内容为“2021 年度: 03/08/2021”。
            ```
-
-       - `QString arg(const QString &a, int fieldWidth = 0, QChar fillChar = QLatin1Char(' '))`
-
-         - 以`QString` 作为输入参数类型
-
-       - `QString arg(double a, int fieldWidth = 0, char format = 'g', int precision = -1,QChar fillChar = QLatin1Char(' '))`
-
-         - 可以把浮点数转换为字符串
+     
+  - `QString arg(const QString &a, int fieldWidth = 0, QChar fillChar = QLatin1Char(' '))`
+     
+    - 以`QString` 作为输入参数类型
+     
+  - `QString arg(double a, int fieldWidth = 0, char format = 'g', int precision = -1,QChar fillChar = QLatin1Char(' '))`
+     
+    - **可以把浮点数转换为字符串**
 
 #### QSpinBox和QDoubleSpinBox
 
 1. 属性和接口函数
    - `QSpinBox` 和`QDoubleSpinBox` 都是`QAbstractSpinBox` 的子类，具有很多相同的属性，只是参数类型不同。
    - <img style="width: 1100px;height:340px" src="image\主要属性.png">
-   - 从Qt 5.12开始，`QSpinBox` 和`QDoubleSpinBox` 新增了一个`stepType` 属性，表示步长变化的方式，属性值是枚举类型`QAbstractSpinBox::StepType`
+   - 从**Qt 5.12**开始，`QSpinBox` 和`QDoubleSpinBox` 新增了一个`stepType` 属性，表示步长变化的方式，属性值是枚举类型`QAbstractSpinBox::StepType`
      - `QAbstractSpinBox::DefaultStepType`：默认步长，也就是使用属性`singleStep` 设置的固定步长。
      - `QAbstractSpinBox::AdaptiveDecimalStepType`：自适应十进制步长，表示将自动连续调整步
        长值为10^n^，其中n为大于或等于0 的整数。例如，value 属性值为10 以下时，`singleStep`属性值为1；`value` 属性值为100～999 时，`singleStep` 属性值为10。
@@ -596,27 +595,27 @@
      - `void QSpinBox::valueChanged(int i)`
        - value 属性值变化时被发射，传递的参数`i `是变化之后的数值。
      - `void QSpinBox::textChanged(const QString &text)`
-       - 显示的文字发生变化时被发射，例如数值变化导致文字变化，`prefix` 或`suffix` 属性变化导致文字变化。
+       - 显示的文字发生变化时被发射，例如**数值变化导致文字变化**，`prefix` 或`suffix` 属性变化导致文字变化。
 
 #### 常用的按钮组件
 
 1. 普通按钮（`QPushButton` 类）、工具按钮（`QToolButton` 类）、单选按钮（`QRadioButton` 类）、复选框（`QCheckBox` 类），它们都有共同的父类`QAbstractButton`（**抽象类**）。
-   - 这4 种按钮都是可复选的，通过设置属性，普通按钮也可以实现复选框或单选按钮的功能。
+   - 这4 种按钮都是可复选的，**通过设置属性，普通按钮也可以实现复选框或单选按钮的功能**。
 2. 各按钮类的接口详解
-   - <img style="width: 1100px;height:240px" src="image\QAbstractButton.png">
-     - `QPushButton` 的`checkable` 属性默认值是`false`，它一般作为普通按钮使用。
+   - <img style="width: 1100px;height:340px" src="image\QAbstractButton.png">
+     - `QPushButton` 的`checkable` 属性默认值是`false`，它一般作为普通按钮使用
      - `QRadioButton` 和`QCheckBox` 的`checkable` 属性默认值是`true`，它们有复选状态
      - `QCheckBox` 的`autoExclusive` 属性默认值是`false`，所以复选框一般用于非互斥的选项
      - `QRadioButton` 的`autoExclusive` 属性默认值是`true`，所以单选按钮一般用于互斥的选项
    - <img style="width: 1100px;height:140px" src="image\QPushButton.png">
-     - 只有当按钮所在的**窗口基类是 `QDialog` 时，`autoDefault` 和`default` 属性才有意义**。
-       - 在对话框上，如果一个按钮的`default `属性为`true`，它就是默认按钮，按下`Enter` 键就相当于点击了默认按钮。
+     - 只有当按钮所在的==**窗口基类是 `QDialog` 时，`autoDefault` 和`default` 属性才有意义**==。
+       - 在对话框上，如果一个按钮的`default `属性为`true`，它就是默认按钮，**按下`Enter` 键**就相当于点击了默认按钮。
        - 如果一个按钮的`autoDefault` 属性为`true`，它就是**自动**默认按钮，当它获得**焦点**时，它就会变成默认按钮。
-   - `QCheckBox` 增加了==一个`tristate` 属性，==表示是否允许有`3` 种复选状态，即除了`Checked` 和`Unchecked`，==**还有`PartiallyChecked`**==。可以分别用`QAbstractButton` 定义的函数`isChecked()`和`setChecked()`读取和设置复选状态，也可以分别用`QCheckBox` 中定义的函数`checkState()`和`setCheckState()`读取和设置复选状态。
-   - 常用的信号是`clicked()`。如果**按钮是可复选的**，还可以使用`clicked(bool)`信号，`bool` 类型参数是点击按钮后`checked` 属性的值。
+   - `QCheckBox` 增加了==一个`tristate` 属性，==表示是否允许有`3` 种复选状态，即除了`Checked` 和`Unchecked`，==**还有`PartiallyChecked`**==。可以分别用`QAbstractButton` 定义的函数`isChecked()`和`setChecked()`读取和设置复选状态，也可以分别用`QCheckBox` 中定义的==**函数`checkState()`和`setCheckState()`读取和设置复选状态**==。
+   - 常用的信号是`clicked()`。如果**按钮是可==复选==的**，还可以使用`clicked(bool)`信号，`bool` 类型参数是点击按钮==**后**==`checked` 属性的值。
      - 按钮的 `checked` 属性值变化时，按钮会发射`toggled(bool)`信号，`bool` 类型参数是变化之后的`checked` 属性的值。点击按钮或运行函数`setChecked()`会导致`checked` 属性值发生变化
    - `QCheckBox` 定义了**一个新信号**，定义如下：`void QCheckBox::stateChanged(int state)`
-     - **当复选框的复选状态变化时，组件发射此信号**。如果**复选框的`tristate` 属性设置为`false`，**也就是只有两种复选状态时，`stateChanged()`信号和`toggled()`信号的作用是一样的。
+     - 当复选框的**复选状态变化**时，组件发射此信号。如果**复选框的`tristate` 属性设置为`false`，**也就是只有两种复选状态时，`stateChanged()`信号和`toggled()`信号的作用是一样的。
 
 #### QSlider和QProgressBar
 
@@ -626,8 +625,8 @@
 2. 各组件类的主要属性和接口函数
    - <img style="width: 1100px;height:340px" src="image\QAbstractSlider.png">
      - `QAbstractSlider` 的接口函数主要是这些属性的读写函数，还有一个常用的函数`setRange()`
-   - <img style="width: 1100px;height:170px" src="image\Abslid信号.png">
-     - `actionTriggered(int action)`信号在滑动条触发一些动作时被发射，`action` 表示动作的类型，用枚举类型`QAbstractSlider::SliderAction` 的值表示
+   - <img style="width: 1100px;height:270px" src="image\Abslid信号.png">
+     - `actionTriggered(int action)`信号在滑动条触发一些动作时被发射，`action` 表示动作的类型，用**枚举类型`QAbstractSlider::SliderAction` 的值表示**
        - 如`SliderToMinimum` 表示滑动到最小值。
      - `value` 属性值改变时，组件会发射`valueChanged()`信号，可以通过拖动滑块改变`value` 属性的值，也可以在程序中运行函数`setValue()`改变`value` 属性的值。
      - 用鼠标拖动滑块移动时，组件会发射`sliderMoved(int value)`信号，参数`value` 是组件的当前值。
@@ -647,7 +646,7 @@
    - `QProgressBar`类
      - `QProgressBar` 表示进度条组件，一般以百分比数据来显示进度。`QProgressBar` 的**父类是`QWidget`，它与`QAbstractSlider` 类没有继承关系**。
      - `textDirection`：文字的方向，这表示垂直进度条的文字的阅读方向，包括从上往下和从下往上两种选项。这个属性对于水平进度条无意义。
-     - `format`：显示文字的格式，“%p%”显示百分比，“%v”显示当前值，“%m”显示总步数。默认为“%p%”
+     - `format`：**显示文字的格式**，“%p%”显示百分比，“%v”显示当前值，“%m”显示总步数。默认为“%p%”
 
 #### 日期时间数据
 
@@ -690,11 +689,11 @@
 
      - 日期时间编辑框的特性与`QSpinBox` 的有些相似，只是日期时间编辑框里提供了多个输入段，例如，`QTimeEdit` 有小时、分钟、秒3 个输入段，当光标落在某个段时，点击编辑框右端的上下调节按钮，就可以调节这个段的数值。
 
-     - 属性编辑器中显示的==`QDateTimeEdit` ==的属性
+     - 属性编辑器中显示的`QDateTimeEdit` 的==属性
 
        - `currentSection`：光标所在的日期时间输入段，是枚举类型`QDateTimeEdit::Section`。
        - `currentSectionIndex`：用序号表示的光标所在的段。
-       - `calendarPopup`：是否允许弹出一个==**日历**==选择框。当设置为`true` 时，**编辑框右端**的**上下调节**按钮变成**一个下拉**按钮，点击按钮时会出现一个日历选择框，用于在日历上选择日期。
+       - `calendarPopup`：是否允许弹出一个==**日历选择框**==。当设置为`true` 时，**编辑框右端**的**上下调节**按钮变成**一个下拉**按钮，点击按钮时会出现一个日历选择框，用于在日历上选择日期。
        - `displayFormat`：日期时间数据的显示格式，格式字符的含义如表4-16 所示。
 
      - `QDateTimeEdit` 有如下3 个信号
@@ -749,13 +748,12 @@
          - `Qt::CoarseTimer`：粗糙定时器，定时误差尽量在定时周期值的5%以内。
          - `Qt::VeryCoarseTimer`：非常粗糙的定时器，精度保持在秒级。
      - 槽函数
-       - <img style="width: 1100px;height:140px" src="image\QTime槽函数.png">
+       - <img style="width: 1100px;height:100px" src="image\QTime槽函数.png">
      - `QTimer` 只有一个`timeout()`信号
        - 函数`start()`启动定时器后，定时溢出时发射`timeout()`信号。连续定时，周期性地定时溢出和周期性地发射timeout()信号；单次定时，只会发生一次定时溢出和发射一次`timeout()`信号。
      - 静态函数`singleShot()`
        - 用于创建和启动单次定时器并且将定时器的`timeout()`信号与指定的槽函数关联。这个函数有多种参数形式。
-         - `void QTimer::singleShot(int msec, Qt::TimerType timerType,
-           const QObject *receiver, const char *member)`
+         - `void QTimer::singleShot(int msec, Qt::TimerType timerType,const QObject *receiver, const char *member)`
 3. `QElapsedTimer` 类
    - **它没有父类，不支持Qt 的元对象系统**。
      - `elapsed()`的返回值是自上次运行`start()`之后计时器的运行时间，单位是毫秒。
@@ -764,8 +762,7 @@
    - `QLCDNumber`的关键属性是`digitCount` 和`smallDecimalPoint`
      - `digitCount `表示显示的数字位数
      - `smallDecimalPoint` 表示是否显示小数点
-     - `digitCount` 设置为2，`smallDecimalPoint` 设置为`false`，就只显示
-       两位整数
+     - `digitCount` 设置为2，`smallDecimalPoint` 设置为`false`，就只显示两位整数
 
 #### QComboBox
 
@@ -778,9 +775,9 @@
 
 3. `QComboBox`的信号
 
-   - 函数中的参数index 是项的序号，text 是项的文字。
+   - 函数中的参数`index` 是项的序号，`text` 是项的文字。
 
-   - <img style="width: 1100px;height:140px" src="image\QCombo信号.png">
+   - <img style="width: 1100px;height:240px" src="image\QCombo信号.png">
 
      - **选择**下拉列表的一个项时，**即使选择的项没有发生变化**，组件也会发射 `activated()`信号
      - 当 `currentIndex` **属性**变化时，不管是用户在界面操作还是程序导致`currentIndex` 变化，组件都会发射`currentIndexChanged()`信号。
@@ -843,7 +840,7 @@
          void clear() 			   //清除整个列表
          ```
 
-     - 访问列表项
+     - 访问==**列表项**==
 
        - ```c++
          int count() 									//返回列表中项的总数
@@ -875,17 +872,17 @@
    - `iconText`：这是用`Action` 创建**工具按钮时**按钮上**显示的文字**。在图4-41 所示对话框中设置了`Text` 属性后，`iconText` 就自动等于`Text`。如果`Text` 设置的文字有...`iconText` 的文字会自动去除...。
      - <img style="width: 1100px;height:400px" src="image\Act编辑器.png">
    - ==`statusTip`==：这是**鼠标移动到菜单项或工具按钮上时**，在主窗口下方状态栏的临时消息区显示的文字，**显示两秒后自动消失**。`statusTip` 一般是对`Action` 比较详细的描述，默认为空。
-   - `shortcutContext`：这是`Action` 的**快捷键的有效响应范围**，默认值为`WindowShortcut`，**表示`Action` 关联的组件是当前窗口的子组件时快捷键有效**；如果值为`ApplicationShortcut`，表示只要应用程序有窗口显示，快捷键就有效。
+   - `shortcutContext`：这是`Action` 的==**快捷键的有效响应范围**==，默认值为`WindowShortcut`，**表示`Action` 关联的组件是当前窗口的子组件时快捷键有效**；如果值为`ApplicationShortcut`，表示只要应用程序有窗口显示，快捷键就有效。
    - `autoRepeat`：表示当**快捷键被==一直按下时==**，`Action` 是否自动重复执行。
    - `menuRole`：==**这个属性在`macOS` 上才有意义**==，表示`Action` 创建的菜单项的作用。
    - `iconVisibleInMenu`：表示在菜单项上是否显示`Action` 的图标。
-   - `shortcutVisibleInContextMenu`：表示在使用`Action` 创建右键快捷菜单时，是否显示快捷键。
-   - `priority`：表示`Action` 在`UI` 上的优先级，默认值为`NormalPriority`。如果设置为`LowPriority`，当工具栏的`toolButtonStyle` 属性设置为`Qt::ToolButtonTextBesideIcon` 时，按钮上将不显示`Action` 的文字。
+   - **`shortcutVisibleInContextMenu`**：表示在使用`Action` 创建右键快捷菜单时，是否显示快捷键。
+   - `priority`：**表示`Action` 在`UI` 上的优先级**，默认值为`NormalPriority`。如果设置为`LowPriority`，当工具栏的`toolButtonStyle` 属性设置为`Qt::ToolButtonTextBesideIcon` 时，按钮上将不显示`Action` 的文字。
    - <img style="width: 1100px;height:400px" src="image\QAction.png">
 
 3. 设计菜单栏和工具栏
 
-   - 菜单栏`QMenuBar`，工具栏`QToolBar`，状态栏`QStatusBar`它们都是直接从`QWidget` 继承而来的。
+   - 菜单栏`QMenuBar`，工具栏`QToolBar`，状态栏`QStatusBar`它们都是==**直接从`QWidget` 继承**==而来的。
 
      - 一个主窗口上最多有一个菜单栏和一个状态栏，可以有多个工具栏。
      - <img style="width: 1100px;height:500px" src="image\qact界面.png">
@@ -919,7 +916,7 @@
          ```
 
          - 点击由`Action` 创建的菜单项/工具按钮或按下`Action` 的快捷键时，`QAction` 对象发射`triggered()`信号
-         - 如果`Action` 的`checkable` 属性值为`true`，还会发射`triggered(bool)`信号，`bool` 类型参数表示当前复选状态
+         - 如果`Action` 的`checkable` ==**属性值为`true`**==，还会发射`triggered(bool)`信号，`bool` 类型参数表示当前复选状态
          - `triggered()`==**信号是较常用的**==，一般会为`triggered()`或`triggered(bool)`信号编写槽函数，点击菜单项或工具按钮时，就会运行相关`Action` 的`triggered()`或`triggered(bool)`信号关联的槽函数。
          - 当 `Action` 的`checked` **属性值变化时**，`Action` 会发射`toggled(bool)`信号。点击菜单项或工具按钮可以使`checked` 属性值发生变化，在程序中运行`QAction::setChecked()`函数也可以使`checked` 属性值发生变化。
 
@@ -969,7 +966,7 @@
            - 函数 `addWidget()`添加的组件按添加的**先后顺序**，从状态栏左端开始从左到右排列，也就是**左对齐**。函数`addPermanentWidget()`添加的组件按添加的先后顺序从左到右排列，但是为**右对齐**，也就是最后添加的组件在状态栏右端。
            - 使用 `addWidget()`或`addPermanentWidget()`添加组件后，就可以在组件上显示信息了，例如添加的是一个`QLabel` 组件，就在这个`QLabel` 组件上显示信息即可。
 
-       - 显示临时消息
+       - ==**显示临时消息**==
 
          - ```c++
            void showMessage(const QString &message, int timeout = 0) //显示临时消息
@@ -978,11 +975,11 @@
 
          - 函数`showMessage()`用于在**状态栏上==左端首位==置显示字符串信息**，显示**持续时间**是`timeout`，单位是**毫秒**。如果`timeout` 设置为`0`，就是一直显示，直到被`clearMessage()`清除，或显示下一条临时消息。
 
-         - 使用`showMessage()`显示临时消息时，状态栏上用`addWidget()`添加的组件会被临时隐藏，而用`addPermanentWidget()`函数添加的组件会保持不变。
+         - 使用`showMessage()`显示临时消息时，**状态栏上用`addWidget()`添加的组件会被临时隐藏**，而用`addPermanentWidget()`函数添加的组件会保持不变。
 
-       - 自动显示`Action` 的`statusTip`
+       - ==**自动显示`Action` 的`statusTip`**==
 
-         - 如果一个`Action` 的`statusTip` **属性不为空**，当鼠标移动到如果一个`Action` 的`statusTip` 属性不为空，当鼠标移动到由这个`Action` 创建的菜单项或工具按钮上时，状态栏上就会自动显示这个`Action` 的`statusTip` 属性的内容；当鼠标移出时，状态栏上的临时消息就会被自动清除。使用这个功能无须编写任何代码，只需要设置`Action` 的`statusTip` 属性。
+         - 当鼠标移动到如果一个`Action` 的`statusTip` 属性不为空，当鼠标移动到由这个`Action` 创建的菜单项或工具按钮上时，状态栏上就会自动显示这个`Action` 的`statusTip` 属性的内容；当鼠标移出时，状态栏上的临时消息就会被自动清除。使用这个功能无须编写任何代码，只需要设置`Action` 的`statusTip` 属性。
 
 4. 混合式UI 设计
 
@@ -1518,48 +1515,288 @@
 
 1. 模型/视图结构概述
 
-   - 模型/视图结构是一种将**数据存储**和**界面展示分离**的编程方法。**模型存储数据**，**视图组件显示模型中的数据**，在视图组件里修改的数据会被自动保存到模型里。
+   - 模型/视图结构是一种将**数据存储**和**界面展示分离**的编程方法。**==模型==存储数据**，**==视图组件==显示模型中的数据**，在视图组件里修改的数据会被==**自动**==保存到模型里。
    - 模型的数据来源可以是内存中的字符串列表或二维表格型数据，也可以是数据库中的数据表，一种模型可以用不同的视图组件来显示数据。
      - <img style="width: 600px;height:200px" src="image\模型视图.png">
      - 源数据（data）
        - 是原始数据如数据库的一个数据表或SQL查询结果、内存中的一个字符串列表或磁盘文件系统结构等
      - 视图（view）也称为视图组件
-       - 是界面组件，视图从模型获得数据然后将其显示在界面上
-       - `Qt` 提供一些常用的视图组件，如`QListView`、`QTreeView` 和`QTableView`
+       - 是界面组件，**视图从模型获得数据然后将其显示在界面上**
+       - `Qt` 提供一些常用的视图组件，==如`QListView`、`QTreeView` 和`QTableView=`==
      - 模型（model）也称为数据模型
-       - 与源数据通信，并为视图组件提供数据接口。它从源数据提取需要的数据，用于视图组件进行显示和编辑。
+       - **与源数据通信**，并**为视图组件提供数据接口**。它从源数据提取需要的数据，用于视图组件进行显示和编辑。
        - `QStringListModel` 是字符串列表的模型类，`QSqlTableModel` 是数据库中数据表的模型类。
      - 代理（delegate）
-       - 在视图与模型之间交互操作时提供的临时编辑器。模型向视图提供数据是单向的，一般仅用于显示。当需要在视图上编辑数据时，代理会为编辑数据提供一个编辑器，这个编辑器获取模型的数据、接受用户编辑的数据后又将其提交给模型。
+       - **在视图与模型之间交互操作时提供的临时编辑器**。模型向视图提供数据是单向的，一般仅用于显示。当需要在视图上编辑数据时，代理会为编辑数据提供一个编辑器，这个编辑器获取模型的数据、接受用户编辑的数据后又将其提交给模型。
        - 例如在`QTableView` 组件上双击一个单元格来编辑数据时，在单元格里就会出现一个`QLineEdit` 组件，这个编辑框就是代理提供的临时编辑器。
 
 2. 模型
 
-   - 所有**基于项**（item）的**模型类**都是基于`QAbstractItemModel` 类的，这个类定义了视图组件和代理存取数据的接口。
+   - 所有**基于项**（item）的**模型类**都是==**基于`QAbstractItemModel` 类的**==，这个类定义了**视图组件**和**代理存取数据的接口**。
      - 模型只是在内存中临时存储数据，模型的数据来源可以是其他类、文件、数据库或任何数据源
-   - `Qt` 中几个主要的模型类的继承关系如图5-2 所示。`QAbstractItemModel` 的父类是`QObject`，所以模型类支持`Qt` 的元对象系统。
+   - `Qt` 中几个主要的模型类的继承关系如图5-2 所示。`QAbstractItemModel` 的**父类是`QObject`**，所以**模型类支持`Qt` 的元对象系统**。
      - <img style="width: 1100px;height:400px" src="image\模型类的继承关系.png">
-     - 抽象模型类 `QAbstractItemModel` 不能直接用于创建实例对象
+     - ==**抽象模型类 `QAbstractItemModel`** ==不能直接用于创建实例对象
    - 常用的模型类
-     - `QFileSystemModel` 	用于表示计算机上文件系统的模型类
-     - `QStringListModel`         用于表示字符串列表数据的模型类
-     - `QStandardItemModel`     标准的基于项的模型类，每个项是一个`QStandardItem` 对象
-     - `QSqlQueryModel`             用于表示数据库`SQL` 查询结果的模型类
-     - `QSqlTableModel`             用于表示数据库的一个数据表的模型类
+     - `QFileSystemModel` 	用于表示**计算机上文件系统**的模型类
+     - `QStringListModel`         用于表示**字符串列表**数据的模型类
+     - `QStandardItemModel`     标准的**基于项的模型类**，**每个项是一个`QStandardItem` 对象**
+     - `QSqlQueryModel`             用于表示**数据库`SQL` 查询结果**的模型类
+     - `QSqlTableModel`             用于表示**数据库的一个数据表**的模型类
 
 3. 视图
 
-   - 
+   - `QListView`：用于显示**单列**的列表数据，适用于一维数据的操作
+   - `QTreeView`：用于显示**树状**结构数据，适用于树状结构数据的操作。
+   - `QTableView`：用于显示**表格**数据，适用于二维表格数据的操作。
+   - `QColumnView`：用**多个`QListView` 显示树状结构数据**，树状结构的一层用一个`QListView`显示。
+   - `QUndoView`：用于**显示`undo`指令栈**内数据的视图组件，是`QListView` 的子类。
+     - 第 4 章介绍了`QListWidget`、`QTreeWidget` 和`QTableWidget` 这3 个用于处理项数据的组件。这3 个类分别是3 个视图类的子类，称为视图类的便利类（convenience class）。这些类的继承关系如图4-10 所示。
+   - 只需调用==**视图类的 `setModel()`函数**==为视图组件设置一个模型，模型的数据就可以显示在视图组件上。在视图组件上修改数据后，数据可以自动保存到模型里。
+   - **视图组件的数据来源于模型**，**视图组件不存储数据**。**便利类**则为组件的**每个节点或单元格**创建一个**项**，**用项存储数据**
+     - 例如对于`QTableWidget` 类这个便利类，表格的每个单元格关联一个`QTableWidgetItem `对象。**便利类没有模型**，它实际上是**用项的方式替代了模型的功能，将界面与数据绑定**。
+     - 因此，**便利类缺乏对大型数据源进行灵活处理的能力，只适用于小型数据的显示和编辑**，==**而视图组件则会根据模型的数据内容自动显示，有助于减少编程工作量，使用起来也更灵活。**==
 
-   
+4. 代理
 
-   
+   - 代理就是在视图组件上为**编辑数据提供的临时编辑器**，例如在`QTableView` 组件上编辑一个单元格的数据时，默认会提供一个`QLineEdit` 编辑框。代理负责从模型获取相应的数据，然后将其显示在编辑器里，修改数据后又将编辑器里的数据保存到模型中。
+   - `QAbstractItemDelegate` **==是所有代理类的基类==，作为抽象类，它不能直接用于创建对象**。
+     - 它有两个子类， 即`QItemDelegate` 和`QStyledItemDelegate` ， 这两个类的功能基本相同， 
+     - 而`QStyledItemDelegate` 能使用`Qt` ==**样式表**==定义的当前**样式绘制代理组件**，所以，`QStyledItemDelegate`是视图组件使用的==默认的代理类==
+   - 对于一些特殊的数据编辑需求，例如只允许输入整数时使用`QSpinBox` 作为代理组件更合适，需要从列表中选择数据时则使用`QComboBox` 作为代理组件更好，这时就可以从`QStyledItemDelegate`继承创建自定义代理类。
 
-   
+5. 模型/视图结构的一些概念
 
-   
+   - - 模型的基本结构
 
+       - 在模型/视图结构中，**模型为视图组件和代理**提供**存取数据**的标准接口。
+         - `QAbstractItemModel` 是所有模型类的基类，**不管底层的数据结构是如何组织数据的，`QAbstractItemModel` 的子类都以表格的层次结构展示数据**，**视图组件按照这种规则来存取模型中的数据，但是展示给用户的形式不一样**。
+       - 图 5-3 所示的是模型的3 种常见展示形式，分别是**列表模型**（`list model`）、**表格模型**（`table model`）和**树状模型**（`tree model`）。不管模型的表现形式是怎样的，**模型中存储数据的基本单元都是项**（`item`），**每个项有一个行号和一个列号，还有一个父项**（`parent item`）。**3 个模型都有一个隐藏的根项**（`root item`），列表模型的存储结构就是一列，表格模型的存储结构是规则的二维数组，树状模型的项可以有子项，结构复杂一点。
+       - <img style="width: 1100px;height:400px" src="image\3中模型.png">
 
+     - ==**模型索引**==
 
+       - 为了确保数据的展示与数据存取方式分离，模型中引入了模型索引（model index）的概念。
+       - 通过模型能访问的每个项都有一个模型索引，**视图组件和代理都通过模型索引来获取数据**。
+       - **`QModelIndex` 是表示模型索引的类**。**模型索引提供访问数据的临时指针**，用于通过模型提取或修改数据。因为模型内部组织数据的结构可能随时改变，**所以模型索引是临时的，例如对于一个`QTreeView` 组件，获得一个节点的模型索引后又修改了模型的数据，那么前面获得的那个模型索引可能就不再指向原来那个节点了。**
 
+     - 行号和列号
 
+       - 模型的基本形式是==**用行和列**==定义的**表格数据**，但**这并不意味着底层的数据是用二维数组存储**的，使用行和列只是为了组件之间交互方便。一个模型索引包含行号和列号。
+
+       - 要获得一个模型索引，必须提供3 个参数：==**行号、列号、父项的模型索引**==。例如，对于图5-3中的**表格模型**中的3 个项A、B、C，获取其模型索引的示意代码如下：
+
+         - ```c++
+           QModelIndex indexA = model->index(0, 0, QModelIndex());
+           QModelIndex indexB = model->index(1, 1, QModelIndex());
+           QModelIndex indexC = model->index(2, 1, QModelIndex());
+           ```
+
+     - 父项
+
+       - 当模型为==**列表**==或==**表格结构时**==，使用行号、列号访问数据比较直观，所有项的父项就是顶层项。
+
+       - 当模型为**树状结构时情况比较复杂**（树状结构中，项一般称为节点），一个节点有父节点，其也可以是其他节点的父节点，在构造节点的模型索引时，必须指定正确的行号、列号和父节点。
+
+         - ```c++
+           //对于图 5-3 中的树状模型，节点A 和节点C 的父节点是顶层节点，获取模型索引的代码是：
+           QModelIndex indexA = model->index(0, 0, QModelIndex());
+           QModelIndex indexC = model->index(2, 1, QModelIndex());
+           
+           //但是，节点B 的父节点是节点A，节点B 的模型索引由下面的代码生成：
+           QModelIndex indexB = model->index(1, 0, indexA);
+           ```
+
+     - 项的角色
+
+       - 在为模型的一个项设置数据时，**可以为项设置不同角色的数据**。`QAbstractItemModel` 类定义了设置项的数据的函数`setData()`
+         - `bool QAbstractItemModel::setData(const QModelIndex &index, const QVariant &value,int role = Qt::EditRole)`
+         - `index` 是项的模型索引，`value` 是需要设置的数据，`role` 是设置数据的角色。
+       - 可以为一个项设置不同角色的数据，角色参数 role 用枚举类型`Qt::ItemDataRole` 的枚举值表示。
+         - <img style="width: 1100px;height:400px" src="image\role.png">
+       - 在获取一个项的数据时也需要指定角色，以获取不同角色的数据。`QAbstractItemModel` 定义了函数`data()`，可返回一个项的不同角色的数据，其函数原型定义如下：
+         - `QVariant QAbstractItemModel::data(const QModelIndex &index, int role = Qt::DisplayRole)`
+         - <img style="width: 1100px;height:200px" src="image\role2.png">
+
+     
+
+6. `QAbstractItemModel` 类
+
+   - `QAbstractItemMode` 是所有模型类的直接或间接父类**它定义了模型的通用接口函数，例如用于插入行、删除行、设置数据的函数**。`QAbstractItemModel` 是==**抽象类**==，不能直接用于创建对象实例，各个具体的模型类实现了这些接口函数。
+
+   - 行数和列数
+
+     - ```c++
+       int rowCount(const QModelIndex &parent = QModelIndex());
+       int columnCount(const QModelIndex &parent = QModelIndex());
+       ```
+
+     - 这两个函数中都需要传递一个参数`parent`，这是父项的模型索引。对于**列表模型和表格模型**，`parent` **使用默认的参数`QModelIndex()`即可**，得到的行数和列数就是模型的行数和列数。
+
+     - ==**对于树状模型**==，`parent` 需要设置**为父节点的模型索引**，函数返回的是父节点下的节点的行数和列数。
+
+   - 插入或删除行
+
+     - ```c++
+       bool insertRow(int row, 			const QModelIndex &parent = QModelIndex())
+       bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex())
+       bool removeRow(int row, 			const QModelIndex &parent = QModelIndex())
+       bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex())
+       ```
+
+     - 在使用函数` insertRow()`时，如果参数`row` 的值**超过了模型的行数**，**新增的行就添加到模型的末尾**。
+
+   - 插入或删除列
+
+     - ```c++
+       bool insertColumn(int column, 			  const QModelIndex &parent = QModelIndex())
+       bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex())
+       bool removeColumn(int column, 			  const QModelIndex &parent = QModelIndex())
+       bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex())
+       ```
+
+   - 移动行或列
+
+     - ```c++
+       bool moveRow(const QModelIndex &sourceParent, int sourceRow,
+                    const QModelIndex &destinationParent, int destinationChild);
+       bool moveColumn(const QModelIndex &sourceParent, int sourceColumn,
+                    const QModelIndex &destinationParent, int destinationChild);
+       ```
+
+   - 数据排序
+
+     - `void sort(int column, Qt::SortOrder order = Qt::AscendingOrder)`
+
+   - 设置和读取项的数据
+
+     - ```c++
+       bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+       QVariant data(const QModelIndex &index, int role = Qt::DisplayRole);
+       ```
+
+   - 清除一个项的数据
+
+     - `bool clearItemData(const QModelIndex &index)`
+
+   - ==**`QAbstractItemModel` 的这些函数一般都是虚函数，子类会重新实现其需要用到的函数，以符合模型类的具体操作。**==
+
+7. `QAbstractItemView` 类
+
+   - `QAbstractItemView` 是所有==**视图组件类**==的父类（见图4-10），它定义了视图组件类共有的一些接口。
+
+   - ==**关联数据模型和选择模型**==
+
+     - ```c++
+       void setModel(QAbstractItemModel *model) //设置数据模型
+       QAbstractItemModel *model() //返回关联的数据模型对象指针
+       ```
+
+     - **不同的视图组件使用不同类型的模型**
+
+       - `QListView` 组件一般用`QStringListModel` 对象作为数据模型，用于编辑字符串列表；`QTableView` 一般用`QStandardItemModel` 对象作为数据模型，用于编辑表格数据。
+
+     - 视图组件**还可以设置选择模型**，在界面上选择的项发生变化时，通过选择模型可以获取所有被选择项的模型索引。
+
+       - 例如，`QTableView` 在允许选择多个单元格时，使用`QItemSelectionModel`类对象作为选择模型就比较有用，可以获得所有被选单元格的模型索引，从而能方便地对所选择的项进行处理。
+
+       - ```c++
+         void setSelectionModel(QItemSelectionModel *selectionModel) //设置选择模型
+         QItemSelectionModel *selectionModel()				//返回关联的选择模型对象指针
+         ```
+
+   - 常用属性
+
+     - `QAbstractItemView `类定义了一些属性，这些属性是子类`QListView` 和`QTableView` 共有的
+
+     - `editTriggers` 属性。表示视图组件是否可以编辑数据，以及进入编辑状态的方式
+
+       - ```c++
+         void setEditTriggers(QAbstractItemView::EditTriggers triggers)
+         QAbstractItemView::EditTriggers editTriggers()
+         ```
+
+       - `QAbstractItemView::EditTrigger`的枚举值的组合
+
+         - `NoEditTriggers`：不允许编辑。
+         - `CurrentChanged`：当前项变化时进入编辑状态。
+         - `DoubleClicked`：双击一个项时进入编辑状态。
+         - `SelectedClicked`：点击一个已选择的项时进入编辑状态
+         - `EditKeyPressed`：当平台的编辑按键被按下时进入编辑状态。
+         - `AnyKeyPressed`：任何键被按下时进入编辑状态。
+         - `AllEditTriggers`：发生以上任何动作时进入编辑状态
+         - **视图组件类和模型类都没有 `readonly` 属性**，如果要设置数据是只读的，用函数`setEditTriggers()`设置视图组件为不允许编辑即可。
+
+     - `alternatingRowColors` 属性。
+
+       - 这个属性设置各行是否交替使用不同的背景色。如果设置为`true`，会使用系统默认的一种颜色。**如果要自定义背景色，需要用`Qt` 样式表**
+
+     - `selectionMode` 属性
+
+       - 这个属性表示在视图组件上选择项的操作模式，对于`QTableView`比较有意义。这个属性值是枚举类型`QAbstractItemView::SelectionMode`
+       - `SingleSelection`：单选，只能选择一个项，例如只能选择一个单元格。
+       - `ContiguousSelection`：连续选择，例如按住Shift键选择多个连续单元格。
+       - `ExtendedSelection`：扩展选择，例如可以按住Ctrl键选择多个不连续的单元格。
+       - `MultiSelection`：多选，例如通过拖动鼠标选择多个单元格。
+       - `NoSelection`：不允许选择。
+
+     - `selectionBehavior `属性
+
+       - 这个属性表示点击鼠标时选择操作的行为，对于`QTableView` 比较有意义。这个属性值是枚举类型`QAbstractItemView::SelectionBehavior`
+       - `SelectItems`：选择单个项，点击一个单元格时，就是选择这个单元格。
+       - `SelectRows`：选择行，点击一个单元格时，选择单元格所在的一整行。
+       - `SelectColumns`：选择列，点击一个单元格时，选择单元格所在的一整列。
+
+   - 常用接口函数
+
+     - `QAbstractItemView `定义了很多接口函数，下面是常用的几个。
+
+       - ```c++
+         QModelIndex currentIndex() 						//返回当前项的模型索引，例如当前单元格的模型索引
+         void setCurrentIndex(const QModelIndex &index) //设置模型索引为index 的项为当前项
+         void selectAll() 			//选择视图中的所有项，例如选择QTableView 组件中的所有单元格
+         void clearSelection() 		//清除所有选择
+         ```
+
+   - 常用信号
+
+     - `QAbstractItemView` 定义了几个信号，常用的几个信号定义如下
+
+       - ```c++
+         void clicked(const QModelIndex &index) 			//点击某个项时
+         void doubleClicked(const QModelIndex &index) 	//双击某个项时
+         void entered(const QModelIndex &index) //鼠标移动到某个项上时
+         void pressed(const QModelIndex &index) //鼠标左键或右键被按下时
+         ```
+
+#### QStringListModel和QListView
+
+1. 简介
+
+   - `QStringListModel` 是处理字符串列表的模型类，其实例可以作为`QListView `组件的数据模型。结合使用这两个类，就可以在界面上显示和编辑字符串列表。
+   - `QStringListModel` 内部存储了一个字符串列表，这个字符串列表的内容自动显示在关联的`QListView` 组件上，在`QListView` 组件上**双击某一行**时，可以通过**默认的代理组件**（`QLineEdit` 组件）修改这一行字符串的内容，**修改后的这行字符串自动保存到数据模型的字符串列表里**。
+   - 在字符串列表中添加或删除行是通过 `QStringListModel` 的接口函数实现的，`QListView` 没有接口函数用于修改数据，它只是用作数据显示和编辑的界面组件。通过`QStringListModel` 的接口函数修改字符串列表的内容后，关联的`QListView` **组件会自动更新显示内容。**
+
+2. `QStringListModel` 类
+
+   - `QStringListModel` 有两种参数形式的构造函数
+
+     - ```c++
+       QStringListModel(const QStringList &strings, QObject *parent = nullptr)
+       QStringListModel(QObject *parent = nullptr)
+       ```
+
+     - `QStringListModel` 对象内部有一个**字符串列表**，**对模型数据的修改就是对`QStringListModel` 对象内部字符串列表的修改**
+
+     - ```c++
+       void setStringList(const QStringList &strings) //设置字符串列表，初始化模型数据
+       QStringList stringList() //返回模型内部的字符串列表
+       ```
+
+3. 在文本框中显示数据模型的内容
+
+   - 在对数据模型进行插入、添加、删除项操作后，内容会立即在 `listView` 上显示出来，这是数据模型与视图组件之间信号与槽的作用的结果，当数据模型的内容发生改变时，通知视图组件更新显示。
+   - 数据模型内保存着最新的数据内容，对`QStringListModel` 模型来说，通过**函数`stringList()`可以得到其最新的数据副本**。
+   - 在测试过程中发现==**不能为`listView` 显示的列表显示图标和复选框，不能设置文字对齐方式**==，即使用函数`setData()`设置了`DecorationRole`、`TextAlignmentRole` 等角色的数据。这是因为`QStringListModel` 内部仅保存字符串列表，并没有数据结构保存其他角色的数据。
+   - `samp4_11` 采用`QListWidget` 设计了一个列表编辑器，每行是一个`QListWidgetItem`类型的项，可以设置图标和复选框。
+     对比这两个示例，可以发现它们的区别和适用场景。如果只是需要编辑字符串列表的内容，使用模型/视图结构比较方便。如果需要每一行带复选框的列表框，还是要使用`QListWidget`。
