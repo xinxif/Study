@@ -26,7 +26,7 @@
    - `*.ui`文件经过***UIC* 编译**后生成`*.h`这个文件里定义了一个类，类的名称是`Ui_*`，用`C++`语言描述`UI` 文件中界面组件的属性设置、布局以及信号与槽的关联等内容
 
      - 窗口界面定义文件，是一个XML文件。用`Qt Designer` 打开`UI` 文件进行窗口界面可视化设计，保存修改后会重新生成`UI` 文件。
-     - `retranslateUi()`，其功能是设置界面上各组件的文字属性，如标签的文字、按钮的文字、窗口的标题等。界面上所有与文字设置相关的功能都集中在函数`retranslateUi()`里，在**设计多语言界面时**会用到这个函数。
+     - `retranslateUi()`，其功能是设置界面上各组件的文字属性，如标签的文字、按钮的文字、窗口的标题等。界面上所有与**文字设置相关**的功能都集中在函数`retranslateUi()`里，在**设计多语言界面时**会用到这个函数。
 
 3. 窗口界面可视化设计
 
@@ -34,7 +34,7 @@
 
      - 界面上的每个组件需要有一个唯一的对象名称，程序里访问界面组件时都是通过其对象名称进行的，**自动生成的槽函数名称里也有对象名称**。所以，**组件的对象名称设置好之后一般不要改动**。若需要修改对象名称，涉及的代码需要相应改动。
      - 窗体的对象名称会影响窗口`UI` 类的名称。`dialog.ui` 被`UIC` 编译后生成文件`ui_dialog.h`，窗体的对象名称与文件`ui_dialog.h`中定义的窗口`UI` 类有关。一般不在`Qt Designer` 里修改窗体的对象名称，除非是要重命名一个窗口，那么需要对窗口相关的`4` 个文件都重命名。
-     - 设置**窗体**的`font `属性后，**界面上其他组件**的**默认字体就是窗体的字体**，无须再单独设置，除非要为某个组件设置单独的字体，例如组件`plainTextEdit` 的字体大小被单独设置为`20`。
+     - 设置**窗体**的`font `属性后，==**界面上其他组件**==的==**默认字体就是窗体的字体**==，无须再单独设置，除非要为某个组件设置单独的字体，例如组件`plainTextEdit` 的字体大小被单独设置为`20`。
      - 组件的属性都有默认值，一个组件的某个属性被修改后，属性编辑器里的属性名称会以粗体显示。如果要恢复属性的默认值，点击属性值右端的还原按钮即可。
 
    - <img style="width: 1100px;height:700px" src="image\qt设计师工具.png">
@@ -80,7 +80,7 @@
        clicked(bool)	//信号以复选框当前的选择状态作为参数。
        ```
 
-   - `QMetaObject::connectSlotsByName(Dialog);`
+   - ==`QMetaObject::connectSlotsByName(Dialog);`==
 
      - 搜索`Dialog` 界面上的所有组件，将名称匹配的信号和槽关联起来，
        - 假设槽函数的名称是：`void on_<object name>_<signal name>(<signal parameters>);`
@@ -109,9 +109,9 @@
        - 可视化设计的窗口`UI` 文件会被用户界面编译器`（UIC）`转换为一个`C++`源程序文件。例如示例项目`samp2_1` 中的文件`widget.ui` 被转换为文件`ui_widget.h`。
        - `UIC` 编译生成的文件与UI 文件在同一个文件夹里，文件`ui_widget.h` 之后会被标准`C++`编译器编译。
      - 资源文件和RCC
-       - `Qt` 项目中的资源文件（`.qrc` 文件）会被资源编译器（`RCC`）转换为`C++`程序文件。例如示例项目`samp2_2` 中的资源文件是`res.qrc`，经过`RCC `编译后生成的文件是`qrc_res.cpp`。
+       - `Qt` 项目中的资源文件（`.qrc` 文件）会被资源编译器（`RCC`）转换为`C++`程序文件。例如示例项目`samp2_2` 中的资源文件是`res.qrc`，经过`RCC`编译后生成的文件是`qrc_res.cpp`。
      - 标准`C++`编译器
-       - 使用 `MOC`、`UIC` 和`RCC` 编译各原始文件的过程称为预编译过程，预编译之后生成的是标准C++语言的程序文件，它们被标准C++编译器编译和连接，最终生成可执行文件。
+       - 使用 `MOC`、`UIC` 和`RCC` 编译各原始文件的过程称为预编译过程，预编译之后生成的是标准`C++`语言的程序文件，它们被标准C++编译器编译和连接，最终生成可执行文件。
        - `samp2_3`手动`ui`创建
 
 4. 使用`CMake`构建系统
@@ -210,6 +210,28 @@
 
 ### 第三章 Qt框架功能概述
 
+#### Qt6框架中的模块
+
+1. Qt 基础模块
+   - <img style="width: 1100px;height:300px" src="image\Qt基础模块.png">
+   - `Qt Core` 模块是`Qt` 框架的核心，其他模块都依赖此模块。`Qt GUI` 模块提供用于开发`GUI` 应用程序的必要的类。
+     - `QT += core gui`
+2. Qt 附加模块
+   - <img style="width: 1100px;height:600px" src="image\Qt附加模块.png">
+3. Qt 全局定义
+   - 头文件`<QtGlobal>`包含`Qt` 框架中的一些全局定义，包括基本数据类型、函数和宏。一般的`Qt` 类的头文件都会包含这个头文件，所以用户程序中无须包含这个头文件就可以使用其中的定义。
+   - <img style="width: 1100px;height:450px" src="image\数据类型定义.png">
+     - `qfloat16` 是`Qt 5.9` 中增加的一种类型，用于表示16 位的浮点数。头文件`<QFloat16>`
+   - 函数
+     - <img style="width: 1100px;height:550px" src="image\常用函数.png">
+   - 宏定义
+     - QT_VERSION 表示Qt 版本
+       - 这个宏展开为数值形式0xMMNNPP。例如Qt 版本为Qt 6.2.3，则QT_VERSION 为0x060203。
+     - Q_BYTE_ORDER 表示系统内存中数据的字节序。Q_BIG_ENDIAN 表示大端字节序，
+       Q_LITTLE_ENDIAN 表示小端字节序。
+     - Q_DECL_IMPORT 和Q_DECL_EXPORT 分别用于在使用或设计共享库时导入或导出库的内容。
+     - Q_UNUSED(name)用于声明函数中未被使用的参数
+
 #### 元对象系统
 
 1. 元对象系统概述
@@ -227,6 +249,7 @@
    - <img style="width: 1100px;height:400px" src="image\元对象系统.png">
 
    - ```c++
+     //使用QObject 和QMetaObject 提供的以下一些接口函数，我们可以在运行时获得一个对象的类名称以及其父类的名称，判断其是否从某个类继承而来。要实现这些功能，我们并不需要C++编译器的运行时类型信息（run-time type information，RTTI）支持
      QPushButton btn;
      qDebug() << btn.metaObject()->className();
      // 输出: QPushButton
@@ -237,10 +260,16 @@
          qDebug() << "这是一个按钮";
      }
      
+     QPushButton *btn= new QPushButton();
+     bool result= btn->inherits("QPushButton"); //true
+     result= btn->inherits("QObject"); //true
+     result= btn->inherits("QWidget"); //true
+     result= btn->inherits("QCheckBox"); //false
+     
      //找所有符合条件的子对象
      auto buttons = win->findChildren<QPushButton*>();
      ```
-
+     
    - 属性系统
 
      - 在类的定义代码中可以用宏`Q_PROPERTY` 定义属性，`QObject` 的`setProperty()`函数会设置属性的值或定义动态属性；`property()`函数会返回属性的值。
@@ -248,16 +277,28 @@
 3. `QMetaObject`
 
    - 每个 `QObject` 及其子类的实例都有**一个自动创建的元对象**，元对象是`QMetaObject` 类型的**实例**。元对象**存储了类的实例所属类的各种元数据**，包括类信息元数据、方法元数据、属性元数据等，所以，元对象实质上是对类的描述。
+
    - <img style="width: 1100px;height:600px" src="image\QMetaObject.png">
-   - <img style="width: 1100px;height:300px" src="image\QMetaObject2.png">
+
+   - <img style="width: 1100px;height:260px" src="image\QMetaObject2.png">
+
+     - ```c++
+       QPushButton btn;
+       // metaObject() 返回一个 QMetaObject 指针
+       std::cout << btn.metaObject()->className();
+       // 直接访问类的静态成员
+       std::cout << QPushButton::staticMetaObject.className();
+       ```
+
    - `qobject_cast()`进行动态类型转换
+
      - 如果自定义的类要支持函数`qobject_cast()`，那么自定义的类需要直接或间接继承自`QObject`，且在类定义中插入宏`Q_OBJECT`。
      - 标准 `C++`语言中有类似的强制类型转换函数`dynamic_cast()`，使用`qobject_cast()`的好处是不需要`C++`编译器开启RTTI 支持。
 
 4. 属性系统
 
    - 属性是 `Qt C++`的一个扩展的特性，是基于元对象系统实现的，标准`C++`语言中没有属性。在`QObject `的子类中，我们可以使用宏`Q_PROPERTY` 定义属性。
-     
+   
      - ```c++
        Q_PROPERTY(type name
                (READ getFunction [WRITE setFunction] |
@@ -274,33 +315,33 @@
                [FINAL]
                [REQUIRED])
        ```
-     
+   
      - 宏`Q_PROPERTY` 定义一个值类型为`type`，名称为`name` 的属性，用`READ`、`WRITE` 关键字分别定义属性的读取、写入函数，还有一些其他关键字用于定义属性的一些操作特性。属性值的类型可以是`QVariant` 支持的任何类型，也可以是自定义类型。
-     
+   
      - `READ`：指定一个读取属性值的函数，没有MEMBER 关键字时必须设置READ。
-     
+   
      - `WRITE`：指定一个设置属性值的函数，只读属性没有WRITE 配置
-     
-     - `MEMBER`：指定一个成员变量与属性关联，使之成为可读可写的属性，指定后无须再设置READ 和WRITE。
-     
-     - `RESET`：是可选的，用于指定一个设置属性默认值的函数。
-     
-     - `NOTIFY`：是可选的，用于设置一个信号，当属性值变化时发射此信号。
-     
-     - `DESIGNABLE`：表示属性是否在Qt Designer 的属性编辑器里可见，默认值为true。
-     
+   
+     - `MEMBER`：指定一个成员变量与属性关联，**使之成为可读可写的属性，指定后无须再设置READ 和WRITE**。
+   
+     - `RESET`：是可选的，用于指定一个设置属性**默认值**的函数。
+   
+     - `NOTIFY`：是可选的，用于设置一个信号，当**属性值变化时发射此信号**。
+   
+     - `DESIGNABLE`：表示属性是否在`Qt Designer` 的属性编辑器里可见，默认值为`true`。
+   
      - `USER`：表示这个属性是不是用户可编辑的属性，默认值为false。通常一个类只有一个USER 设置为true 的属性，例如QAbstractButton 的checked 属性
-     
-     - `CONSTANT`：表示属性值是一个常数，对于一个对象实例，READ 指定的函数返回值是常数，但是每个实例的返回值可以不一样。具有CONSTANT 关键字的属性不能有WRITE和NOTIFY 关键字。
-     
+   
+     - `CONSTANT`：表示属性值是一个常数，**对于一个对象实例，READ 指定的函数返回值是常数，但是每个实例的返回值可以不一样**。具有CONSTANT 关键字的属性不能有WRITE和NOTIFY 关键字。
+   
      - `FINAL`：表示所定义的属性不能被子类重载。
-     
+   
      - ```c++
        Q_PROPERTY(bool focus READ hasFocus)
        Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled)
        Q_PROPERTY(QCursor cursor READ cursor WRITE setCursor RESET unsetCursor)
        ```
-     
+   
    - 属性的使用
    
      - `QObject` 类提供了两个函数直接通过属性名字符串来访问属性，其中`QObject::property()`函数读取属性值，`QObject::setProperty()`函数设置属性值。
@@ -312,6 +353,340 @@
        
        //ui->btnProperty表示窗口上的一个QPushButton按钮。注意，QObject::property()函数的返回值是QVariant类型，需要转换为具体的类型。
        ```
+   
+   - 在 QML 中使用 C++ 定义的类，**只有**通过 `Q_PROPERTY` 定义的内容才能在 QML 界面中被直接访问和绑定
+   
+     - ```css
+       /*Qt 的样式表可以根据属性值来改变 UI 样式*/
+       /*只有当自定义属性 state 为 'danger' 时，标签才显示红色 */
+       QLabel[state="danger"] { color: red; }
+       ```
+   
+     - ```c++
+       const QMetaObject *meta= ui->spinBoy->metaObject(); //获取一个SpinBox 的元对象
+       int index= meta->indexOfProperty("value"); //获取属性value 的序号
+       QMetaProperty prop= meta->property(index); //获取属性value 的元数据
+       bool res= prop.isWritable(); //属性是否可写，值为true
+       res= prop.isDesignable(); //属性是否可设计，值为true
+       res= prop.hasNotifySignal(); //属性是否有反映属性值变化的信号，值为true
+       ```
+   
+   - 动态属性
+   
+      - 函数 `QObject::setProperty()`设置属性值时，如果属性名称不存在，就会为对象定义一个新的属性并设置属性值，这时定义的属性称为动态属性。
+         - 动态属性是针对类的实例定义的，所以只能使用函数QObject::property()读取动态属性的属性值。
+   
+   - 附加的类信息
+   
+      - 元对象系统还支持使用宏 `Q_CLASSINFO()`在类中定义一些类信息，类信息有名称和值，值只能用字符串表示。
+   
+         - ```c++
+            class QMyClass : public QObject
+            {
+                Q_OBJECT
+                Q_CLASSINFO("author", "Wang")
+                Q_CLASSINFO("company", "UPC")
+                Q_CLASSINFO("version ", "3.0.1")
+            public:
+            ...
+            };
+            //使用QMetaObject的一些函数可以获取类信息元数据（见表3-6）。一条类信息用QMetaClassInfo类描述，这个类只有两个函数，函数原型定义如下：
+            char *QMetaClassInfo::name() //返回类信息的名称
+            char *QMetaClassInfo::value() //返回类信息的值
+            ```
+
+#### 信号和槽
+
+1. `connect()`函数的不同参数形式
+
+   - `QMetaObject::Connection QObject::connect(const QObject *sender, const char *signal,const QObject *receiver, const char *method,Qt::ConnectionType type = Qt::AutoConnection)`
+
+     - 一般用法：`connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));`
+     - 使用了宏SIGNAL()和SLOT()指定信号和槽函数，如果信号和槽函数带有参数，还需注明参数类型。
+       - `connect(spinNum, SIGNAL(valueChanged(int)), this, SLOT(updateStatus(int)));`
+
+   - 另一种参数形式的**静态函数**QObject::connect()的原型是：
+
+     - `QMetaObject::Connection QObject::connect(const QObject *sender, const QMetaMethod &signal,
+       const QObject *receiver, const QMetaMethod &method,Qt::ConnectionType type = Qt::AutoConnection)`
+
+     - ```c++
+       //信号与槽函数重载问题
+       void QCheckBox::clicked(bool checked = false);
+       //Go to slot 对话框中会出现两个同名的信号：clicked()和clicked(bool)。
+       //如果在一个窗口类 Widget 里设计了如下的两个自定义槽函数：
+       void do_checked(bool checked);
+       void do_checked_NoParam();
+       //那么使用如下代码进行信号与槽的连接是没有问题的。
+       connect(ui->checkBox, &QCheckBox::clicked, this, &Widget::do_checked);
+       connect(ui->checkBox, &QCheckBox::clicked, this, &Widget::do_checked_NoParam);
+       //第一行代码会自动使用checkBox 的clicked(bool)信号与do_checked(bool)连接，第二行代码会自动使用checkBox 的clicked()信号与do_checked_NoParam()连接。
+       
+       ```
+
+       - 如果在窗口类 `Widget` 里设计了如下的两个自定义槽函数：`void do_click(bool checked);`，`void do_click( );`那么使用如下的代码进行信号与槽的连接时，编译会出现错误。
+
+         - `connect(ui->checkBox, &QCheckBox::clicked, this, &Widget::do_click);`
+
+         - 这是因为`QCheckBox` 的`clicked()`信号是`overload` 型信号，`do_click()`是`overload` 型槽函数，信号与槽函数无法匹配。
+
+         - 这时需要使用模板函数`qOverload()`来明确参数类型
+
+           ```c++
+           connect(ui->checkBox, &QCheckBox::clicked, this, qOverload<bool>(&Widget::do_click));
+           connect(ui->checkBox, &QCheckBox::clicked, this, qOverload<>(&Widget::do_click));
+           ```
+
+   - 没有表示接收者的参数，**接收者就是对象自身**
+
+     - `QMetaObject::Connection QObject::connect(const QObject *sender, const char *signal,const char *method, Qt::ConnectionType type = Qt::AutoConnection)`
+
+   - `Qt::ConnectionType`
+
+     - `Qt::AutoConnection`（默认值）
+       - 如果信号的接收者与发射者在同一个线程中，就使用`Qt::DirectConnection` 方式，否则使用`Qt::QueuedConnection` 方式，在信号发射时自动确定关联方式。
+     - `Qt::DirectConnection`
+       - 信号被发射时槽函数立即运行，槽函数与信号在同一个线程中。
+     - `Qt::QueuedConnection`
+       - 在事件循环回到**接收者线程**后运行槽函数，槽函数与信号在不同的线程中。
+     - `Qt::BlockingQueuedConnection`
+       - 与`Qt::QueuedConnection` 相似，区别是信号线程会阻塞，直到槽函数运行完毕。当信号与槽函数在同一个线程中时绝对不能使用这种方式，否则会造成死锁。
+
+2. `disconnect()`函数的使用
+
+   - 有2 种成员函数形式和4 种静态函数形式，具体的函数原型见Qt 帮助文档。
+
+     ```c++
+     //解除与一个发射者所有信号的连接
+     disconnect(myObject, nullptr, nullptr, nullptr); //静态函数形式
+     myObject->disconnect(); 						//成员函数形式
+     //解除与一个特定信号的所有连接
+     disconnect(myObject, SIGNAL(mySignal()), nullptr, nullptr); //静态函数形式
+     myObject->disconnect(SIGNAL(mySignal())); 					//成员函数形式
+     //解除与一个特定接收者的所有连接
+     disconnect(myObject, nullptr, myReceiver, nullptr); //静态函数形式
+     myObject->disconnect(myReceiver); 					//成员函数形式
+     //解除特定的一个信号与槽的连接
+     disconnect(lineEdit, &QLineEdit::textChanged, label, &QLabel::setText); //静态函数形式
+     ```
+
+3. 使用函数`sender()`获取信号发射者
+
+   - `sender()`是`QObject` 类的一个`protected` 函数，在一个槽函数里调用函数`sender()`可以获取信号发射者的`QObject` 对象指针。如果知道信号发射者的类型，我们就可以将`QObject` 指针转换为确定类型对象的指针，然后使用这个确定类的接口函数。
+
+     - ```c++
+       void Widget::on_btnProperty_clicked()
+       {
+       QPushButton *btn= qobject_cast<QPushButton*>(sender()); //获取信号的发射者
+       bool isFlat= btn->property("flat").toBool();
+       btn->setProperty("flat", !isFlat);
+       }
+       ```
+
+
+
+#### 对象树
+
+1. 使用`QObject` 及其子类创建的对象（统称为`QObject` 对象）是以对象树的形式来组织的。创建一个`QObject` 对象时若设置一个父对象，它就会被添加到父对象的子对象列表里。一个父对象被删除时，其全部子对象就会被自动删除。
+
+   - 界面组件都有父对象，也就是组件的容器组件。对于不可见的`QObject` 对象（如表示快捷方式的`QShortcut` 对象）也可以设置窗口作为父对象。窗口是一个窗口对象树的最上层节点。当用户关闭并删除一个窗口时，窗口上的所有对象都会被自动删除。
+
+   - QObject 类的构造函数里有一个参数`parent`，用于设置对象的父对象
+
+     ```c++
+     const QObjectList &QObject::children();	//返回对象的子对象列表
+     typedef QList<QObject*> QObjectList;
+     //对于界面上的容器类组件，容器内的所有组件（包括内部的布局组件）都是其子对象
+     
+     QObjectList objList=ui->groupBox_Btns->children(); //获取分组框的子对象列表
+     for(int i=0;i<objList.size(); i++) 				   //列表中有5 个元素
+     {
+     	const QMetaObject *meta= objList.at(i)->metaObject();//获取元对象
+     	QString className= QString(meta->className()); //子对象类名称
+     	if (className == "QPushButton") 			   //子对象类名称是QPushButton
+     	{
+     		QPushButton *btn= qobject_cast<QPushButton*>(objList.at(i));
+     		QString str= btn->text();
+     		btn->setText(str+"*");
+     	}
+     }
+     ```
+
+     - 分组框`groupBox_Btns` 里虽然有4 个`QPushButton` 按钮，但是`children()`函数返回的列表`objList` 中有5 个元素，因为还有一个水平布局对象。所以在操作`QPushButton` 按钮时，需要通过对象的元对象的`className()`函数获取对象的类名称，判断对象类型后再操作。
+
+   - 函数`findChild()`
+
+     - 在对象的子对象中查找可以转换为类型T 的子对象
+
+     - ```c++
+       template <typename T>
+       T QObject::findChild(const QString &name = QString(),Qt::FindChildOptions options = Qt::FindChildrenRecursively);
+       ```
+
+       - 参数`name`是子对象的对象名称
+
+       - 参数`options`表示查找方式，默认值`Qt::FindChildrenRecursively`表示在子对象中递归查找，也就是会查找子对象的子对象，若设置为 `Qt::FindDirectChildrenOnly` 表示只查找直接子对象。
+
+         ```c++
+         //查找窗口上对象名称为 btnOK 的QPushButton 按钮
+         QPushButton *btn = this->findChild<QPushButton *>("btnOK");
+         ```
+
+   - 函数`findChildren()`
+
+     - 这个函数用于在对象的子对象中查找可以转换为类型T 的子对象，可以指定对象名称，还可以使用正则表达式（QRegularExpression）来匹配对象名称。
+
+     - 如果不设置要查找的对象名称，就返回所有能转换为类型T 的对象。
+
+       ```c++
+       template <typename T> 
+       QList<T> QObject::findChildren(const QString &name = QString(),Qt::FindChildOptions options = Qt::FindChildrenRecursively);
+       
+       template <typename T> 
+       QList<T> QObject::findChildren(const QRegularExpression &re,Qt::FindChildOptions options = Qt::FindChildrenRecursively);
+       
+       QList<QPushButton*> btnList= ui->groupBox_Btns->findChildren<QPushButton*>();
+       for(int i=0; i<btnList.size(); i++)
+       {
+           QPushButton *btn= btnList.at(i);
+           QString str= btn->text();
+           btn->setText(str+"*");
+       }
+       ```
+
+
+
+#### 容器类
+
+1. 其他常用的基础类
+
+   - `QVariant` 类
+
+     ```c++
+     QVariant var(173);
+     QString str= var.toString(); //str="173"
+     int val= var.value<int>(); //val=173
+     
+     QStringList strList;
+     strList<<"One"<<"Two"<<"Three";
+     var.setValue(strList); //给var 赋值一个字符串列表
+     QStringList value= var.toStringList(); //转换为字符串列表
+     
+     //对于Qt GUI 模块中的一些类型，QVariant 没有相应的toT 函数，例如没有toColor()、toFont()这样的函数。
+     //但是这些类型的值可以赋值给QVariant 变量，之后通过QVariant::value()函数来得到指定类型的值
+     QFont font= this->font(); //窗口的字体
+     QVariant var= font; //赋值给一个QVariant 变量
+     QFont font2= var.value<QFont>(); //转换为QFont 类型
+     ```
+
+   - `QFlags` 类
+
+     - `QFlags<Enum>`是一个模板类，其中`Enum` 是枚举类型。
+
+       ```c++
+       //QLabel 有一个alignment 属性，其读写函数分别定义如下
+       Qt::Alignment alignment()
+       void setAlignment(Qt::Alignment)
+       //alignment 属性值是Qt::Alignment 类型，Qt 帮助文档中显示的Qt::Alignment 信息有如下表示：
+       enum  Qt::AlignmentFlag //枚举类型
+       flags Qt::Alignment 	//标志类型
+           //这表示Qt::Alignment 是QFlags<Qt::AlignmentFlag>类型
+       ```
+
+       - `Qt::AlignmentFlag` 是枚举类型，其有一些枚举常量。
+
+       - `Qt::Alignment` 是一个或多个`Qt::AlignmentFlag` 类型枚举值的组合，是一种特性标志。所以，我们把Qt::Alignment 称为枚举类型Qt::AlignmentFlag 的标志类型。
+
+         ```c++
+         //给窗口上的 QLabel 组件label 设置对齐方式，可以使用如下的代码：
+         ui->label->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+         //这实际上是创建了一个Qt::Alignment 类型的临时变量，相当于如下的代码：
+         QFlags<Qt::AlignmentFlag> flags= Qt::AlignLeft | Qt::AlignVCenter;
+         ui->label->setAlignment(flags);
+         
+         //QFlags 类支持或、与、异或等位运算，所以也可以这样写代码：
+         QFlags<Qt::AlignmentFlag> flags= ui->label->alignment(); //获取alignment 属性值
+         flags = flags | Qt::AlignVCenter; //增加垂直对齐
+         ui->label->setAlignment(flags);
+         ```
+
+       - 这里主要是要区分帮助文档中`enum Qt::AlignmentFlag` 和`flags Qt::Alignment` 的意义，不要把`QLabel` 的`setAlignment()`函数的输入参数认为是枚举类型，它实际上是标志类型。
+
+       - `QFlags` 类有一个函数`testFlag()`可以测试某个枚举值是否包含在此标志变量中，例如：
+
+         - `QFlags<Qt::AlignmentFlag> flags= ui->label->alignment(); //获取alignment 属性值`
+         - `bool isLeft = flags.testFlag(Qt::AlignLeft); //是否包含Qt::AlignLeft`
+
+   - `QRandomGenerator` 类
+
+     - 随机数发生器和随机数种子
+
+       - Qt 6 中已经舍弃了Qt 5 中产生随机数的函数qrand()和qsrand()，取而代之的是QRandomGenerator类，它可以产生高质量的随机数。
+
+       - 在创建QRandomGenerator 对象（称为随机数发生器）时可以给构造函数提供一个数作为随机数种子。如果两个随机数种子相同，则产生的随机数序列是完全相同的；如果两个随机数种子不同，则产生的随机数序列是完全不同的。
+
+         - ```c++
+           QRandomGenerator *rand1= new QRandomGenerator(QDateTime::currentMSecsSinceEpoch());
+           QRandomGenerator *rand2= new QRandomGenerator(QDateTime::currentSecsSinceEpoch());
+           for(int i=0; i<5;i++)
+           	qDebug("R1=%u, R2=%u",rand1->generate(), rand2->generate());
+           ```
+
+       - `QRandomGenerator QRandomGenerator::securelySeeded()`，静态函数创建一个随机数发生器。
+
+         - 这个函数使用静态函数`QRandomGenerator::system()`
+         - 表示的**系统随机数发生器**生成的随机数作为种子，创建一个随机数发生器。
+
+     - 全局的随机数发生器
+
+       - `QRandomGenerator` 有两个静态函数会返回随机数发生器，可以直接使用这两个函数返回的随机数发生器，无须给它们设置种子进行初始化。
+
+         - ```c++
+           QRandomGenerator *QRandomGenerator::system()
+           QRandomGenerator *QRandomGenerator::global()
+           ```
+
+         - 静态函数 `system()`返回系统随机数发生器。这个发生器利用操作系统的一些特性产生随机数，在常用的操作系统上，使用这个发生器的随机数生成密码是安全的。这个发生器是线程安全的，可以在任何线程里使用。
+
+         - 这个发生器可能会使用硬件的随机数发生器，所以不要用它生成大量的随机数，可以用它生成的随机数作为新建`QRandomGenerator` 对象的种子。
+
+       - 静态函数 `global()`返回全局的随机数发生器，这个发生器是`Qt` 自动用静态函数`securelySeeded()`设置种子初始化的。程序中一般使用全局的随机数发生器即可。
+
+         - `quint32 rand= QRandomGenerator::global()->generate();`
+
+     - `QRandomGenerator` 的接口函数
+
+       - ```c++
+         quint32 QRandomGenerator::generate() //生成32 位随机数
+         quint64 QRandomGenerator::generate64() //生成64 位随机数
+         double QRandomGenerator::generateDouble() //生成[0,1)区间内的浮点数
+             
+         //QRandomGenerator 还支持括号运算符，程序中的rand()等同于rand.generate()。
+         QRandomGenerator rand(QDateTime::currentSecsSinceEpoch());
+         for(int i=0; i<5;i++)
+         	qDebug("number =%u",rand());
+         
+         
+         //QRandomGenerator 的fillRange()函数可以生成一组随机数，可将其填充到列表或数组里
+         QList<quint32> list;
+         list.resize(10); //设置列表长度
+         QRandomGenerator::global()->fillRange(list.data(), list.size());
+         //生成随机数并将其填充到列表里
+         quint32 array[10];
+         QRandomGenerator::global()->fillRange(array); //生成随机数并将其填充到数组里
+         
+         
+         //QRandomGenerator 的bounded()函数可以生成指定范围内的随机数
+         double 	bounded(double highest) //生成区间[0,highest)内的随机双精度浮点数
+         quint32 bounded(quint32 highest) //生成区间[0,highest)内的quint32 随机数
+         quint32 bounded(quint32 lowest, quint32 highest) //随机数区间为[lowest,highest)
+         int 	bounded(int highest) //生成区间[0,highest)内的int 随机数
+         int 	bounded(int lowest, int highest) //生成区间[lowest,highest)内的int 随机数
+         quint64 bounded(quint64 highest) //生成区间[0,highest)内的quint64 随机数
+         qint64  bounded(qint64 lowest, qint64 highest) //随机数区间为[lowest,highest)
+         ```
+
+       - ==**生成的随机数区间为[lowest, highest)，它包含下界，但不包含上界**==
 
 ### 第四章 常用界面组件的使用
 
@@ -529,55 +904,55 @@
        - **==字符串表示的是二进制数则base因该设为2==**
        
 - `float toFloat(bool *ok = nullptr)`
-     
+  
 - `double toDouble(bool *ok = nullptr)`
-     
+  
 - `setNum()`用于**将整数或浮点数转换为==字符串==**。`setNum()`是==`overload` 型函数==，有很多种参数形式。
-     
+  
   - `QString &setNum(float n, char format = 'g', int precision = 6)`
        - <img style="width: 1100px;height:180px" src="image\浮点数格式.png">
-     
+  
 - ==**静态函数**==`number()`
-     
+  
   - 参数形式和功能与成员函数`setNum()`的相似
-     
+  
 - **静态函数**`asprintf()`
-     
+  
   - `QString` 的静态函数`asprintf()`用于构造格式化输出各种数据的字符串，类似于标准C 语言中的函数`printf()`。
-     
+    
   - `cformat`格式化字符串中支持汉字，但是**替换格式化字符串中的**`%s `只能==**用`UTF-8` 编码的字符串**==，也就是变量的字符串中不能有汉字，否则会出现乱码。
-     
+    
   - ```c++
          QString UPC = "UPC";
          //QString UPC= "石油大学"; //如果这个字符串中有汉字，str2 会出现乱码
          QString str2= QString::asprintf("Hello,欢迎来到 %s",UPC.toLocal8Bit().data());
          //将QString型变量UPC的UTF-16 编码的字符串转换为本地8位编码的QByteArray型数据，再得到QByteArray数据的char 类型指针
-         ```
-     
+     ```
+  
 - 函数`arg()`
-     
+  
   - `QString arg(int a, int fieldWidth = 0, int base = 10, QChar fillChar = QLatin1Char(' '))`
-     
+    
     - `a` 是要转换为字符串的整数
-     
+    
     - `fieldWidth` 是转换成的字符串占用的最少空格数
-     
+    
     - `base`是转换成的字符串显示进制
-     
+    
     - `fillChar`是当`fieldWidth`大于实际数位宽度时使用的填充字符，默认用空格
-     
+    
     - ```c++
            //格式字符串中占位符出现的顺序可以打乱，甚至可以重复出现，例如，最后一行代码如果是：
            QString str1= QString("%1 年度: %3/%2/%1").arg(Y).arg(M,2,base,ch).arg(D,2,base,ch);
            //那么，str1 的内容为“2021 年度: 03/08/2021”。
-           ```
-     
+       ```
+    
   - `QString arg(const QString &a, int fieldWidth = 0, QChar fillChar = QLatin1Char(' '))`
-     
+    
     - 以`QString` 作为输入参数类型
-     
+    
   - `QString arg(double a, int fieldWidth = 0, char format = 'g', int precision = -1,QChar fillChar = QLatin1Char(' '))`
-     
+    
     - **可以把浮点数转换为字符串**
 
 #### QSpinBox和QDoubleSpinBox
@@ -994,26 +1369,25 @@
 1. `Qt` 中用于**处理项数据**（item data）的组件有两类
 
    - 一类是`Item Views` 组件，包括`QListView`、`QTreeView`、`QTableView `等；
-   - 另一类是`Item Widgets` 组件，包括`QListWidget`、`QTreeWidget`、
-     `QTableWidget` 等
+   - 另一类是`Item Widgets` 组件，包括`QListWidget`、`QTreeWidget`、`QTableWidget` 等
    - `Item Widgets` 组件使用起来稍微复杂一点。它们直接将数据存储在每一个项里，例如，`QListWidget` 的每一行是一个项，`QTreeWidget` 的每个节点是一个项，`QTableWidget` 的每一个单元格是一个项。一个项存储了文字、文字的格式定义、图标、用户数据等内容。
-   - `QToolButton` 有一个**`setDefaultAction()`函数**，可以使==**按钮与`Action` 关联**==，按钮的文字、图标、`toolTip` 等属性都将自动从关联的`Action` 复制而来。点击一个工具按钮时就会运行关联`Action` 的`triggered()`信号的槽函数。
+   - `QToolButton` 有一个==**`setDefaultAction()`函数**==，可以使==**按钮与`Action` 关联**==，按钮的文字、图标、`toolTip` 等属性都将自动从关联的`Action` 复制而来。**点击一个工具按钮时就会运行关联`Action` 的`triggered()`信号的槽函数**。
      - 在 `Qt Designer` 里并**不能**直接为一个==**工具**==按钮设定一个`Action`，而需要在窗口类的构造函数里编写代码，为界面上的各个工具按钮设置关联的`Action`。
-
+   
 2. `QToolBox` 组件
 
    - `QToolBox` 是工具箱组件类，工具箱是一种**垂直分页**的**多页容器组件**。
    - 在`UI` 可视化设计时，在工具箱组件上点击鼠标右键调出快捷菜单，可以分别使用`Insert Page` 和`Delete Page` 菜单项添加和删除页面。
-   - 工具箱的**每个页面就是一个 `QWidget` 组件**在页面的工作区可以放置任何其他界面组件
+   - 工具箱的==**每个页面就是一个 `QWidget` 组件**==在页面的工作区可以放置任何其他界面组件
    - 在切换当前页面时组件发射此信号，参数`index` 是当前页面序号
      - `void QToolBox::currentChanged(int index)`
    - `QToolBox` 类提供了用于页面控制、属性访问的各种接口函数，查阅`Qt` 帮助文档
    - <img style="width: 1000px;height:250px" src="image\QAction设计.png">
 
-3. QListWidget 组件
+3. `QListWidget` 组件
 
    - `QListWidget` 是列表组件，每**一行是一个**`QListWidgetItem` **类型的对象**，称为**项或列表项**。
-   - `QListWidgetItem`有一个**标志变量**`flags`，用于**设置列表项的特性**，`flags` 是枚举类型`Qt::ItemFlag` 的枚举值的组合。
+   - `QListWidgetItem`有一个**标志变量**`flags`，用于**设置==列表项==的特性**，`flags` 是枚举类型`Qt::ItemFlag` 的枚举值的组合。
      - `Selectable` ： 列表项可被选择， 对应枚举值`Qt::ItemIsSelectable`。
      - `Editable`：列表项可被编辑，对应枚举值`Qt::ItemIsEditable`。
      - `DragEnabled`：列表项可以被拖动，对应枚举值`Qt::ItemIsDragEnabled`。
@@ -1032,14 +1406,14 @@
          - **点击工具按钮**会执行按钮关联的Action，而不会显示下拉菜单。
        - `QToolButton::InstantPopup`：会在按钮的**右下角显示一个很小的下拉箭头图标**，==**点击按钮就会立刻显示下拉菜单，即使工具按钮关联了一个`Action`，也不会执行这个`Action`**==
      - `toolButtonStyle` 属性。属性值是枚举类型`Qt::ToolButtonStyle`，表示工具按钮上文字与图标的显示方式
-     - `autoRaise` 属性。如果设置为`true`，按钮就没有边框，鼠标移动到按钮上时才显示按钮边框。
+     - ==`autoRaise` 属性==。如果设置为`true`，按钮就没有边框，鼠标移动到按钮上时才显示按钮边框。
      - `arrowType` 属性。属性值是枚举类型`Qt::ArrowType`
        - 可以在按钮上显示表示方向的箭头图标
    - `QToolButton` 的其他接口函数
      - `setDefaultAction()`函数。这个函数用于为工具按钮设置关联的`Action`。设置关联的`Action`后，工具按钮的文字、图标、`toolTip` 等属性都与`Action` 的一样，工具按钮的`triggered()`信号自动关联`Action` 的`triggered()`信号。
      - `setMenu()`函数。这个函数用于为工具按钮设置下拉菜单
        - `void QToolButton::setMenu(QMenu *menu)`
-       - `QMenu` 是菜单类，它直接从`QWidget` 继承而来。要为工具按钮设计下拉菜单，需要通过代码动态创建`QMenu` 对象，然后通过函数`setMenu()`将其设置为工具按钮的下拉菜单。
+       - `QMenu` 是菜单类，它直接从`QWidget` 继承而来。要为工具按钮设计下拉菜单，需要**通过代码**动态创建`QMenu` 对象，然后通过函数`setMenu()`将其设置为工具按钮的下拉菜单。
 
 5. 代码补充创建界面
 
@@ -1056,7 +1430,7 @@
      - **显示菜单**可以使用函数 `exec()`
 
        - `QAction *QMenu::exec(const QPoint &p, QAction *action = nullptr)`
-       - 参数p 表示菜单的左上角坐标。在点击鼠标右键显示快捷菜单时，**一般使用鼠标光标的当前==位置`QCursor::pos()`作==为参数`p` 的值**
+       - 参数`p` 表示菜单的左上角坐标。在点击鼠标右键显示快捷菜单时，**一般使用鼠标光标的当前==位置`QCursor::pos()`作==为参数`p` 的值**
 
 6. `QListWidget` 的操作
 
@@ -1066,11 +1440,11 @@
 
      - `QListWidget` 的主要接口函数
 
-       - <img style="width: 1000px;height:450px" src="image\listwidget接口.png">
+       - <img style="width: 1000px;height:500px" src="image\listwidget接口.png">
        - `QListWidgetItem` 的函数`setFlags()`用于设置项的一些特性，如是否可选、是否可编辑、是否有复选框等，
+         
          - `setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable)`
-         - `takeItem()`函数的功能==**只是从列表中移除一个项，并不会删除**==这个
-           `QListWidgetItem` 对象，如果要彻底删除这个项，需要使用`delete` 显式地删除它。
+         - `takeItem()`函数的功能==**只是从列表中移除一个项，并不会删除**==这个`QListWidgetItem` 对象，如果要彻底删除这个项，需要使用`delete` 显式地删除它。
          - `sortingEnabled`，表示列表是否**==动态自动==**排序，默认值为`false`
            - 新添加的项进行动态的排序。
 
@@ -1122,7 +1496,7 @@
 
 3. `QTreeWidget` 组件的可视化设计
 
-   - 双击窗体上的`QTreeWidget` 组件可以打开组件的编辑器，编辑器有**两个页面**，可分别==**对`Columns` 和`Items`** ==进行设计。
+   - 双击窗体上的`QTreeWidget` 组件可以打开组件的编辑器，编辑器有**两个页面**，可分别**==对`Columns` 和`Items`==** 进行设计。
      - `Columns`页面用于设计树形组件的==**列**==。在编辑器里可以添加、删除、移动列，以及设置每一列的标题文字、字体、前景色、背景色、文字对齐方式、图标等。
        - 在UI 可视化设计时，我们设置了两个列，标题分别为“节点”和“节点类型”，且两个列的标题文字对齐方式不同，如图4-58 所示
      - `Items` 页面用于==**设计树形组件的节点**==。如图4-59
@@ -1187,7 +1561,7 @@
 
      - 目录树上有一个当前节点，也就是**通过点击鼠标或按键移动选择**的节点。函数`currentItem()`会返回当前节点，如果返回值为`nullptr`，就表示没有当前节点。
 
-     - 如果**树形组件允许多选**，函数`selectedItems()`会返回选择的节点的列表。通过`QTreeWidget` 的**上层父类**`QAbstractItemView` 的`selectionMode` 属性能够**设置选择模式**，可以设置为多选。
+     - 如果**树形组件允许多选**，函数`selectedItems()`会返回选择的节点的列表。通过`QTreeWidget` 的==**上层父类**`QAbstractItemView` 的`selectionMode` 属性能够**设置选择模式**，==可以设置为多选。
 
    - `QTreeWidget` 的公有槽
 
@@ -1216,7 +1590,7 @@
        ```
 
        - `currentItemChanged()`信号在当前节点发生变化时被发射，`current` 是当前节点，`previous` 是之前节点，==**这两个参数的值有可能为`nullptr`**==。注意，即使当前点击的**行没有变化**，但是被点击节点的**列发生了变化**，组件也会发射此信号。
-       - `itemChanged()`信号在节点的某一列的属性发生变化时被发射，例如文字变化、复选状态变化
+       - `itemChanged()`信号在节点的**某一列的属性**发生变化时被发射，例如文字变化、复选状态变化
        - `itemClicked()`信号在点击节点时被发射，不管当前节点的行和列有没有变化都会触发此信号。用户在目录树上按下鼠标左键或右键时，组件会发射`itemPressed()`信号。
        - `itemSelectionChanged()`信号在用户选择的节点发生变化时被发射，在当前节点切换或多选节点变化时都会触发此信号。
        - ==**不希望`qDebug()`输出信息的.pro 文件里增加`DEFINES += QT_NO_DEBUG_OUTPUT`**==
@@ -1270,7 +1644,7 @@
        bool isSelected()
        ```
 
-       - 注意，函数`type()`返回的是创建节点时传递的`type` 参数，节点创建后就不能更改节点类型了。还有一个函数 `setFlags()`用于设置节点的一些特性，
+       - 注意，函数`type()`返回的是创建节点时传递的`type` 参数，**节点创建后就不能更改节点类型了**。还有一个函数 `setFlags()`用于设置节点的一些特性，
 
      - ```c++
        void setFlags(Qt::ItemFlags flags) //设置节点的标志
@@ -1310,10 +1684,9 @@
      
        - `scaledToHeight(int height)`：返回一个缩放后的图片副本，图片缩放到高度`height`
        - `scaledToWidth(int width)`：返回一个缩放后的图片副本，图片缩放到宽度`width`
-       - `scaled(int width, int height)`：返回一个缩放后的图片副本，图片缩放到宽度`width` 和高度
-         `height`，默认是不保持比例
+       - `scaled(int width, int height)`：返回一个缩放后的图片副本，图片缩放到宽度`width` 和高度`height`，**默认是不保持比例**
        - 使用`QLabel` 的`setPixmap()`函数即可显示图片，其函数原型定义如下：`void QLabel::setPixmap(const QPixmap &)`
-     - QDockWidget 类有如下几个信号，信号发射的时机见注释。
+     - `QDockWidget` 类有如下几个信号，信号发射的时机见注释。
      
        - ```c++
          void allowedAreasChanged(Qt::DockWidgetAreas allowedAreas) //allowedAreas属性值变化时
@@ -1358,7 +1731,7 @@
 
      - ```c++
        //QTableWidget 定义了两个公有槽，可以用来清除整个表格或数据区的全部单元格的项。
-       void clear() 		//清除表头和数据区的所有项
+       void clear() 		//清除表头和数据区的所有项,内存也被释放
        void clearContents() //清除数据区的所有项
        ```
 
@@ -1482,7 +1855,7 @@
          QVariant data(int role)
          ```
 
-       - 参数role 是用户数据角色，可以使用常量`Qt::UserRole` 定义第一个用户数据，使`1+Qt::UserRole` 定义第二个用户数据。
+       - 参数`role`是用户数据角色，可以使用常量`Qt::UserRole` 定义第一个用户数据，使`1+Qt::UserRole` 定义第二个用户数据。
 
    - 与表格相关的接口函数
 
@@ -1499,9 +1872,9 @@
    - ```c++
      //这几个函数是 QTableWidget 的父类QTableView 中定义的函数，
      void resizeColumnToContents(int column) //自动调整列号为column 的列的宽度
-     void resizeColumnsToContents() //自动调整所有列的宽度，以适应其内容
-     void resizeRowToContents(int row) //自动调整行号为row 的行的高度
-     void resizeRowsToContents() //自动调整所有行的高度，以适应其内容
+     void resizeColumnsToContents() 			//自动调整所有列的宽度，以适应其内容
+     void resizeRowToContents(int row) 		//自动调整行号为row 的行的高度
+     void resizeRowsToContents() 			//自动调整所有行的高度，以适应其内容
      ```
 
 5. 其他属性控制
@@ -1522,7 +1895,7 @@
        - 是原始数据如数据库的一个数据表或SQL查询结果、内存中的一个字符串列表或磁盘文件系统结构等
      - 视图（view）也称为视图组件
        - 是界面组件，**视图从模型获得数据然后将其显示在界面上**
-       - `Qt` 提供一些常用的视图组件，==如`QListView`、`QTreeView` 和`QTableView=`==
+       - `Qt` 提供一些常用的视图组件，==如`QListView`、`QTreeView` 和`QTableView`==
      - 模型（model）也称为数据模型
        - **与源数据通信**，并**为视图组件提供数据接口**。它从源数据提取需要的数据，用于视图组件进行显示和编辑。
        - `QStringListModel` 是字符串列表的模型类，`QSqlTableModel` 是数据库中数据表的模型类。
@@ -1536,7 +1909,7 @@
      - 模型只是在内存中临时存储数据，模型的数据来源可以是其他类、文件、数据库或任何数据源
    - `Qt` 中几个主要的模型类的继承关系如图5-2 所示。`QAbstractItemModel` 的**父类是`QObject`**，所以**模型类支持`Qt` 的元对象系统**。
      - <img style="width: 1100px;height:400px" src="image\模型类的继承关系.png">
-     - ==**抽象模型类 `QAbstractItemModel`** ==不能直接用于创建实例对象
+     - **==抽象模型类 `QAbstractItemModel`==** 不能直接用于创建实例对象
    - 常用的模型类
      - `QFileSystemModel` 	用于表示**计算机上文件系统**的模型类
      - `QStringListModel`         用于表示**字符串列表**数据的模型类
@@ -1578,7 +1951,7 @@
 
        - 为了确保数据的展示与数据存取方式分离，模型中引入了模型索引（model index）的概念。
        - 通过模型能访问的每个项都有一个模型索引，**视图组件和代理都通过模型索引来获取数据**。
-       - **`QModelIndex` 是表示模型索引的类**。**模型索引提供访问数据的临时指针**，用于通过模型提取或修改数据。因为模型内部组织数据的结构可能随时改变，**所以模型索引是临时的，例如对于一个`QTreeView` 组件，获得一个节点的模型索引后又修改了模型的数据，那么前面获得的那个模型索引可能就不再指向原来那个节点了。**
+       - ==**`QModelIndex` 是表示模型索引的类**==。**模型索引提供访问数据的临时指针**，用于通过模型提取或修改数据。因为模型内部组织数据的结构可能随时改变，**所以模型索引是临时的，例如对于一个`QTreeView` 组件，获得一个节点的模型索引后又修改了模型的数据，那么前面获得的那个模型索引可能就不再指向原来那个节点了。**
 
      - 行号和列号
 
@@ -1612,7 +1985,7 @@
        - 在为模型的一个项设置数据时，**可以为项设置不同角色的数据**。`QAbstractItemModel` 类定义了设置项的数据的函数`setData()`
          - `bool QAbstractItemModel::setData(const QModelIndex &index, const QVariant &value,int role = Qt::EditRole)`
          - `index` 是项的模型索引，`value` 是需要设置的数据，`role` 是设置数据的角色。
-       - 可以为一个项设置不同角色的数据，角色参数 role 用枚举类型`Qt::ItemDataRole` 的枚举值表示。
+       - 可以为一个项设置不同角色的数据，角色参数 `role` 用枚举类型`Qt::ItemDataRole` 的枚举值表示。
          - <img style="width: 1100px;height:400px" src="image\role.png">
        - 在获取一个项的数据时也需要指定角色，以获取不同角色的数据。`QAbstractItemModel` 定义了函数`data()`，可返回一个项的不同角色的数据，其函数原型定义如下：
          - `QVariant QAbstractItemModel::data(const QModelIndex &index, int role = Qt::DisplayRole)`
@@ -1620,7 +1993,7 @@
 
      
 
-6. `QAbstractItemModel` 类
+6. ==**`QAbstractItemModel` 类**==
 
    - `QAbstractItemMode` 是所有模型类的直接或间接父类**它定义了模型的通用接口函数，例如用于插入行、删除行、设置数据的函数**。`QAbstractItemModel` 是==**抽象类**==，不能直接用于创建对象实例，各个具体的模型类实现了这些接口函数。
 
@@ -1631,7 +2004,7 @@
        int columnCount(const QModelIndex &parent = QModelIndex());
        ```
 
-     - 这两个函数中都需要传递一个参数`parent`，这是父项的模型索引。对于**列表模型和表格模型**，`parent` **使用默认的参数`QModelIndex()`即可**，得到的行数和列数就是模型的行数和列数。
+     - 这两个函数中都需要传递一个参数`parent`，这是父项的模型索引。对于==**列表模型和表格模型**==，`parent` **使用默认的参数`QModelIndex()`即可**，得到的行数和列数就是模型的行数和列数。
 
      - ==**对于树状模型**==，`parent` 需要设置**为父节点的模型索引**，函数返回的是父节点下的节点的行数和列数。
 
@@ -1681,7 +2054,7 @@
 
    - ==**`QAbstractItemModel` 的这些函数一般都是虚函数，子类会重新实现其需要用到的函数，以符合模型类的具体操作。**==
 
-7. `QAbstractItemView` 类
+7. ==**`QAbstractItemView` 类**==
 
    - `QAbstractItemView` 是所有==**视图组件类**==的父类（见图4-10），它定义了视图组件类共有的一些接口。
 
@@ -1696,13 +2069,13 @@
 
        - `QListView` 组件一般用`QStringListModel` 对象作为数据模型，用于编辑字符串列表；`QTableView` 一般用`QStandardItemModel` 对象作为数据模型，用于编辑表格数据。
 
-     - 视图组件**还可以设置选择模型**，在界面上选择的项发生变化时，通过选择模型可以获取所有被选择项的模型索引。
+     - 视图组件**还可以设置==选择模型==**，在界面上选择的项发生变化时，通过选择模型可以获取所有被选择项的模型索引。
 
-       - 例如，`QTableView` 在允许选择多个单元格时，使用`QItemSelectionModel`类对象作为选择模型就比较有用，可以获得所有被选单元格的模型索引，从而能方便地对所选择的项进行处理。
+       - 例如，`QTableView` 在**允许选择多个单元格时**，使用`QItemSelectionModel`**类对象作为选择模型就比较有用，**可以获得所有被选单元格的模型索引，从而能方便地对所选择的项进行处理。
 
        - ```c++
          void setSelectionModel(QItemSelectionModel *selectionModel) //设置选择模型
-         QItemSelectionModel *selectionModel()				//返回关联的选择模型对象指针
+         QItemSelectionModel *selectionModel()						//返回关联的选择模型对象指针
          ```
 
    - 常用属性
@@ -1740,7 +2113,7 @@
        - `MultiSelection`：多选，例如通过拖动鼠标选择多个单元格。
        - `NoSelection`：不允许选择。
 
-     - `selectionBehavior `属性
+     - `selectionBehavior`属性
 
        - 这个属性表示点击鼠标时选择操作的行为，对于`QTableView` 比较有意义。这个属性值是枚举类型`QAbstractItemView::SelectionBehavior`
        - `SelectItems`：选择单个项，点击一个单元格时，就是选择这个单元格。
@@ -1774,7 +2147,7 @@
 1. 简介
 
    - `QStringListModel` 是处理字符串列表的模型类，其实例可以作为`QListView `组件的数据模型。结合使用这两个类，就可以在界面上显示和编辑字符串列表。
-   - `QStringListModel` 内部存储了一个字符串列表，这个字符串列表的内容自动显示在关联的`QListView` 组件上，在`QListView` 组件上**双击某一行**时，可以通过**默认的代理组件**（`QLineEdit` 组件）修改这一行字符串的内容，**修改后的这行字符串自动保存到数据模型的字符串列表里**。
+   - `QStringListModel` 内部存储了一个字符串**列表**，这个字符串列表的内容自动显示在关联的`QListView` 组件上，在`QListView` 组件上**双击某一行**时，可以通过**默认的代理组件**（`QLineEdit` 组件）修改这一行字符串的内容，**修改后的这行字符串自动保存到数据模型的字符串列表里**。
    - 在字符串列表中添加或删除行是通过 `QStringListModel` 的接口函数实现的，`QListView` 没有接口函数用于修改数据，它只是用作数据显示和编辑的界面组件。通过`QStringListModel` 的接口函数修改字符串列表的内容后，关联的`QListView` **组件会自动更新显示内容。**
 
 2. `QStringListModel` 类
@@ -1800,3 +2173,213 @@
    - 在测试过程中发现==**不能为`listView` 显示的列表显示图标和复选框，不能设置文字对齐方式**==，即使用函数`setData()`设置了`DecorationRole`、`TextAlignmentRole` 等角色的数据。这是因为`QStringListModel` 内部仅保存字符串列表，并没有数据结构保存其他角色的数据。
    - `samp4_11` 采用`QListWidget` 设计了一个列表编辑器，每行是一个`QListWidgetItem`类型的项，可以设置图标和复选框。
      对比这两个示例，可以发现它们的区别和适用场景。如果只是需要编辑字符串列表的内容，使用模型/视图结构比较方便。如果需要每一行带复选框的列表框，还是要使用`QListWidget`。
+
+#### QStandardItemModel 和QTableView
+
+1. 简介
+
+   - `QStandardItemModel` 是基于**项**的**模型类**，每个**项**是一个**`QStandardItem` 对象**，**可以存储各种数据**。
+   - `QStandardItemModel` 通常与`QTableView` 组成模型/视图结构，实现二维数据的管理。
+
+2. `QTableView` 类
+
+   - `QTableView `继承自`QAbstractItemView` 类，主要的属性和接口函数查看`QAbstractItemView` 类。
+
+   - `QTableView` 组件有**水平表头**和**垂直表头**，都是==`QHeaderView` 对象==，可以设置和返回表头对象。
+
+     - ```c++
+       void QTableView::setHorizontalHeader(QHeaderView *header) 	//设置水平表头
+       void QTableView::setVerticalHeader(QHeaderView *header) 	//设置垂直表头
+       QHeaderView *QTableView::horizontalHeader() 	//返回水平表头对象指针
+       QHeaderView *QTableView::verticalHeader() 		//返回垂直表头对象指针
+       ```
+
+     - ==**当`QTableView` 组件使用一个`QStandardItemModel` 对象作为数据模型时，它会自动创建表头对象**==，垂直表头一般显示行号，水平表头一般显示列的标题。
+
+3. `QStandardItemModel` 类
+
+   - `QStandardItemModel`可以存储图5-3 中所示的**3 种模型的数据**，如果以**多行多列的二维数组**形式存储项，就是表格模型；如果**表格模型只有一列，就是列表模型**；如果在**存储项时为项指定父项，就可以构成树状模型**。
+     
+   - 设置行数和列数
+   
+     - 如果设置的列数大于1，模型就是表格模型；如果设置的列数为1，模型就可以看作列表模型。
+   
+     - ```c++
+       void setRowCount(int rows) 			//设置数据模型的行数
+       void setColumnCount(int columns) 	//设置数据模型的列数
+       ```
+   
+   - 设置项
+   
+     - 设置了模型的行数和列数后，就相当于设置了模型的表格大小，还需要用函数`setItem()`为表格的**每个单元**设置一个`QStandardItem` 对象
+   
+     - ```c++
+       void setItem(int row, int column, QStandardItem *item) //用于表格模型
+       void setItem(int row, QStandardItem *item) //用于列表模型
+       ```
+   
+     - 如果模型只有一列，就看作列表模型，函数`setItem()`里不需要传递列号。
+   
+   - 获取项
+   
+     - ```c++
+       QStandardItem *item(int row, int column = 0) //根据行号和列号返回项
+       QStandardItem *itemFromIndex(const QModelIndex &index) //根据模型索引返回项
+       QModelIndex indexFromItem(const QStandardItem *item)//根据项返回其模型索引
+       ```
+   
+   - 添加行或列
+   
+     - 在模型最后添加一行，并且为添加行的每个单元设置`QStandardItem` 对象
+   
+     - ```c++
+       void appendRow(const QList<QStandardItem *> &items) //用于表格模型
+       void appendRow(QStandardItem *item) //用于列表模型
+       void appendColumn(const QList<QStandardItem *> &items) //在表格模型中添加列
+       ```
+   
+   - 插入行或列
+   
+     - ```c++
+       void insertRow(int row, const QList<QStandardItem *> &items) //用于表格模型
+       void insertRow(int row, QStandardItem *item) //用于列表模型
+       ```
+   
+     - `bool insertRow(int row, const QModelIndex &parent = QModelIndex()) `
+   
+       - 用于树状模型，参数`parent` 是父节点的模型索引，`row` 是插入位置的行号。**这种参数形式的函数的功能是在父节点下面插入一个节点，但是==没有为节点设置`QStandardItem` 对象==**，需要再调用函数`setItem()`为新插入的节点设置`QStandardItem` 对象。
+   
+     - 函数`insertColumn()`用于在模型中插入列，只有表格模型或树状模型才需要插入列。
+   
+       - ```c++
+         void insertColumn(int column, const QList<QStandardItem *> &items) 			//用于表格模型
+         bool insertColumn(int column, const QModelIndex &parent = QModelIndex()) 	//用于树状模型
+         ```
+   
+   - 移除行、列或项
+   
+     - 可以从表格模型中移除一行或一列，模型的行数或列数就会相应减1，但是移除的`QStandardItem`对象不会被删除，需要单独用delete 删除
+   
+     - ```c++
+       QList<QStandardItem *> takeRow(int row) 		//移除一行，适用于表格模型
+       QList<QStandardItem *> takeColumn(int column) 	//移除一列，适用于表格模型
+       QStandardItem *takeItem(int row, int column = 0) //移除一个项，适用于列表模型    
+       ```
+   
+   - 水平表头和垂直表头
+   
+     - 水平表头的列数等于表格模型的列数，表头的每个单元也是`QStandardItem`对象，可以用函数`setHorizontalHeaderItem()`为表头的某一列设置项。
+   
+     - ```c++
+       void setHorizontalHeaderItem(int column, QStandardItem *item) //为表头某列设置项
+       void setHorizontalHeaderLabels(const QStringList &labels)	//用字符串列表的内容设置水平表头各列的文字   
+           
+       QStandardItem *horizontalHeaderItem(int column) 		//返回水平表头中的一个项
+       QStandardItem *takeHorizontalHeaderItem(int column) 	//移除水平表头中的一个项
+           
+       void setVerticalHeaderItem(int row, QStandardItem *item)
+       void setVerticalHeaderLabels(const QStringList &labels)
+       QStandardItem *verticalHeaderItem(int row)
+       QStandardItem *takeVerticalHeaderItem(int row)   
+       ```
+   
+       - 表格数据的垂直表头默认以行号作为文字
+   
+   - 函数`clear()`于清除模型内的所有项，行数和列数都会变为0。
+   
+   - `QStandardItemModel`的信号
+   
+     - `QStandardItemModel` 新定义了一个信号`itemChanged()`，在任何一个项的数据发生变化时，此信号就会被发射。
+     - `void itemChanged(QStandardItem *item)`
+   
+4. `QStandardItem` 类
+
+   - `QStandardItemModel` 数据模型中的每个项是一个`QStandardItem` 对象。`QStandardItem` 存储了一个项的各种特性参数，还可以存储用户自定义数据。**一个项可以添加子项，子项也是`QStandardItem`类型的对象**，所以，`QStandardItem` 也可以作为树状模型的项。
+
+   - 特性读写函数
+
+     - <img style="width: 1100px;height:500px" src="image\QStandardItem.png">
+     - 参数`flags` 是标志类型，是枚举类型`Qt::ItemFlag` 的枚举值的组合
+
+   - 用户自定义数据
+
+     - `void QStandardItem::setData(const QVariant &value, int role = Qt::UserRole + 1)`
+
+     - `QStandardItem` 的一些**单独的函数相当于设置了项的一些固定角色的数据**
+
+       - 例如函数`setText()`设置了`Qt::DisplayRole` 角色的数据，函数`setToolTip()`设置了`Qt::ToolTipRole` 角色的数据。所以，`setData()`一般用于设置用户自定义数据，可以设置多个用户数据，从`Qt::UserRole` 递增角色数值即可。
+
+     - 函数`data()`返回指定角色的数据，函数`clearData()`清除用`setData()`函数设置的所有角色的数据。
+
+     - ```c++
+       QVariant QStandardItem::data(int role = Qt::UserRole + 1)
+       void QStandardItem::clearData()
+       ```
+
+   - 管理子项的函数
+
+     - `QStandardItem` 以二维表格的形式管理子项，**可以添加多行多列的子项**。
+
+     - ```c++
+       void appendRow(const QList<QStandardItem *> &items) //添加一行多个项
+       void appendRow(QStandardItem *item) 				//添加一行，只有一个项
+       void appendColumn(const QList<QStandardItem *> &items) 			//添加一列多个项
+       void insertRow(int row, const QList<QStandardItem *> &items) 	//插入一行多个项
+       void insertRow(int row, QStandardItem *item) 					//插入一行，只有一个项
+       void insertRows(int row, int count) 				//在row 行插入count 个空行，未设置item
+       void insertColumn(int column, const QList<QStandardItem *> &items) //插入一列多个项
+       void insertColumns(int column, int count) 			//在column列插入count个空列，未设置item
+       void removeColumn(int column) 						//删除序号为column 的列
+       void removeColumns(int column, int count) 			//从column 列开始，删除count 个列
+       void removeRow(int row) 							//删除序号为row 的行，存储的项也被删除
+       void removeRows(int row, int count) 				//从row 行开始，删除count 个行
+       int rowCount() 			//返回子项的行数
+       int columnCount() 		//返回子项的列数
+       bool hasChildren() 		//这个项是否有子项
+       QStandardItem *child(int row, int column = 0) 		//根据行号和列号返回子项    
+       ```
+
+     - `QStandardItem` 的很多函数与`QStandardItemModel` 中的函数名称相同，功能也相同，只是操作对象不同。`QStandardItemModel` 管理的是**模型的顶层项**，**如果是列表模型或表格模型（见图5-3），各个项没有子项**，`QStandardItemModel` 就直接管理模型中的所有项。
+
+     - 如果是**树状模型**（见图5-3），**那么`QStandardItemModel` 管理的就是所有顶层项（不是根项）**，也就是目录树中的一级节点，==**而各个一级节点的直接子节点则通过`QStandardItem `类来管理**==，依次递推下去，就可以形成不限层级的树状模型
+
+5. ==`QItemSelectionModel` 类==
+
+   - 一个视图组件需要设置一个数据模型，**还可以设置一个选择模型**。
+
+     - `QItemSelectionModel` 是选择模型类，它的功能是==**跟踪视图组件上的选择操作，给出选择范围**==。
+
+   - 主要接口函数
+
+     - `void QItemSelectionModel::setModel(QAbstractItemModel *model)`，**为选择模型设置==数据模型==**
+
+     - 将**数据模型、选择模型、视图组件这3 种对象做好关联设置后**，在视图组件上进行选择操作时，选择模型就可以跟踪视图组件上的选择操作。`QItemSelectionModel` 有一些接口函数可用于给出选择的项的模型索引等信息。
+
+     - ```c++
+       bool hasSelection() 			//是否有被选择的项，例如被选择的单元格
+       QModelIndex currentIndex() 		//返回当前项的模型索引，例如当前单元格
+       bool isSelected(const QModelIndex &index) 	 //模型索引为index 的项是否被选中
+       QModelIndexList selectedIndexes() 			 //返回所有被选择项的模型索引列表，列表未排序
+       QModelIndexList selectedRows(int column = 0) //返回column 列所有被选择项的模型索引列表
+       QModelIndexList selectedColumns(int row = 0) //返回row 行所有被选择项的模型索引列表
+       ```
+
+     - `QModelIndexList` 就是`QList<QModelIndex>`，是模型索引列表
+
+   - `QItemSelectionModel` 有几个函数用于**清除选择**，例如取消选择`QTableView` 表格中被选择的单元格
+
+     - ```c++
+       void clear() 				//清除选择模型，会触发selectionChanged()和currentChanged()信号
+       void clearCurrentIndex() 	//清除当前索引，会触发currentChanged()信号
+       void clearSelection() 		//清除所有选择，会触发selectionChanged()信号    
+       ```
+
+   - 信号
+
+     - `QItemSelectionModel` 定义了几个信号。选择的当前项发生变化时会触发`currentChanged()`信号
+       - `void currentChanged(const QModelIndex &current, const QModelIndex &previous)`
+     - 选择发生变化时，例如在 `QTableView` 视图组件上选择多个单元格，或取消选择一些单元格，都会触发`selectionChanged()`信号
+       - `void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)`
+       - `selected` 是被选择的项，`deselected` 是被取消选择的项，它们都是`QItemSelection` 类型。
+       - **`QItemSelection` 类的`indexes()`返回一个模型索引列表。**
+
